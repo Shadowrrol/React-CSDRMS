@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styles from "./Login.module.css";
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -69,27 +70,50 @@ const LoginPage = () => {
           <h1>Welcome, {userInfo ? `${userInfo.firstname} ${userInfo.lastname}` : 'User'}!</h1>
         </div>
       ) : (
-        <form onSubmit={handleLogin}>
-          <label>
-            Username:
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </label>
-          <br />
-          <label>
-            Password:
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label>
-          <br />
-          <button type="submit">Login</button>
-        </form>
+    <form onSubmit={handleLogin}>
+     <div className={styles.login}>
+      <section className={styles.image23Parent}>
+        <img className={styles.image23} alt="" src="/image-2-3@2x.png" />
+        <div className={styles.imageRemovebgPreview33Wrapper}>
+          <img
+            className={styles.imageRemovebgPreview33}
+            loading="lazy"
+            alt=""
+            src="/imageremovebgpreview-3-3@2x.png"
+          />
+        </div>
+        <div className={styles.rectangleParent}>
+          <div className={styles.frameChild} />
+          <img
+            className={styles.n1Icon}
+            loading="lazy"
+            alt=""
+            src="/362026522-800031278575304-8187898021528936793-n-1@2x.png"
+          />
+          <div className={styles.frameWrapper}>
+            <form className={styles.frameParent}>
+              <div className={styles.usernameParent}>
+                <div className={styles.username}>Username</div>
+                <input className={styles.frameItem} type="text" value={username}
+              onChange={(e) => setUsername(e.target.value)}/>
+              </div>
+              <div className={styles.passwordParent}>
+                <div className={styles.password}>Password</div>
+                <input className={styles.frameInner} type="password" value={password}
+              onChange={(e) => setPassword(e.target.value)}/>
+              </div>
+              <div className={styles.frameContainer}>
+                <button type="submit" className={styles.inputParent}>
+                  <div className={styles.input} />
+                  <div className={styles.login1}>Login</div>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+    </form>
       )}
     </div>
   );
