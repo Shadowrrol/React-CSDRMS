@@ -5,12 +5,7 @@ const AdminDashboard = () => {
     const location = useLocation();
   const { userInfo } = location.state;
   // Sample data for the dashboard
-  const data = {
-    users: 100,
-    revenue: "$10,000",
-    orders: 50,
-    visits: 2000
-  };
+ 
 
   return (
     <div>
