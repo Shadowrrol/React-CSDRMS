@@ -1,24 +1,28 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import BrowserRouter, Route, and Routes
+import LoginPage from './LoginPage';
+import SSO_Dashboard from './SSO_Dashboard';
+import AdminDashboard from './AdminDashboard';
+import AdviserDashboard from './AdviserDashboard'; // Import your other dashboard components here
+import PrincipalDashboard from './PrincipalDashboard';
 import './App.css';
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route exact path="/" element={<LoginPage setLoggedIn={setLoggedIn} />} />
+          <Route path="/SSO_Dashboard" element={<SSO_Dashboard />} />
+          <Route path="/AdminDashboard" element={<AdminDashboard />} />
+          <Route path="/PrincipalDashboard" element={<PrincipalDashboard />} />
+          <Route path="/AdviserDashboard" element={<AdviserDashboard />} />
+          {/* Add other routes here */}
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
