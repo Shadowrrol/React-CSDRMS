@@ -5,6 +5,10 @@ import SSO_Dashboard from './SSO_Dashboard';
 import AdminDashboard from './AdminDashboard';
 import AdviserDashboard from './AdviserDashboard'; // Import your other dashboard components here
 import PrincipalDashboard from './PrincipalDashboard';
+import Account from './Account';
+import RegisterPrincipal from './RegisterPrincipal';
+import RegisterAdviser from './RegisterAdviser';
+import RegisterSSO from './RegisterSSO';
 import './App.css';
 
 function App() {
@@ -19,6 +23,10 @@ function App() {
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
           <Route path="/PrincipalDashboard" element={<PrincipalDashboard />} />
           <Route path="/AdviserDashboard" element={<AdviserDashboard />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/register/principal" element={<RegisterSSO />} />
+          <Route path="/register/adviser" component={RegisterAdviser} />
+          <Route path="/register/sso" element={<RegisterSSO />} />
           {/* Add other routes here */}
         </Routes>
       </div>
