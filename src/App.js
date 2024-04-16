@@ -10,7 +10,8 @@ import RegisterPrincipal from './RegisterPrincipal';
 import RegisterAdviser from './RegisterAdviser';
 import RegisterSSO from './RegisterSSO';
 import Student from './Student';
-import AddStudent from './AddStudent'
+import AddStudent from './AddStudent';
+import UpdateStudent from './UpdateStudent';
 import './App.css';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="/register/sso" element={<RegisterSSO />} />
           <Route path="/student" element={<Student />} />
           <Route path="/add-student" element={<AddStudent />} />
+          <Route path="/update-student/:sid" element={<UpdateStudent />} /> {/* Add the route for UpdateStudent */}
           {/* Add other routes here */}
         </Routes>
       </div>
