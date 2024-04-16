@@ -91,7 +91,7 @@ const LoginPage = () => {
             src="/362026522-800031278575304-8187898021528936793-n-1@2x.png"
           />
           <div className={styles.frameWrapper}>
-            {/* <form className={styles.frameParent}> */}
+            <div className={styles.frameParent}>
               <div className={styles.usernameParent}>
                 <div className={styles.username}>Username</div>
                 <input className={styles.frameItem} type="text" value={username}
@@ -108,7 +108,7 @@ const LoginPage = () => {
                   <div className={styles.login1}>Login</div>
                 </button>
               </div>
-            {/* </form> */}
+            </div>
           </div>
         </div>
       </section>

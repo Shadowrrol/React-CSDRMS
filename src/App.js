@@ -24,8 +24,8 @@ function App() {
           <Route path="/PrincipalDashboard" element={<PrincipalDashboard />} />
           <Route path="/AdviserDashboard" element={<AdviserDashboard />} />
           <Route path="/account" element={<Account />} />
-          <Route path="/register/principal" element={<RegisterSSO />} />
-          <Route path="/register/adviser" component={RegisterAdviser} />
+          <Route path="/register/principal" element={<RegisterPrincipal />} />
+          <Route path="/register/adviser" element={<RegisterAdviser />} />
           <Route path="/register/sso" element={<RegisterSSO />} />
           {/* Add other routes here */}
         </Routes>
