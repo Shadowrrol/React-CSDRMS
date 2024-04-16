@@ -9,6 +9,8 @@ import Account from './Account';
 import RegisterPrincipal from './RegisterPrincipal';
 import RegisterAdviser from './RegisterAdviser';
 import RegisterSSO from './RegisterSSO';
+import Student from './Student';
+import AddStudent from './AddStudent'
 import './App.css';
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
           <Route path="/register/principal" element={<RegisterPrincipal />} />
           <Route path="/register/adviser" element={<RegisterAdviser />} />
           <Route path="/register/sso" element={<RegisterSSO />} />
+          <Route path="/student" element={<Student />} />
+          <Route path="/add-student" element={<AddStudent />} />
           {/* Add other routes here */}
         </Routes>
       </div>

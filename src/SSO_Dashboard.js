@@ -14,6 +14,8 @@ const SSO_Dashboard = () => {
       
       {/* Navigation link to Account */}
       <Link to="/account">Account</Link>
+      <br></br>
+      <Link to="/student">Student</Link>
     </div>
   );
 }
