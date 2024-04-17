@@ -12,6 +12,7 @@ import RegisterSSO from './RegisterSSO';
 import Student from './Student';
 import AddStudent from './AddStudent';
 import UpdateStudent from './UpdateStudent';
+import SSORegister from './pages/SSORegister';
 import './App.css';
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
           <Route path="/PrincipalDashboard" element={<PrincipalDashboard />} />
           <Route path="/AdviserDashboard" element={<AdviserDashboard />} />
-          <Route path="/account" element={<Account />} />
+          <Route path="/account" element={<SSORegister  />} />
           <Route path="/register/principal" element={<RegisterPrincipal />} />
           <Route path="/register/adviser" element={<RegisterAdviser />} />
           <Route path="/register/sso" element={<RegisterSSO />} />
