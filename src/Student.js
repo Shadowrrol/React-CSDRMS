@@ -36,6 +36,7 @@ const Student = () => {
             <Link to="/add-student">
                 <button>Add Student</button>
             </Link>
+            {/* <Link to="/add-report"><button>Add Student Report</button></Link> */}
             <table>
                 <thead>
                     <tr>
@@ -63,7 +64,14 @@ const Student = () => {
                                 <Link to={`/update-student/${student.sid}`}>
                                     <button>Update</button>
                                 </Link>
+                                
                                 <button onClick={() => handleDelete(student.sid)}>Delete</button>
+                                <Link to={`/add-report/${student.sid}`}>
+                                    <button>Add Report</button>
+                                </Link>
+                                <Link to={`/view-student-report/${student.sid}`}>
+                                    <button>View Report</button>
+                                </Link>
                             </td>
                         </tr>
                     ))}

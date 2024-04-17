@@ -13,6 +13,9 @@ import Student from './Student';
 import AddStudent from './AddStudent';
 import UpdateStudent from './UpdateStudent';
 import SSORegister from './pages/SSORegister';
+import Report from './Report'; // Import Report component
+import AddStudentReport from './AddStudentReport';
+import ViewStudentReport from './ViewStudentReport';
 import './App.css';
 
 function App() {
@@ -33,7 +36,11 @@ function App() {
           <Route path="/register/sso" element={<RegisterSSO />} />
           <Route path="/student" element={<Student />} />
           <Route path="/add-student" element={<AddStudent />} />
-          <Route path="/update-student/:sid" element={<UpdateStudent />} /> {/* Add the route for UpdateStudent */}
+          <Route path="/update-student/:sid" element={<UpdateStudent />} />
+          <Route path="/reports" element={<Report />} /> 
+          <Route path="/add-report/:sid" element={<AddStudentReport />} /> {/* Add the route for AddStudentReport */}
+          <Route path="/view-student-report/:sid" element={<ViewStudentReport />} /> {/* Add route for ViewStudentReport */}
+           {/* Add the route for UpdateStudent */}
           {/* Add other routes here */}
         </Routes>
       </div>
