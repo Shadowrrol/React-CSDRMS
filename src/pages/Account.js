@@ -1,7 +1,7 @@
-import "./SSORegister.css";
+import "./Account.css";
 import { Link } from 'react-router-dom';
 
-const SSORegister = () => {
+const Account = () => {
   return (
     <div className="sso-register">
       <img className="frame-icon" alt="" src="/frame@2x.png" />
@@ -191,4 +191,4 @@ const SSORegister = () => {
   );
 };
 
-export default SSORegister;
+export default Account;
