@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Sidebar from "./Components/Sidebar";
+import './RegisterPrincipal.css';
 
 const RegisterPrincipal = () => {
   const [userData, setUserData] = useState({
@@ -27,7 +29,9 @@ const RegisterPrincipal = () => {
   };
 
   return (
-    <div>
+    <div className="container">
+      <Sidebar />
+      <div className="form-container">
       <h2>Register as Principal</h2>
       <form onSubmit={handleSubmit}>
         <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
@@ -38,6 +42,7 @@ const RegisterPrincipal = () => {
       
         <button type="submit">Register</button>
       </form>
+    </div>
     </div>
   );
 }
