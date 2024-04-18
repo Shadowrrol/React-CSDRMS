@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import './AddStudentReport.css'; // Import CSS file for styling
 
 const AddStudentReport = () => {
-    const { sid } = useParams(); // Destructure sid from useParams
-    const [student, setStudent] = useState(null); // State to store student details
+    const { sid } = useParams();
+    const [student, setStudent] = useState(null);
     const [report, setReport] = useState({
-        sid: '', // Add sid field to report state
+        sid: '',
         date: '',
         time: '',
         monitored_record: '',
@@ -30,10 +31,9 @@ const AddStudentReport = () => {
             }
         };
         fetchStudent();
-    }, [sid]); // Fetch student details when sid changes
+    }, [sid]);
 
     useEffect(() => {
-        // Update report state with the current sid when student data is fetched
         if (student) {
             setReport(prevReport => ({ ...prevReport, sid: student.sid }));
         }
@@ -62,11 +62,11 @@ const AddStudentReport = () => {
     };
 
     if (!student) {
-        return <div>Loading...</div>; // Render loading state while fetching student details
+        return <div className="loading">Loading...</div>;
     }
 
     return (
-        <div>
+        <div className="container">
             <h1>Add Student Report</h1>
             <h2>Student Details</h2>
             <p>Name: {student.firstname} {student.middlename} {student.lastname}</p>
@@ -74,7 +74,7 @@ const AddStudentReport = () => {
             <p>Section: {student.section}</p>
             <p>Contact Number: {student.con_num}</p>
             <form onSubmit={handleSubmit}>
-                <input type="hidden" name="sid" value={report.sid} /> {/* Hidden input for sid */}
+                <input type="hidden" name="sid" value={report.sid} />
                 <label>
                     Date:
                     <input type="date" name="date" value={report.date} onChange={handleChange} />
