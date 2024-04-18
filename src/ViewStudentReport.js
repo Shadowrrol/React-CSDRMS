@@ -1,25 +1,52 @@
-// ViewStudentReport.js
-
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom'; // Import useParams hook and Link component
+import { useParams, Link } from 'react-router-dom';
 
 const ViewStudentReport = () => {
-    const { sid } = useParams(); // Destructure sid from useParams
+    const { sid } = useParams();
     const [reports, setReports] = useState([]);
+    const [student, setStudent] = useState(null); // State to store student details
+
+    useEffect(() => {
+        const fetchStudent = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/student/getStudent/${sid}`);
+                const data = await response.json();
+                setStudent(data); // Update student state with fetched data
+            } catch (error) {
+                console.error('Error fetching student:', error);
+            }
+        };
+
+        fetchStudent();
+    }, [sid]);
 
     useEffect(() => {
         const fetchReports = async () => {
-            const response = await fetch(`http://localhost:8080/student-report/getStudentReports/${sid}`);
-            const data = await response.json();
-            setReports(data);
+            try {
+                const response = await fetch(`http://localhost:8080/student-report/getStudentReports/${sid}`);
+                const data = await response.json();
+                setReports(data);
+            } catch (error) {
+                console.error('Error fetching reports:', error);
+            }
         };
+
         fetchReports();
-    }, [sid]); // Add sid to the dependency array
+    }, [sid]);
 
     return (
         <div>
+            <h2>Student Details</h2>
+            {student && (
+                <div>
+                    <p>Name: {student.firstname} {student.middlename} {student.lastname}</p>
+                    <p>Grade: {student.grade}</p>
+                    <p>Section: {student.section}</p>
+                    <p>Contact Number: {student.con_num}</p>
+                </div>
+            )}
+
             <h2>Student Reports</h2>
-            {/* Pass sid as a parameter when redirecting */}
             <Link to={`/add-report/${sid}`}>
                 <button>Add Report</button>
             </Link>

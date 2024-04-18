@@ -5,7 +5,7 @@ import SSO_Dashboard from './SSO_Dashboard';
 import AdminDashboard from './AdminDashboard';
 import AdviserDashboard from './AdviserDashboard'; // Import your other dashboard components here
 import PrincipalDashboard from './PrincipalDashboard';
-import Account from './SSO/Account';
+import Account from './pages/Account';
 import RegisterPrincipal from './RegisterPrincipal';
 import RegisterAdviser from './RegisterAdviser';
 import RegisterSSO from './RegisterSSO';

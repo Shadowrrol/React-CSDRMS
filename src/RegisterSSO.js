@@ -9,7 +9,6 @@ const RegisterSSO = () => {
     firstname: '',
     lastname: '',
     email: '',
-    section: '',
     userType: 1 // SSO
   });
 
@@ -36,7 +35,6 @@ const RegisterSSO = () => {
         <input type="text" name="firstname" placeholder="First Name" onChange={handleChange} required />
         <input type="text" name="lastname" placeholder="Last Name" onChange={handleChange} required />
         <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-        <input type="text" name="section" placeholder="Section" onChange={handleChange} required />
         <button type="submit">Register</button>
       </form>
     </div>
