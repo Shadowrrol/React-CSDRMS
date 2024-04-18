@@ -16,6 +16,7 @@ import Notification from './Notification';
 import Report from './Report'; // Import Report component
 import AddStudentReport from './AddStudentReport';
 import ViewStudentReport from './ViewStudentReport';
+import Followup from './SSO/Followup';
 import './App.css';
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
           <Route path="/register/adviser" element={<RegisterAdviser />} />
           <Route path="/register/sso" element={<RegisterSSO />} />
           <Route path="/student" element={<Student />} />
+          <Route path="/Followup" element={<Followup />} />
           <Route path="/add-student" element={<AddStudent />} />
           <Route path="/update-student/:sid" element={<UpdateStudent />} />
           <Route path="/notification" element={<Notification />} />
