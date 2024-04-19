@@ -19,6 +19,7 @@ const SSO_Dashboard = () => {
         <Link to="/pendings">Pendings</Link>
         <Link to="/sanctions">Sanctions</Link>
         <Link to="/report">Report</Link>
+        <Link to="/Followup">Followup</Link>
       </div>
       <div className='content'>
         <h1>SSO Dashboard</h1>
