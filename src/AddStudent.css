@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap");
 .wrapper {
     display: flex;
     height: 100vh; /* Full height of the viewport */
@@ -5,24 +6,58 @@
   
 .sidenav {
     width: 20%;
-    background-color: #9F212C;
+    background: linear-gradient(180deg, #863537, #200d0d);
     padding: 20px;
-    color: #fff;
     display: flex; /* Use flexbox */
     flex-direction: column; /* Stack navigation links vertically */
     justify-content: center; /* Center vertically */
     align-items: center; /* Center horizontally */
 }
-  
+.styled-link{
+    width: 50%;
+    height: 40px;
+    border: 5px solid #e8bd26;
+    background-color: #e8bd26;
+    border-radius: 12px;
+    list-style-type: none;
+    margin: 3%;
+    display: flex;
+    color: black;
+    flex-direction: row;
+    align-items: center;
+    font-family: Poppins;
+    justify-content: center; /* Center the text within the link */
+    text-decoration: none;   /* Remove underline from text */ 
+}
+.styled-link:hover {
+    cursor: pointer;
+    background-color: #ffc800;
+    }
+
 .sidenav a {
     margin-bottom: 20px;
     text-decoration: none;
-    color: inherit;
 }
-  
+.sidebar-logo{
+    position: relative;
+    top: -34px;
+    left: -3px;
+    border-radius: 99px;
+    width: 257px;
+    /* height: 198px; */
+    object-fit: cover;
+}
+.icon {
+flex: 1px; /* Space between icon and text */
+}
+
+.link-text {
+    flex: 5; /* Allow text to expand */
+}
 .content {
     flex: 1; /* Take remaining space */
     padding: 20px;
     background-color: #fff; /* White background */
 }
+
    
