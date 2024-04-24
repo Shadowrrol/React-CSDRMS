@@ -36,7 +36,7 @@ const RegisterSSO = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/user/insertUser', userData);
+      const response = await axios.post('http://localhost:8080/sso/insertSSO', userData);
       console.log(response.data); // Handle success response
     } catch (error) {
       console.error('Error:', error); // Handle error

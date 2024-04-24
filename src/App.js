@@ -4,7 +4,7 @@ import LoginPage from './LoginPage';
 import SSO_Dashboard from './SSO_Dashboard';
 import AdminDashboard from './AdminDashboard';
 import AdviserDashboard from './AdviserDashboard'; // Import your other dashboard components here
-import PrincipalDashboard from './PrincipalDashboard';
+import PrincipalDashboard from './Principal/PrincipalDashboard';
 import Account from './SSO/Account';
 import RegisterPrincipal from './RegisterPrincipal';
 import RegisterAdviser from './RegisterAdviser';
@@ -17,6 +17,8 @@ import Report from './Report'; // Import Report component
 import AddStudentReport from './AddStudentReport';
 import ViewStudentReport from './ViewStudentReport';
 import Followup from './SSO/Followup';
+import Sanction from './SSO/Sanction';
+import ViewSanctions from './Principal/ViewSanctions';
 import './App.css';
 
 function App() {
@@ -40,6 +42,8 @@ function App() {
           <Route path="/add-student" element={<AddStudent />} />
           <Route path="/update-student/:sid" element={<UpdateStudent />} />
           <Route path="/notification" element={<Notification />} />
+          <Route path="/sanctions" element={<Sanction />} />
+          <Route path="/viewSanctions" element={<ViewSanctions />} />
           <Route path="/reports" element={<Report />} /> 
           <Route path="/add-report/:sid" element={<AddStudentReport />} /> {/* Add the route for AddStudentReport */}
           <Route path="/view-student-report/:sid" element={<ViewStudentReport />} /> {/* Add route for ViewStudentReport */}
