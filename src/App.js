@@ -44,7 +44,7 @@ function App() {
           <Route path="/notification" element={<Notification />} />
           <Route path="/sanctions" element={<Sanction />} />
           <Route path="/viewSanctions" element={<ViewSanctions />} />
-          <Route path="/reports" element={<Report />} /> 
+          <Route path="/report" element={<Report />} /> 
           <Route path="/add-report/:sid" element={<AddStudentReport />} /> {/* Add the route for AddStudentReport */}
           <Route path="/view-student-report/:sid" element={<ViewStudentReport />} /> {/* Add route for ViewStudentReport */}
            {/* Add the route for UpdateStudent */}
