@@ -33,23 +33,40 @@ const months = [
     { value: 11, label: 'December' }
 ];
 
+const years = [
+    { value: '', label: 'All years' },
+    { value: 2024, label: '2024' },
+    { value: 2023, label: '2023' },
+    { value: 2022, label: '2022' }
+];
+
 const Report = () => {
     const [reports, setReports] = useState([]);
     const [monitoredRecordsCount, setMonitoredRecordsCount] = useState({});
     const [selectedMonth, setSelectedMonth] = useState('');
+    const [selectedYear, setSelectedYear] = useState('');
 
     useEffect(() => {
         fetchReports();
-    }, []);
+    }, [selectedMonth, selectedYear]);
 
     useEffect(() => {
         countMonitoredRecords(reports);
     }, [reports]);
 
     const fetchReports = async () => {
-        const response = await fetch('http://localhost:8080/student-report/getAllStudentReports');
-        const data = await response.json();
-        setReports(data);
+        try {
+            const url = `http://localhost:8080/student-report/getAllStudentReportsByYear?year=${selectedYear}`;
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+            const data = await response.json();
+            setReports(data);
+        } catch (error) {
+            console.error('Error fetching reports:', error);
+            // Handle error (e.g., display error message to the user)
+        }
     };
 
     const countMonitoredRecords = (reports) => {
@@ -74,6 +91,11 @@ const Report = () => {
         setSelectedMonth(month);
     };
 
+    const handleYearChange = (event) => {
+        const year = event.target.value;
+        setSelectedYear(year);
+    };
+
     return (
         <div className="wrapper" style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className="sidenav">
@@ -92,6 +114,13 @@ const Report = () => {
                 <select value={selectedMonth} onChange={handleMonthChange}>
                     {months.map(month => (
                         <option key={month.value} value={month.value}>{month.label}</option>
+                    ))}
+                </select>
+            </div>
+            <div>
+                <select value={selectedYear} onChange={handleYearChange}>
+                    {years.map(year => (
+                        <option key={year.value} value={year.value}>{year.label}</option>
                     ))}
                 </select>
             </div>
