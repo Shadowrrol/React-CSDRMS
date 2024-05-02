@@ -1,64 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap");
-.body{
-    margin: 0;
-    padding: 0;
-}
-.Sidebar{
-    height: 100%;
-    background: linear-gradient(180deg, #863537, #200d0d);
-    width: 300px;
-    margin-left: -450px; /* Adjust as needed */
-    }
-    .Logo{
-        top: 20px;
-        left: 20px;
-        border-radius: 99px;
-        width: 257px;
-        /* height: 198px; */
-        object-fit: cover;
-    }
-    .SidebarList {
-    height: auto;
-    width: 100%;
-    }
-    .SidebarList .Row {
-    width: 68%;
-    height: 50px;
-    border: 3px solid #e8bd26;
-    background-color: #e8bd26;
-    border-radius: 12px;
-    list-style-type: none;
-    margin: 3%;
+.container {
     display: flex;
-    color: black;
-    flex-direction: row;
-    align-items: center;
-    font-family: Poppins;
-    }
-    .SidebarList .Row:hover {
-    cursor: pointer;
-    background-color: #ffc800;
-    }
-    .SidebarList #active {
-    background-color: #ffc800
-    }
-    .Row #icon {
-    flex: 30%;
-    display: grid;
-    place-items: center;
-    }
-    .Row #title {
-    flex: 70%;
-    }
-    .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding: 20px;
-      }
-      
-    .form-container {
-        flex: 1;
-        margin-left: 50px; /* Adjust as needed */
-      }
-      
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+ }
+  
+.form-container {
+    flex: 1;
+    margin-left: 50px; /* Adjust as needed */
+}
+  
