@@ -9,7 +9,8 @@ const ViewSanctions = () => {
   useEffect(() => {
     const fetchSanctions = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/sanction/getAllSanctions');
+        const response = await axios.get('http://localhost:8080/sanction/getAllPendingSanctions');
+        console.log('Fetched sanctions:', response.data);
         setSanctions(response.data);
       } catch (error) {
         console.error('Error:', error);
@@ -78,10 +79,9 @@ const ViewSanctions = () => {
               <li key={sanction.sanction_id}>
                 {/* Display sanction details */}
                 <div>Sanction ID: {sanction.sanction_id}</div>
-                <div>Student ID: {sanction.sid}</div>
+                <div>Student Name: {sanction.student.firstname}  {sanction.student.lastname}</div>
                 <div>Behavior Details: {sanction.behaviorDetails}</div>
                 <div>Sanction Recommendation: {sanction.sanctionRecommendation}</div>
-                <div>Is Approved: {sanction.isApproved}</div>
                 {/* Approve and decline buttons */}
                 {sanction.isApproved !== 1 && (
                   <div>

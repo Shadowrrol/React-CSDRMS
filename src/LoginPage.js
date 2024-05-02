@@ -1,76 +1,95 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import styles from "./Login.module.css";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
+  // Initialize the navigate hook
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Define redirectToDashboard inside useEffect to include it in dependency array
-    const redirectToDashboard = (userType) => {
-      switch (userType) {
-        case 0:
-          navigate('/AdminDashboard', { state: { userInfo } });
-          break;
-        case 1:
-          navigate('/SSO_Dashboard', { state: { userInfo } });
-          break;
-        case 2:
-          navigate('/PrincipalDashboard', { state: { userInfo } });
-          break;
-        case 3:
-          navigate('/AdviserDashboard', { state: { userInfo } });
-          break;
-        default:
-          console.error('Invalid userType:', userType);
-      }
-    };
-
-    // Check userType and redirect if user is already logged in
-    if (loggedIn && userInfo) {
-      redirectToDashboard(userInfo.userType);
-    }
-  }, [loggedIn, userInfo, navigate]); // Include navigate in the dependency array
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (username !== '' && password !== '') {
+    const authToken = localStorage.getItem('authToken');
+   
+  
+    if (authToken) {
       try {
-        const response = await fetch('http://localhost:8080/user/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, password }),
-        });
-
-        if (response.ok) {
-          const userData = await response.json();
-          setUserInfo(userData);
-          setLoggedIn(true);
+        // Attempt to parse the authTokenString
+        const authTokenObj = JSON.parse(authToken);
+       
+        const userType = authTokenObj?.userType;
+        if (!authTokenObj) {
+          // If the authentication token is still not available, navigate to the login page
+          navigate('/');
         } else {
-          alert('Login failed. Please check your credentials.');
+          // If the authentication token exists, navigate based on user type and pass userObject as state
+          if (userType === 1) {
+            const userObject = authTokenObj;
+            navigate('/SSO_Dashboard', { state: { userObject } });
+          } else if (userType === 2) {
+            const userObject = authTokenObj;
+            navigate('/PrincipalDashboard', { state: { userObject } });
+          } else if (userType === 3) {
+            const userObject = authTokenObj;
+            navigate('/AdviserDashboard', { state: { userObject } });
+          } else {
+            // Handle unexpected userType
+            navigate('/');
+          }
         }
       } catch (error) {
-        console.error('Error logging in:', error);
-        alert('An error occurred. Please try again later.');
+        console.error('Error parsing authToken:', error);
+        // Handle error if parsing fails, for example, navigate to the login page
+        navigate('/');
       }
     } else {
-      alert('Please enter username and password');
+      // If the authentication token doesn't exist, navigate to the login page
+      navigate('/');
+    }
+  }, [navigate]);
+  
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+
+  // Function to handle login
+  const handleLogin = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const response = await axios.post('http://localhost:8080/user/login', {
+        username,
+        password,
+      });
+  
+      if (!response.data.userType) {
+        setError('Incorrect Username or Password');
+        return;
+      }
+  
+      const authTokenString = JSON.stringify(response.data);
+      localStorage.setItem('authToken', authTokenString);
+  
+      const userType = response.data.userType;
+      const userObject = response.data;
+
+  
+      if (userType === 1) {
+        navigate('/SSO_Dashboard', { state: { userObject } });
+      } else if (userType === 2) {
+        navigate('/PrincipalDashboard', { state: { userObject } });
+      } else if (userType === 3) {
+        navigate('/AdviserDashboard', { state: { userObject } });
+      } else {
+        setError('Incorrect Username or Password');
+      }
+  
+    } catch (error) {
+      console.error('Login Failed', error.response.data);
+      setError('Incorrect Username or Password');
     }
   };
-
   return (
     <div>
-      {loggedIn ? (
-        <div>
-          <h1>Welcome, {userInfo ? `${userInfo.firstname} ${userInfo.lastname}` : 'User'}!</h1>
-        </div>
-      ) : (
         <form onSubmit={handleLogin}>
           <div className={styles.login}>
             <section className={styles.image23Parent}>
@@ -113,7 +132,6 @@ const LoginPage = () => {
             </section>
           </div>
         </form>
-      )}
     </div>
   );
 };

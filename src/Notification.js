@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import styles from './Navigation.module.css'; // Import CSS module
 
@@ -19,9 +19,25 @@ const createSidebarLink = (to, text, IconComponent) => (
 );
 
 const Notification = () => {
-    // Access location state to get userInfo
+    const [sanctions, setSanctions] = useState([]);
     const location = useLocation();
-    const userInfo = location.state ? location.state.userInfo : null;
+
+    useEffect(() => {
+        const fetchSanctions = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/sanction/getApprovedAndDeclinedSanctions');
+                const data = await response.json();
+                setSanctions(data);
+            } catch (error) {
+                console.error('Error fetching sanctions:', error);
+            }
+        };
+        fetchSanctions();
+    }, []);
+
+    const getSanctionStatus = (isApproved) => {
+        return isApproved === 1 ? 'Accepted' : isApproved === 2 ? 'Declined' : 'Pending';
+    };
 
     return (
         <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
@@ -37,7 +53,20 @@ const Notification = () => {
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
             </div>
             <div className={styles.content}>
-                <h1>Notif</h1>
+                <h1>Notifications</h1>
+                <div>
+                    <h2>Approved and Declined Sanctions</h2>
+                    <ul>
+                        {sanctions.map(sanction => (
+                            <li key={sanction.sanction_id}>
+                                <div>Student Name: {sanction.student.firstname} {sanction.student.lastname}</div>
+                                <div>Behavior Details: {sanction.behaviorDetails}</div>
+                                <div>Sanction Recommendation: {sanction.sanctionRecommendation}</div>
+                                <div><b>Status: {getSanctionStatus(sanction.isApproved)}</b></div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </div>
     );

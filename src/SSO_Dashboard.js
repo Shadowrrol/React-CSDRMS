@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import './SSO_Dashboard.css';
 import styles from './Navigation.module.css'; // Import CSS module
 
@@ -21,8 +21,25 @@ const createSidebarLink = (to, text, IconComponent) => (
 
 const SSO_Dashboard = () => {
   // Access location state to get userInfo
+  const navigate = useNavigate(); 
   const location = useLocation();
-  const userInfo = location.state ? location.state.userInfo : null;
+  const userObject = location.state ? location.state.userObject : null;
+
+  const handleLogout = () => {
+    // Clear the authentication token from localStorage
+    localStorage.removeItem('authToken');
+    // Redirect the user to the login page
+    navigate('/');
+  };
+
+  React.useEffect(() => {
+    if (!userObject) {
+      // If userObject is null or undefined, redirect to login page
+      navigate('/');
+    }
+  }, []);
+
+
 
   return (
     <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
@@ -36,12 +53,13 @@ const SSO_Dashboard = () => {
         {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
         {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
         {createSidebarLink("/report", "Report", AssessmentIcon)}
+        <button onClick={handleLogout}>Logout</button>
     </div>
       <div className='content'>
         <h1>SSO Dashboard</h1>
         {/* Display first name and last name if userInfo is available */}
-        {userInfo && (
-          <h2>Welcome, {userInfo.firstname} {userInfo.lastname}!</h2>
+         {userObject && (
+          <h2>Welcome, {userObject.firstname} {userObject.lastname}!</h2>
         )}
         {/* Content */}
       </div>

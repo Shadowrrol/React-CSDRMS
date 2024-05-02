@@ -28,13 +28,12 @@ import ViewSanctions from './Principal/ViewSanctions';
 import './App.css';
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
 
   return (
     <Router>
       <div className="App">
         <Routes>
-          <Route exact path="/" element={<LoginPage setLoggedIn={setLoggedIn} />} />
+          <Route exact path="/" element={<LoginPage/>} />
           <Route path="/SSO_Dashboard" element={<SSO_Dashboard />} />
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
           <Route path="/PrincipalDashboard" element={<PrincipalDashboard />} />

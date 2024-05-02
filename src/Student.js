@@ -22,6 +22,7 @@ const createSidebarLink = (to, text, IconComponent) => (
 const Student = () => {
     const location = useLocation();
     const [students, setStudents] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         fetch('http://localhost:8080/student/getAllStudents')
@@ -48,6 +49,13 @@ const Student = () => {
         });
     };
 
+    // Function to filter students based on search query
+    const filteredStudents = students.filter(student =>
+        student.sid.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        student.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        student.lastname.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className={styles.sidenav}>
@@ -64,6 +72,12 @@ const Student = () => {
             <div className='content'>
                 <div className="student-content">
                     <h2>Students</h2>
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Search by SID, First Name, or Last Name"
+                    />
                     <Link to="/add-student">
                         <button>Add Student</button>
                     </Link>
@@ -82,7 +96,7 @@ const Student = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {students.map(student => (
+                            {filteredStudents.map(student => (
                                 <tr key={student.sid}>
                                     <td>{student.sid}</td>
                                     <td>{student.firstname}</td>
