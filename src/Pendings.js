@@ -18,7 +18,7 @@ const createSidebarLink = (to, text, IconComponent) => (
     </Link>
 );
 
-const Notification = () => {
+const Pendings = () => {
     // Access location state to get userInfo
     const location = useLocation();
     const userInfo = location.state ? location.state.userInfo : null;
@@ -37,10 +37,10 @@ const Notification = () => {
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
             </div>
             <div className={styles.content}>
-                <h1>Notif</h1>
+                <h1>pendings</h1>
             </div>
         </div>
     );
 }
 
-export default Notification;
+export default Pendings;

@@ -13,7 +13,13 @@ import Student from './Student';
 import AddStudent from './AddStudent';
 import UpdateStudent from './UpdateStudent';
 import Notification from './Notification';
-import Report from './Report'; // Import Report component
+import Feedback from './Feedback';
+import Case from './Case';
+import Pendings from './Pendings';
+
+
+
+import Report from './Report';
 import AddStudentReport from './AddStudentReport';
 import ViewStudentReport from './ViewStudentReport';
 import Followup from './SSO/Followup';
@@ -42,6 +48,11 @@ function App() {
           <Route path="/add-student" element={<AddStudent />} />
           <Route path="/update-student/:sid" element={<UpdateStudent />} />
           <Route path="/notification" element={<Notification />} />
+          <Route path="/feedback" element={<Feedback />} />
+          <Route path="/case" element={<Case />} />
+          <Route path="/pendings" element={<Pendings />} />
+
+
           <Route path="/sanctions" element={<Sanction />} />
           <Route path="/viewSanctions" element={<ViewSanctions />} />
           <Route path="/report" element={<Report />} /> 

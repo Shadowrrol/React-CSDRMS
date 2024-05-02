@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
+import styles from './Navigation.module.css'; 
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
@@ -11,9 +12,9 @@ import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const createSidebarLink = (to, text, IconComponent) => (
-    <Link to={to} className="styled-link">
-        <IconComponent className="icon" /> {/* Icon */}
-        <span className="link-text">{text}</span> {/* Text */}
+    <Link to={to} className={styles['styled-link']}>
+        <IconComponent className={styles.icon} /> {/* Icon */}
+        <span className={styles['link-text']}>{text}</span> {/* Text */}
     </Link>
 );
 
@@ -97,9 +98,9 @@ const Report = () => {
     };
 
     return (
-        <div className="wrapper" style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
-            <div className="sidenav">
-                <img src="/image-removebg-preview (1).png" alt="" className="sidebar-logo"/>
+        <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
+            <div className={styles.sidenav}>
+                <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
                 {createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}

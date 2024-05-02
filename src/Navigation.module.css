@@ -1,18 +1,34 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap");
 .wrapper {
     display: flex;
     height: 100vh; /* Full height of the viewport */
-  }
-  
+}
+
+.sidebar-logo{
+    position: relative;
+    top: -10px;
+    left: -3px;
+    border-radius: 99px;
+    width: 257px;
+    /* height: 198px; */
+    object-fit: cover;
+}
+
 .sidenav {
     width: 20%;
     background: linear-gradient(180deg, #863537, #200d0d);
     padding: 20px;
+    color: #fff;
     display: flex; /* Use flexbox */
     flex-direction: column; /* Stack navigation links vertically */
     justify-content: center; /* Center vertically */
     align-items: center; /* Center horizontally */
 }
+
+.sidenav a {
+    margin-bottom: 20px;
+    text-decoration: none;
+}
+
 .styled-link{
     width: 50%;
     height: 40px;
@@ -29,35 +45,23 @@
     justify-content: center; /* Center the text within the link */
     text-decoration: none;   /* Remove underline from text */ 
 }
+
 .styled-link:hover {
     cursor: pointer;
     background-color: #ffc800;
-    }
-
-.sidenav a {
-    margin-bottom: 20px;
-    text-decoration: none;
-}
-.sidebar-logo{
-    position: relative;
-    top: -34px;
-    left: -3px;
-    border-radius: 99px;
-    width: 257px;
-    /* height: 198px; */
-    object-fit: cover;
-}
-.icon {
-flex: 1px; /* Space between icon and text */
 }
 
 .link-text {
-    flex: 5; /* Allow text to expand */
+    flex: 5 1;
 }
+
+.icon {
+    flex: 1px 1;
+}
+
 .content {
     flex: 1; /* Take remaining space */
     padding: 20px;
     background-color: #fff; /* White background */
 }
 
-   
