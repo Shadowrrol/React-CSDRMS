@@ -63,26 +63,26 @@ const Account = () => {
         />
       </div>
       <div className="frame17">
-        <div buttonclassName="account">Account</div>
-      </div>
-      <div className="frame18">
-        <div className="students1">Students</div>
-      </div>
-      <div className="frame19">
-        <div className="case">Notification</div>
-      </div>
-      <div className="frame20">
-        <div className="case">Feedback</div>
-      </div>
-      <div className="frame21">
-        <div className="case">case</div>
-      </div>
-      <div className="frame22">
-        <div className="case">Pendings</div>
-      </div>
-      <div className="frame23">
-        <div className="case">Sanctions</div>
-      </div>
+    <a href="/account" className="account">Account</a>
+</div>
+<div className="frame18">
+    <a href="/student" className="students1">Students</a>
+</div>
+<div className="frame19">
+    <a href="/notification" className="case">Notification</a>
+</div>
+<div className="frame20">
+    <a href="/feedback" className="case">Feedback</a>
+</div>
+<div className="frame21">
+    <a href="/case" className="case">Case</a>
+</div>
+<div className="frame22">
+    <a href="/pendings" className="case">Pendings</a>
+</div>
+<div className="frame23">
+    <a href="/sanctions" className="case">Sanctions</a>
+</div>
       <img className="frame-icon2" alt="" src="/image-removebg-preview (1).png" />
       <div className="frame24">
         <img
@@ -109,8 +109,8 @@ const Account = () => {
         <div className="input3" />
       </button>
       <div className="frame28">
-        <div className="case">Report</div>
-      </div>
+    <a href="/report" className="case">Report</a>
+</div>
       <div className="frame29">
         <img
           className="image-removebg-preview-8-1"

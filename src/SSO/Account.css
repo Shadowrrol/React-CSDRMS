@@ -785,3 +785,12 @@ body {
   --br-3xs: 10px;
   --br-xs: 12px;
 }
+
+a.account, a.students1, a.case {
+  color: inherit; /* Keeps the link color the same as the surrounding text */
+  text-decoration: none; /* Removes the underline from the link */
+}
+/* Optional: add hover effect */
+a.account:hover, a.students1:hover, a.case:hover {
+  text-decoration: underline; /* Adds underline on hover */
+}
