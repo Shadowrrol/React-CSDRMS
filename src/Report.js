@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import styles from './Navigation.module.css'; 
+import styles2 from './Report.module.css'; 
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
@@ -110,54 +111,56 @@ const Report = () => {
                 {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
             </div>
-            <h1>All Student Reports</h1>
-            <div>
-                <select value={selectedMonth} onChange={handleMonthChange}>
-                    {months.map(month => (
-                        <option key={month.value} value={month.value}>{month.label}</option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <select value={selectedYear} onChange={handleYearChange}>
-                    {years.map(year => (
-                        <option key={year.value} value={year.value}>{year.label}</option>
-                    ))}
-                </select>
-            </div>
-            {selectedMonth !== '' && (
+            <div className={styles2.content}>
+                <h1>All Student Reports</h1>
                 <div>
-                    <h2>Monitored Record Totals for {selectedMonth === '' ? 'All months' : months.find(m => m.value === selectedMonth)?.label}</h2>
+                    <select value={selectedMonth} onChange={handleMonthChange}>
+                        {months.map(month => (
+                            <option key={month.value} value={month.value}>{month.label}</option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <select value={selectedYear} onChange={handleYearChange}>
+                        {years.map(year => (
+                            <option key={year.value} value={year.value}>{year.label}</option>
+                        ))}
+                    </select>
+                </div>
+                {selectedMonth !== '' && (
+                    <div>
+                        <h2>Monitored Record Totals for {selectedMonth === '' ? 'All months' : months.find(m => m.value === selectedMonth)?.label}</h2>
+                        <ul>
+                            {Object.entries(monitoredRecordsCount[selectedMonth || 'all'] || {}).map(([record, count]) => (
+                                <li key={record}>
+                                    {record}: {count}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+                {selectedMonth === '' && (
+                    <div>
+                        <h2>Monitored Record Totals for All months</h2>
+                        <ul>
+                            {Object.entries(monitoredRecordsCount['all'] || {}).map(([record, count]) => (
+                                <li key={record}>
+                                    {record}: {count}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+                <div>
+                    <h2>All Reports</h2>
                     <ul>
-                        {Object.entries(monitoredRecordsCount[selectedMonth || 'all'] || {}).map(([record, count]) => (
-                            <li key={record}>
-                                {record}: {count}
+                        {reports.map(report => (
+                            <li key={report.rid}>
+                                <p>Monitored Record: {report.monitored_record}</p>
                             </li>
                         ))}
                     </ul>
                 </div>
-            )}
-            {selectedMonth === '' && (
-                <div>
-                    <h2>Monitored Record Totals for All months</h2>
-                    <ul>
-                        {Object.entries(monitoredRecordsCount['all'] || {}).map(([record, count]) => (
-                            <li key={record}>
-                                {record}: {count}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-            <div>
-                <h2>All Reports</h2>
-                <ul>
-                    {reports.map(report => (
-                        <li key={report.rid}>
-                            <p>Monitored Record: {report.monitored_record}</p>
-                        </li>
-                    ))}
-                </ul>
             </div>
         </div>
     );
