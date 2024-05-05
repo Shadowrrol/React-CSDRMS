@@ -38,7 +38,7 @@ const RegisterPrincipal = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/principal/insertPrincipal', userData);
+      const response = await axios.post('http://localhost:8080/user/registerPrincipal', userData);
       console.log(response.data); // Handle success response
     } catch (error) {
       console.error('Error:', error); // Handle error

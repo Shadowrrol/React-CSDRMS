@@ -1,17 +1,37 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
+import './SSO_Dashboard.css';
 
 const AdviserDashboard = () => {
-    const location = useLocation();
-  const { userInfo } = location.state;
-  // Sample data for the dashboard
-  
+  // Access location state to get userInfo
+  const location = useLocation();
+  const userInfo = location.state ? location.state.userInfo : null;
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Implement logout functionality, e.g., clear tokens
+    localStorage.removeItem('authToken');
+    // Then navigate to the login page
+    navigate('/');
+  };
 
   return (
-    <div>
-       <h2>AdviserDashboard</h2>
-            {/* Display first name and last name */}
-      <h2>Welcome, {userInfo.firstname} {userInfo.lastname}!</h2>
+    <div className='wrapper'>
+      <div className="sidenav">
+        {/* Navigation links */}
+        <Link to="/report">Report</Link>
+        <button onClick={handleLogout}>
+            <span>Logout</span>
+          </button>
+      </div>
+      <div className='content'>
+        <h1>Adviser Dashboard</h1>
+        {/* Display first name and last name if userInfo is available */}
+        {userInfo && (
+          <h2>Welcome, {userInfo.firstname} {userInfo.lastname}!</h2>
+        )}
+        {/* Content */}
+      </div>
     </div>
   );
 }
