@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
-import '../SSO_Dashboard.css';
+import './SSO_Dashboard.css';
 import styles from '../Navigation.module.css'; // Import CSS module
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';

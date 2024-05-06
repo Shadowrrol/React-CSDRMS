@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './Navigation.module.css'; // Import CSS module
+import styles from '../Navigation.module.css'; // Import CSS module
 import styles1 from './AddStudent.module.css'; // Import AddStudent.css
 
 // Import icons from Material-UI

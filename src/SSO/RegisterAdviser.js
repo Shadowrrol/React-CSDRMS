@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './RegisterPrincipal.css';
-import styles from './Navigation.module.css'; // Import CSS module
+import styles from '../Navigation.module.css'; // Import CSS module
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
@@ -20,7 +20,7 @@ const createSidebarLink = (to, text, IconComponent) => (
   </Link>
 );
 
-const RegisterSSO = () => {
+const RegisterAdviser = () => {
   const [userData, setUserData] = useState({
     uid: '',
     username: '',
@@ -28,7 +28,8 @@ const RegisterSSO = () => {
     firstname: '',
     lastname: '',
     email: '',
-    userType: 1 // SSO
+    section: '',
+    userType: 3 // Adviser
   });
 
   const handleChange = (e) => {
@@ -38,7 +39,7 @@ const RegisterSSO = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/user/registerSSO', userData);
+      const response = await axios.post('http://localhost:8080/user/registerAdviser', userData);
       console.log(response.data); // Handle success response
     } catch (error) {
       console.error('Error:', error); // Handle error
@@ -58,17 +59,18 @@ const RegisterSSO = () => {
             {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
             {createSidebarLink("/report", "Report", AssessmentIcon)}
         </div>
-      <h2>Register as SSO</h2>
+      <h2>Register as Adviser</h2>
       <form onSubmit={handleSubmit}>
         <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
         <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
         <input type="text" name="firstname" placeholder="First Name" onChange={handleChange} required />
         <input type="text" name="lastname" placeholder="Last Name" onChange={handleChange} required />
         <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
+        <input type="text" name="section" placeholder="Section" onChange={handleChange} required />
         <button type="submit">Register</button>
       </form>
     </div>
   );
 }
 
-export default RegisterSSO;
+export default RegisterAdviser;

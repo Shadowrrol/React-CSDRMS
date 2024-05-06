@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import '../SSO_Dashboard.css';
+import '../SSO/SSO_Dashboard.css';
 
 const ViewSanctions = () => {
   const [sanctions, setSanctions] = useState([]);

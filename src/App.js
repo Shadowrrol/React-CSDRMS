@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import BrowserRouter, Route, and Routes
 import LoginPage from './LoginPage';
-import SSO_Dashboard from './SSO_Dashboard';
-import AdminDashboard from './AdminDashboard';
-import AdviserDashboard from './AdviserDashboard'; // Import your other dashboard components here
+import SSO_Dashboard from './SSO/SSO_Dashboard';
+import AdminDashboard from './Admin/AdminDashboard';
+import AdviserDashboard from './Adviser/AdviserDashboard'; // Import your other dashboard components here
 import PrincipalDashboard from './Principal/PrincipalDashboard';
 import Account from './SSO/Account';
-import RegisterPrincipal from './RegisterPrincipal';
-import RegisterAdviser from './RegisterAdviser';
-import RegisterSSO from './RegisterSSO';
-import Student from './Student';
-import AddStudent from './AddStudent';
-import UpdateStudent from './UpdateStudent';
-import Notification from './Notification';
-import Feedback from './Feedback';
-import Case from './Case';
-import Pendings from './Pendings';
+import RegisterPrincipal from './SSO/RegisterPrincipal';
+import RegisterAdviser from './SSO/RegisterAdviser';
+import RegisterSSO from './SSO/RegisterSSO';
+import Student from './Adviser/Student';
+import AddStudent from './Adviser/AddStudent';
+import UpdateStudent from './Adviser/UpdateStudent';
+import Notification from './SSO/Notification';
+import Feedback from './SSO/Feedback';
+import Case from './SSO/Case';
+import Pendings from './SSO/Pendings';
 
 
 
-import Report from './Report';
-import AddStudentReport from './AddStudentReport';
-import ViewStudentReport from './ViewStudentReport';
+import Report from './SSO/Report';
+import AddStudentReport from './SSO/AddStudentReport';
+import ViewStudentReport from './Principal/ViewStudentReport';
 import Followup from './SSO/Followup';
 import Sanction from './SSO/Sanction';
 import ViewSanctions from './Principal/ViewSanctions';

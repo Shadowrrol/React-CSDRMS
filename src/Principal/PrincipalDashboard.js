@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import '../SSO_Dashboard.css';
+import '../SSO/SSO_Dashboard.css';
 
 const PrincipalDashboard = () => {
   // Access location state to get userInfo

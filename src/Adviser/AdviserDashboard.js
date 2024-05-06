@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import './SSO_Dashboard.css';
+import '../SSO/SSO_Dashboard.css';
 
 const AdviserDashboard = () => {
   // Access location state to get userInfo
@@ -20,6 +20,7 @@ const AdviserDashboard = () => {
       <div className="sidenav">
         {/* Navigation links */}
         <Link to="/report">Report</Link>
+        <Link to="/student">Students</Link>
         <button onClick={handleLogout}>
             <span>Logout</span>
           </button>

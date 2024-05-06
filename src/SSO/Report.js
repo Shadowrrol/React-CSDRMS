@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import styles from './Navigation.module.css'; 
+import styles from '../Navigation.module.css'; 
 import styles2 from './Report.module.css'; 
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
