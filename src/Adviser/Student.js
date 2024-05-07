@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css'; // Import CSS module
 import './Student.css';
 
@@ -20,7 +20,7 @@ const createSidebarLink = (to, text, IconComponent) => (
 );
 
 const Student = () => {
-    const location = useLocation();
+    const navigate = useNavigate(); 
     const [students, setStudents] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -30,6 +30,13 @@ const Student = () => {
             .then(data => setStudents(data))
             .catch(error => console.error('Error fetching students:', error));
     }, []);
+
+    const handleLogout = () => {
+        // Clear the authentication token from localStorage
+        localStorage.removeItem('authToken');
+        // Redirect the user to the login page
+        navigate('/');
+      };
 
     const handleDelete = (sid) => {
         fetch(`http://localhost:8080/student/deleteStudent/${sid}`, {
@@ -68,6 +75,7 @@ const Student = () => {
                 {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
                 {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
+                <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className='content'>
                 <div className="student-content">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css'; // Import CSS module
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -19,8 +19,8 @@ const createSidebarLink = (to, text, IconComponent) => (
 );
 
 const Notification = () => {
+    const navigate = useNavigate(); 
     const [sanctions, setSanctions] = useState([]);
-    const location = useLocation();
 
     useEffect(() => {
         const fetchSanctions = async () => {
@@ -34,6 +34,13 @@ const Notification = () => {
         };
         fetchSanctions();
     }, []);
+
+    const handleLogout = () => {
+        // Clear the authentication token from localStorage
+        localStorage.removeItem('authToken');
+        // Redirect the user to the login page
+        navigate('/');
+    };
 
     const getSanctionStatus = (isApproved) => {
         return isApproved === 1 ? 'Accepted' : isApproved === 2 ? 'Declined' : 'Pending';
@@ -51,6 +58,7 @@ const Notification = () => {
                 {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
                 {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
+                <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles.content}>
                 <h1>Notifications</h1>

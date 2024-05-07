@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import './RegisterPrincipal.css';
 import styles from '../Navigation.module.css'; // Import CSS module
+import styles1 from '../GlobalForm.module.css'; // Import RegisterAdviser CSS module
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
@@ -59,16 +59,88 @@ const RegisterAdviser = () => {
             {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
             {createSidebarLink("/report", "Report", AssessmentIcon)}
         </div>
-      <h2>Register as Adviser</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-        <input type="text" name="firstname" placeholder="First Name" onChange={handleChange} required />
-        <input type="text" name="lastname" placeholder="Last Name" onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-        <input type="text" name="section" placeholder="Section" onChange={handleChange} required />
-        <button type="submit">Register</button>
-      </form>
+      <div className={styles1.content}>
+        <div className={styles1.contentform}>
+          <h2>Register as Adviser</h2>
+          <form onSubmit={handleSubmit} className={styles1['addadviser-form']}>
+            <div className={styles1['form-container']}>
+              <div className={styles1['form-group']}>
+                <label htmlFor="username">Username:</label>
+                <input 
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={userData.username}
+                  onChange={handleChange}
+                  placeholder="Username"
+                  required
+                />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="password">Password:</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={userData.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                  required
+                />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="firstname">First Name:</label>
+                <input
+                  type="text"
+                  id="firstname"
+                  name="firstname"
+                  value={userData.firstname}
+                  onChange={handleChange}
+                  placeholder="First Name"
+                  required
+                />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="lastname">Last Name:</label>
+                <input
+                  type="text"
+                  id="lastname"
+                  name="lastname"
+                  value={userData.lastname}
+                  onChange={handleChange}
+                  placeholder="Last Name"
+                  required
+                />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="email">Email:</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={userData.email}
+                  onChange={handleChange}
+                  placeholder="Email"
+                  required
+                />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="section">Section:</label>
+                <input
+                  type="text"
+                  id="section"
+                  name="section"
+                  value={userData.section}
+                  onChange={handleChange}
+                  placeholder="Section"
+                  required
+                />
+              </div>
+              <button type="submit" className={styles1['global-button']}>Register</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

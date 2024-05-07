@@ -53,7 +53,7 @@ const SSO_Dashboard = () => {
         {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
         {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
         {createSidebarLink("/report", "Report", AssessmentIcon)}
-        <button onClick={handleLogout}>Logout</button>
+        <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
     </div>
       <div className='content'>
         <h1>SSO Dashboard</h1>

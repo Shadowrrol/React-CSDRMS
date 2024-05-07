@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css'; // Import CSS module
 import styles1 from './AddStudent.module.css'; // Import AddStudent.css
 
@@ -21,6 +21,7 @@ const createSidebarLink = (to, text, IconComponent) => (
 );
 
 const AddStudent = () => {
+    const navigate = useNavigate(); 
     const [studentData, setStudentData] = useState({
         sid: '',
         firstname: '',
@@ -30,6 +31,13 @@ const AddStudent = () => {
         section: '',
         con_num: ''
     });
+    
+    const handleLogout = () => {
+        // Clear the authentication token from localStorage
+        localStorage.removeItem('authToken');
+        // Redirect the user to the login page
+        navigate('/');
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -70,6 +78,7 @@ const AddStudent = () => {
                 {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
                 {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
+                <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles1.content}>
                 <h2>Add Student</h2>
