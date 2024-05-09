@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styles from '../Navigation.module.css'; // Import CSS module
 import './Student.css';
 
@@ -19,24 +19,27 @@ const createSidebarLink = (to, text, IconComponent) => (
     </Link>
 );
 
-const Student = () => {
-    const navigate = useNavigate(); 
+const AdviserStudent = () => {
+    const authToken = localStorage.getItem('authToken');
+    const loggedInUser = JSON.parse(authToken);
     const [students, setStudents] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
-        fetch('http://localhost:8080/student/getAllStudents')
-            .then(response => response.json())
-            .then(data => setStudents(data))
-            .catch(error => console.error('Error fetching students:', error));
-    }, []);
-
-    const handleLogout = () => {
-        // Clear the authentication token from localStorage
-        localStorage.removeItem('authToken');
-        // Redirect the user to the login page
-        navigate('/');
-      };
+        // Check if the logged-in user's school year and section exist
+        if (loggedInUser && loggedInUser.schoolYear && loggedInUser.section) {
+            // Construct the URL with the school year and section
+            const url = `http://localhost:8080/student/getAllStudents/${loggedInUser.schoolYear}/${loggedInUser.section}`;
+    
+            // Fetch students based on the URL
+            fetch(url)
+                .then(response => response.json())
+                .then(data => setStudents(data))
+                .catch(error => console.error('Error fetching students:', error));
+        } else {
+            console.error('Logged-in user details are missing.');
+        }
+    }, [loggedInUser]);
 
     const handleDelete = (sid) => {
         fetch(`http://localhost:8080/student/deleteStudent/${sid}`, {
@@ -67,15 +70,11 @@ const Student = () => {
         <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
-                {createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-                {createSidebarLink("/case", "Case", PostAddIcon)}
-                {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
                 {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
-                <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className='content'>
                 <div className="student-content">
@@ -135,4 +134,4 @@ const Student = () => {
     );
 }
 
-export default Student;
+export default AdviserStudent;

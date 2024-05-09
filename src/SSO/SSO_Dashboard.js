@@ -22,8 +22,8 @@ const createSidebarLink = (to, text, IconComponent) => (
 const SSO_Dashboard = () => {
   // Access location state to get userInfo
   const navigate = useNavigate(); 
-  const location = useLocation();
-  const userObject = location.state ? location.state.userObject : null;
+  const authToken = localStorage.getItem('authToken');
+  const loggedInUser = JSON.parse(authToken);
 
   const handleLogout = () => {
     // Clear the authentication token from localStorage
@@ -33,7 +33,7 @@ const SSO_Dashboard = () => {
   };
 
   React.useEffect(() => {
-    if (!userObject) {
+    if (!loggedInUser) {
       // If userObject is null or undefined, redirect to login page
       navigate('/');
     }
@@ -58,8 +58,8 @@ const SSO_Dashboard = () => {
       <div className='content'>
         <h1>SSO Dashboard</h1>
         {/* Display first name and last name if userInfo is available */}
-         {userObject && (
-          <h2>Welcome, {userObject.firstname} {userObject.lastname}!</h2>
+         {loggedInUser && (
+          <h2>Welcome, {loggedInUser.firstname} {loggedInUser.lastname}!</h2>
         )}
         {/* Content */}
       </div>
