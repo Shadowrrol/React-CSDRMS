@@ -21,7 +21,7 @@ const AdviserDashboard = () => {
       <div className="sidenav">
         {/* Navigation links */}
         <Link to="/report">Report</Link>
-        <Link to="/adviser-student">Students</Link>
+        <Link to="/student">Students</Link>
         <button onClick={handleLogout}>
             <span>Logout</span>
           </button>

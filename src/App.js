@@ -11,7 +11,7 @@ import RegisterAdviser from './SSO/RegisterAdviser';
 import RegisterSSO from './SSO/RegisterSSO';
 import AddStudent from './Adviser/AddStudent';
 import UpdateStudent from './Adviser/UpdateStudent';
-import Notification from './SSO/Notification';
+import Notification from './Notification';
 import Feedback from './SSO/Feedback';
 import Case from './SSO/Case';
 import Pendings from './SSO/Pendings';
@@ -25,7 +25,10 @@ import Followup from './SSO/Followup';
 import Sanction from './SSO/Sanction';
 import ViewSanctions from './Principal/ViewSanctions';
 import './App.css';
-import AdviserStudent from './Adviser/Adviser_Student';
+import Student from './Student';
+
+import ViewStudentCases from './ViewStudentCases';
+import ViewStudentSanctions from './ViewStudentSanctions';
 
 function App() {
 
@@ -43,7 +46,7 @@ function App() {
           <Route path="/register/adviser" element={<RegisterAdviser />} />
           <Route path="/register/sso" element={<RegisterSSO />} />
           <Route path="/Followup" element={<Followup />} />
-          <Route path="/adviser-student" element={<AdviserStudent />} />
+          <Route path="/student" element={<Student />} />
           <Route path="/add-student" element={<AddStudent />} />
           <Route path="/update-student/:sid" element={<UpdateStudent />} />
           <Route path="/notification" element={<Notification />} />
@@ -56,7 +59,10 @@ function App() {
           <Route path="/viewSanctions" element={<ViewSanctions />} />
           <Route path="/report" element={<Report />} /> 
           <Route path="/add-report/:sid" element={<AddStudentReport />} /> {/* Add the route for AddStudentReport */}
-          <Route path="/view-student-report/:sid" element={<ViewStudentReport />} /> {/* Add route for ViewStudentReport */}
+          <Route path="/view-student-report/:sid" element={<ViewStudentReport />} />
+          
+          <Route path="/view-student-cases/:sid" element={<ViewStudentCases />} /> {/* Add route for ViewStudentReport */}
+          <Route path="/view-student-sanctions/:sid" element={<ViewStudentSanctions />} /> {/* Add route for ViewStudentReport */}
            {/* Add the route for UpdateStudent */}
           {/* Add other routes here */}
         </Routes>

@@ -90,6 +90,14 @@ const ViewSanctions = () => {
           <LocalPoliceIcon className={styles.icon} /> 
           <span className={styles['link-text']}>Sanctions</span> 
         </Link>
+        <Link to="/viewCases" className={styles['styled-link']}>
+          <LocalPoliceIcon className={styles.icon} /> 
+          <span className={styles['link-text']}>Cases</span> 
+        </Link>
+        <Link to="/viewRecords" className={styles['styled-link']}>
+          <LocalPoliceIcon className={styles.icon} /> 
+          <span className={styles['link-text']}>Records</span> 
+        </Link>
         <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
       </div>
       <div className='content'>
@@ -111,6 +119,12 @@ const ViewSanctions = () => {
                     <button onClick={() => handleDecline(sanction.sanction_id)}>Decline</button>
                   </div>
                 )}
+                {/* View associated cases, sanctions, and records */}
+                <div>
+                  <Link to={`/view-student-cases/${sanction.sid}`}>View Cases</Link><br></br>
+                  <Link to={`/view-student-sanctions/${sanction.sid}`}>View Sanctions</Link><br></br>
+                  <Link to={`/view-student-report/${sanction.sid}`}>View Records</Link><br></br>
+                </div>
               </li>
             ))}
           </ul>
@@ -118,6 +132,7 @@ const ViewSanctions = () => {
       </div>
     </div>
   );
+  
 }
 
 export default ViewSanctions;

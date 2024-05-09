@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from '../Navigation.module.css'; // Import CSS module
+import styles from './Navigation.module.css';
+import styles2 from './Notification.module.css'; // Import CSS module
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
@@ -21,19 +22,28 @@ const createSidebarLink = (to, text, IconComponent) => (
 const Notification = () => {
     const navigate = useNavigate(); 
     const [sanctions, setSanctions] = useState([]);
+    const authToken = localStorage.getItem('authToken');
+    const loggedInUser = JSON.parse(authToken);
+
+
 
     useEffect(() => {
-        const fetchSanctions = async () => {
-            try {
-                const response = await fetch('http://localhost:8080/sanction/getApprovedAndDeclinedSanctions');
-                const data = await response.json();
-                setSanctions(data);
-            } catch (error) {
-                console.error('Error fetching sanctions:', error);
+    const fetchSanctions = async () => {
+        try {
+            let response;
+            if (loggedInUser.userType === 3) {
+                response = await fetch(`http://localhost:8080/sanction/getSanctionsBySectionAndSchoolYear?section=${loggedInUser.section}&schoolYear=${loggedInUser.schoolYear}`);
+            } else {
+                response = await fetch('http://localhost:8080/sanction/getApprovedAndDeclinedSanctions');
             }
-        };
-        fetchSanctions();
-    }, []);
+            const data = await response.json();
+            setSanctions(data);
+        } catch (error) {
+            console.error('Error fetching sanctions:', error);
+        }
+    };
+    fetchSanctions();
+}, [loggedInUser]);
 
     const handleLogout = () => {
         // Clear the authentication token from localStorage
@@ -50,13 +60,13 @@ const Notification = () => {
         <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
-                {createSidebarLink("/account", "Account", AccountBoxIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                 {createSidebarLink("/case", "Case", PostAddIcon)}
-                {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
-                {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import styles from '../Navigation.module.css'; // Import CSS module
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import styles from './Navigation.module.css'; // Import CSS module
 import './Student.css';
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -18,19 +18,26 @@ const createSidebarLink = (to, text, IconComponent) => (
         <span className={styles['link-text']}>{text}</span> {/* Text */}
     </Link>
 );
-
+ 
 const AdviserStudent = () => {
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
     const [students, setStudents] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         // Check if the logged-in user's school year and section exist
-        if (loggedInUser && loggedInUser.schoolYear && loggedInUser.section) {
-            // Construct the URL with the school year and section
-            const url = `http://localhost:8080/student/getAllStudents/${loggedInUser.schoolYear}/${loggedInUser.section}`;
-    
+        if (loggedInUser) {
+            let url;
+            if (loggedInUser.userType === 3) {
+                // Use the URL for user type 3
+                url = `http://localhost:8080/student/getAllStudents/${loggedInUser.schoolYear}/${loggedInUser.section}`;
+            } else {
+                // Use the default URL
+                url = 'http://localhost:8080/student/getAllStudents';
+            }
+            
             // Fetch students based on the URL
             fetch(url)
                 .then(response => response.json())
@@ -40,6 +47,13 @@ const AdviserStudent = () => {
             console.error('Logged-in user details are missing.');
         }
     }, [loggedInUser]);
+
+    const handleLogout = () => {
+        // Clear the authentication token from localStorage
+        localStorage.removeItem('authToken');
+        // Redirect the user to the login page
+        navigate('/');
+      };
 
     const handleDelete = (sid) => {
         fetch(`http://localhost:8080/student/deleteStudent/${sid}`, {
@@ -70,11 +84,15 @@ const AdviserStudent = () => {
         <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
+                {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-                {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+                {createSidebarLink("/case", "Case", PostAddIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
+                <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className='content'>
                 <div className="student-content">
@@ -85,9 +103,11 @@ const AdviserStudent = () => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search by SID, First Name, or Last Name"
                     />
+                     {loggedInUser.userType == 3 && (
                     <Link to="/add-student">
                         <button>Add Student</button>
                     </Link>
+                     )}
                     {/* <Link to="/add-report"><button>Add Student Report</button></Link> */}
                     <table>
                         <thead>
@@ -113,10 +133,14 @@ const AdviserStudent = () => {
                                     <td>{student.section}</td>
                                     <td>{student.con_num}</td>
                                     <td>
+                                    {loggedInUser.userType == 3 && (
+                                        <>
                                         <Link to={`/update-student/${student.sid}`}>
                                             <button>Update</button>
                                         </Link>
                                         <button onClick={() => handleDelete(student.sid)}>Delete</button>
+                                        </>
+                                    )}
                                         <Link to={`/add-report/${student.sid}`}>
                                             <button>Add Report</button>
                                         </Link>

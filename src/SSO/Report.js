@@ -88,12 +88,12 @@ const Report = () => {
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
                 {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
-                {createSidebarLink("/adviser-student", "Student", SchoolIcon)}
+                {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                 {createSidebarLink("/case", "Case", PostAddIcon)}
-                {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
-                {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
