@@ -9,7 +9,6 @@ import Account from './SSO/Account';
 import RegisterPrincipal from './SSO/RegisterPrincipal';
 import RegisterAdviser from './SSO/RegisterAdviser';
 import RegisterSSO from './SSO/RegisterSSO';
-import Student from './Adviser/Student';
 import AddStudent from './Adviser/AddStudent';
 import UpdateStudent from './Adviser/UpdateStudent';
 import Notification from './SSO/Notification';
@@ -26,6 +25,7 @@ import Followup from './SSO/Followup';
 import Sanction from './SSO/Sanction';
 import ViewSanctions from './Principal/ViewSanctions';
 import './App.css';
+import AdviserStudent from './Adviser/Adviser_Student';
 
 function App() {
 
@@ -42,8 +42,8 @@ function App() {
           <Route path="/register/principal" element={<RegisterPrincipal />} />
           <Route path="/register/adviser" element={<RegisterAdviser />} />
           <Route path="/register/sso" element={<RegisterSSO />} />
-          <Route path="/student" element={<Student />} />
           <Route path="/Followup" element={<Followup />} />
+          <Route path="/adviser-student" element={<AdviserStudent />} />
           <Route path="/add-student" element={<AddStudent />} />
           <Route path="/update-student/:sid" element={<UpdateStudent />} />
           <Route path="/notification" element={<Notification />} />

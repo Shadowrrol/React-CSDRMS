@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import styles from '../Navigation.module.css'; 
-import styles2 from './Report.module.css'; 
+import styles from '../Navigation.module.css';
+import axios from 'axios';
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
@@ -14,92 +14,69 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const createSidebarLink = (to, text, IconComponent) => (
     <Link to={to} className={styles['styled-link']}>
-        <IconComponent className={styles.icon} /> {/* Icon */}
-        <span className={styles['link-text']}>{text}</span> {/* Text */}
+        <IconComponent className={styles.icon} />
+        <span className={styles['link-text']}>{text}</span>
     </Link>
 );
 
-const months = [
-    { value: '', label: 'All months' },
-    { value: 0, label: 'January' },
-    { value: 1, label: 'February' },
-    { value: 2, label: 'March' },
-    { value: 3, label: 'April' },
-    { value: 4, label: 'May' },
-    { value: 5, label: 'June' },
-    { value: 6, label: 'July' },
-    { value: 7, label: 'August' },
-    { value: 8, label: 'September' },
-    { value: 9, label: 'October' },
-    { value: 10, label: 'November' },
-    { value: 11, label: 'December' }
-];
-
-const years = [
-    { value: '', label: 'All years' },
-    { value: 2024, label: '2024' },
-    { value: 2023, label: '2023' },
-    { value: 2022, label: '2022' }
-];
-
 const Report = () => {
-    const [reports, setReports] = useState([]);
-    const [monitoredRecordsCount, setMonitoredRecordsCount] = useState({});
-    const [selectedMonth, setSelectedMonth] = useState('');
-    const [selectedYear, setSelectedYear] = useState('');
+    const authToken = localStorage.getItem('authToken');
+    const loggedInUser = JSON.parse(authToken);
+    const [studentReports, setStudentReports] = useState([]);
+    const [yearFilter, setYearFilter] = useState(null);
+    const [monthFilter, setMonthFilter] = useState(null);
+    const [gradeFilter, setGradeFilter] = useState(null);
 
     useEffect(() => {
-        fetchReports();
-    }, [selectedMonth, selectedYear]);
-
-    useEffect(() => {
-        countMonitoredRecords(reports);
-    }, [reports]);
-
-    const fetchReports = async () => {
-        try {
-            const url = `http://localhost:8080/student-report/getAllStudentReportsByYear?year=${selectedYear}`;
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error('Failed to fetch data');
+        // Function to fetch student reports based on user type
+        const fetchStudentReports = async () => {
+            try {
+                let response;
+                if (loggedInUser.userType === 3) {
+                    response = await axios.get(`http://localhost:8080/student-report/getStudentReportsBySectionAndSchoolYear?section=${loggedInUser.section}&schoolYear=${loggedInUser.schoolYear}`);
+                } else {
+                    response = await axios.get('http://localhost:8080/student-report/getAllStudentReports');
+                }
+                setStudentReports(response.data);
+            } catch (error) {
+                console.error('Error fetching student reports:', error);
             }
-            const data = await response.json();
-            setReports(data);
-        } catch (error) {
-            console.error('Error fetching reports:', error);
-            // Handle error (e.g., display error message to the user)
+        };
+    
+        fetchStudentReports();
+    }, [yearFilter]);
+    
+
+    // Function to filter student reports by year, month, and/or grade
+    const filterStudentReports = () => {
+        let filteredReports = studentReports;
+
+        if (yearFilter) {
+            filteredReports = filteredReports.filter(report => report.schoolYear === yearFilter);
         }
-    };
 
-    const countMonitoredRecords = (reports) => {
-        const count = {};
-        reports.forEach(report => {
-            const reportDate = new Date(report.date);
-            const month = reportDate.getMonth();
-            if (!count[month]) {
-                count[month] = {};
-            }
-            count[month][report.monitored_record] = (count[month][report.monitored_record] || 0) + 1;
-            if (!count['all']) {
-                count['all'] = {};
-            }
-            count['all'][report.monitored_record] = (count['all'][report.monitored_record] || 0) + 1;
+        if (monthFilter) {
+            filteredReports = filteredReports.filter(report => report.date.includes(`-${monthFilter}-`));
+        }
+
+        if (gradeFilter) {
+            filteredReports = filteredReports.filter(report => report.grade === gradeFilter);
+        }
+
+        // Count occurrences of each monitored_record
+        const monitoredRecordCounts = {};
+        filteredReports.forEach(report => {
+            const monitoredRecord = report.monitored_record;
+            monitoredRecordCounts[monitoredRecord] = (monitoredRecordCounts[monitoredRecord] || 0) + 1;
         });
-        setMonitoredRecordsCount(count);
+
+        return { filteredReports, monitoredRecordCounts };
     };
 
-    const handleMonthChange = (event) => {
-        const month = event.target.value;
-        setSelectedMonth(month);
-    };
-
-    const handleYearChange = (event) => {
-        const year = event.target.value;
-        setSelectedYear(year);
-    };
+    const { filteredReports, monitoredRecordCounts } = filterStudentReports();
 
     return (
-        <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
+        <div className={styles.wrapper}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
                 {createSidebarLink("/account", "Account", AccountBoxIcon)}
@@ -111,52 +88,54 @@ const Report = () => {
                 {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
             </div>
-            <div className={styles2.content}>
-                <h1>All Student Reports</h1>
+            <div className={styles.content}>
+                <h1>Case</h1>
                 <div>
-                    <select value={selectedMonth} onChange={handleMonthChange}>
-                        {months.map(month => (
-                            <option key={month.value} value={month.value}>{month.label}</option>
-                        ))}
+                    <h2>Filters:</h2>
+                    {loggedInUser.userType !== 3 && (
+                    <select onChange={e => setYearFilter(e.target.value)}>
+                        <option value="">All Years</option>
+                        <option value="2022-2023">2022-2023</option>
+                        <option value="2023-2024">2023-2024</option>
+                        <option value="2024-2025">2024-2025</option>
+                        {/* Add more years as needed */}
                     </select>
+                    )}
+                    <select onChange={e => setMonthFilter(e.target.value)}>
+                        <option value="">All Months</option>
+                        <option value="01">January</option>
+                        <option value="02">February</option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        {/* Add more months as needed */}
+                    </select>
+                    {loggedInUser.userType !== 3 && (
+                    <select onChange={e => setGradeFilter(parseInt(e.target.value))}>
+                        <option value="">All Grades</option>
+                        <option value="7">Grade 7</option>
+                        <option value="8">Grade 8</option>
+                        <option value="9">Grade 9</option>
+                        {/* Add more grades as needed */}
+                    </select>
+                    )}
                 </div>
                 <div>
-                    <select value={selectedYear} onChange={handleYearChange}>
-                        {years.map(year => (
-                            <option key={year.value} value={year.value}>{year.label}</option>
-                        ))}
-                    </select>
-                </div>
-                {selectedMonth !== '' && (
-                    <div>
-                        <h2>Monitored Record Totals for {selectedMonth === '' ? 'All months' : months.find(m => m.value === selectedMonth)?.label}</h2>
-                        <ul>
-                            {Object.entries(monitoredRecordsCount[selectedMonth || 'all'] || {}).map(([record, count]) => (
-                                <li key={record}>
-                                    {record}: {count}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-                {selectedMonth === '' && (
-                    <div>
-                        <h2>Monitored Record Totals for All months</h2>
-                        <ul>
-                            {Object.entries(monitoredRecordsCount['all'] || {}).map(([record, count]) => (
-                                <li key={record}>
-                                    {record}: {count}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-                <div>
-                    <h2>All Reports</h2>
+                    <h2>Filtered Student Reports:</h2>
                     <ul>
-                        {reports.map(report => (
+                        {filteredReports.map(report => (
                             <li key={report.rid}>
-                                <p>Monitored Record: {report.monitored_record}</p>
+                                {report.name} - Year: {report.schoolYear}, Grade: {report.grade}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div>
+                    <h2>Monitored Record Counts:</h2>
+                    <ul>
+                        {Object.entries(monitoredRecordCounts).map(([monitoredRecord, count]) => (
+                            <li key={monitoredRecord}>
+                                {monitoredRecord}: {count}
                             </li>
                         ))}
                     </ul>

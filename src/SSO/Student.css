@@ -1,0 +1,76 @@
+
+/* Main Content (Student Table) Styles */
+.content {
+    flex: 1; /* Take remaining space */
+    padding: 20px;
+    background-color: #fff; /* White background */
+}
+
+.student-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.student-content h2 {
+    margin-bottom: 20px;
+}
+
+.student-content table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.student-content th, .student-content td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.student-content th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.student-content tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+.student-content td button {
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.student-content td button:hover {
+    background-color: #45a049;
+}
+
+.student-content td .action-button {
+    width: 100px;
+    height: 30px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.student-content td .action-button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .sidenav {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .content {
+        padding: 10px;
+    }
+}

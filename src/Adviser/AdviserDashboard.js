@@ -4,9 +4,9 @@ import '../SSO/SSO_Dashboard.css';
 
 const AdviserDashboard = () => {
   // Access location state to get userInfo
-  const location = useLocation();
-  const userInfo = location.state ? location.state.userInfo : null;
   const navigate = useNavigate();
+  const authToken = localStorage.getItem('authToken');
+  const loggedInUser = JSON.parse(authToken);
 
   const handleLogout = () => {
     // Implement logout functionality, e.g., clear tokens
@@ -20,7 +20,7 @@ const AdviserDashboard = () => {
       <div className="sidenav">
         {/* Navigation links */}
         <Link to="/report">Report</Link>
-        <Link to="/student">Students</Link>
+        <Link to="/adviser-student">Students</Link>
         <button onClick={handleLogout}>
             <span>Logout</span>
           </button>
@@ -28,8 +28,8 @@ const AdviserDashboard = () => {
       <div className='content'>
         <h1>Adviser Dashboard</h1>
         {/* Display first name and last name if userInfo is available */}
-        {userInfo && (
-          <h2>Welcome, {userInfo.firstname} {userInfo.lastname}!</h2>
+        {loggedInUser && (
+          <h2>Welcome, {loggedInUser.firstname} {loggedInUser.lastname}!</h2>
         )}
         {/* Content */}
       </div>

@@ -3,10 +3,9 @@ import { useLocation, Link, useNavigate } from 'react-router-dom';
 import '../SSO/SSO_Dashboard.css';
 
 const PrincipalDashboard = () => {
-  // Access location state to get userInfo
-  const location = useLocation();
-  const userInfo = location.state ? location.state.userInfo : null;
   const navigate = useNavigate();
+  const authToken = localStorage.getItem('authToken');
+  const loggedInUser = JSON.parse(authToken);
 
   const handleLogout = () => {
     // Implement logout functionality, e.g., clear tokens
@@ -29,8 +28,8 @@ const PrincipalDashboard = () => {
       <div className='content'>
         <h1>Principal Dashboard</h1>
         {/* Display first name and last name if userInfo is available */}
-        {userInfo && (
-          <h2>Welcome, {userInfo.firstname} {userInfo.lastname}!</h2>
+        {loggedInUser && (
+          <h2>Welcome, {loggedInUser.firstname} {loggedInUser.lastname}!</h2>
         )}
         {/* Content */}
       </div>
