@@ -130,8 +130,8 @@ const Case = () => {
                     <table className={caseStyles['case-table']}>
                         <thead>
                             <tr>
-                                <th>Date</th>
                                 <th>Case#</th>
+                                <th>StudentID</th>
                                 <th>Case Name</th>
                                 <th>Investigator</th>
                                 <th>Violation</th>
