@@ -1,7 +1,7 @@
 import "./Account.css";
 import navigationStyles from '../Navigation.module.css';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
@@ -12,6 +12,7 @@ import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
 // Function to create sidebar links
+
 const createSidebarLink = (to, text, IconComponent) => (
     <Link to={to} className={navigationStyles['styled-link']}>
         <IconComponent className={navigationStyles.icon} />
@@ -19,7 +20,16 @@ const createSidebarLink = (to, text, IconComponent) => (
     </Link>
 );
 
+
+
 const Account = () => {
+  const navigate = useNavigate(); 
+  const handleLogout = () => {
+    // Clear the authentication token from localStorage
+    localStorage.removeItem('authToken');
+    // Redirect the user to the login page
+    navigate('/');
+  };
   return (
     <div className={navigationStyles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
       <div className={navigationStyles.sidenav}>
@@ -32,6 +42,7 @@ const Account = () => {
         {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
         {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
         {createSidebarLink("/report", "Report", AssessmentIcon)}
+        <button className={navigationStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
       </div>
       
       

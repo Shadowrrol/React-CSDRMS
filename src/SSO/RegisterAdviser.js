@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css'; // Import CSS module
 import styles1 from '../GlobalForm.module.css'; // Import RegisterAdviser CSS module
 
@@ -21,6 +21,13 @@ const createSidebarLink = (to, text, IconComponent) => (
 );
 
 const RegisterAdviser = () => {
+  const navigate = useNavigate(); 
+  const handleLogout = () => {
+    // Clear the authentication token from localStorage
+    localStorage.removeItem('authToken');
+    // Redirect the user to the login page
+    navigate('/');
+  };
   const [userData, setUserData] = useState({
     uid: '',
     username: '',
@@ -58,6 +65,7 @@ const RegisterAdviser = () => {
             {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
             {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
             {createSidebarLink("/report", "Report", AssessmentIcon)}
+            <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
         </div>
       <div className={styles1.content}>
         <div className={styles1.contentform}>

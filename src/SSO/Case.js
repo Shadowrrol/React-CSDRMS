@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import navigationStyles from '../Navigation.module.css';
 import caseStyles from './Case.module.css';
 import modalStyles from './Modal.module.css';
@@ -21,6 +21,13 @@ const createSidebarLink = (to, text, IconComponent) => (
 );
 
 const Case = () => {
+    const navigate = useNavigate(); 
+  const handleLogout = () => {
+    // Clear the authentication token from localStorage
+    localStorage.removeItem('authToken');
+    // Redirect the user to the login page
+    navigate('/');
+  };
     const [cases, setCases] = useState([]);
     const [selectedCaseId, setSelectedCaseId] = useState(null);
     const [isModalOpen, setModalOpen] = useState(false);
@@ -123,6 +130,7 @@ const Case = () => {
                 {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
                 {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
+                <button className={navigationStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className={navigationStyles.content}>
                 <div className={caseStyles['case-container']}>
