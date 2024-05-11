@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import BrowserRouter, Route, and Routes
 import LoginPage from './LoginPage';
-import SSO_Dashboard from './SSO/SSO_Dashboard';
-import AdminDashboard from './Admin/AdminDashboard';
+import SSODashboard from './SSO/SSODashboard';
 import AdviserDashboard from './Adviser/AdviserDashboard'; // Import your other dashboard components here
 import PrincipalDashboard from './Principal/PrincipalDashboard';
 import Account from './SSO/Account';
@@ -20,7 +19,7 @@ import Pendings from './SSO/Pendings';
 
 import Report from './SSO/Report';
 import AddStudentReport from './SSO/AddStudentReport';
-import ViewStudentReport from './Principal/ViewStudentReport';
+import ViewStudentReport from './Adviser/ViewStudentReport';
 import Followup from './SSO/Followup';
 import Sanction from './SSO/Sanction';
 import ViewSanctions from './Principal/ViewSanctions';
@@ -37,8 +36,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route exact path="/" element={<LoginPage/>} />
-          <Route path="/SSO_Dashboard" element={<SSO_Dashboard />} />
-          <Route path="/AdminDashboard" element={<AdminDashboard />} />
+          <Route path="/SSODashboard" element={<SSODashboard />} />
           <Route path="/PrincipalDashboard" element={<PrincipalDashboard />} />
           <Route path="/AdviserDashboard" element={<AdviserDashboard />} />
           <Route path="/account" element={<Account  />} />

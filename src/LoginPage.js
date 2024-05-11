@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from "./Login.module.css";
@@ -24,7 +24,7 @@ const LoginPage = () => {
           // If the authentication token exists, navigate based on user type and pass userObject as state
           if (userType === 1) {
             const userObject = authTokenObj;
-            navigate('/SSO_Dashboard', { state: { userObject } });
+            navigate('/SSODashboard', { state: { userObject } });
           } else if (userType === 2) {
             const userObject = authTokenObj;
             navigate('/PrincipalDashboard', { state: { userObject } });
@@ -74,7 +74,7 @@ const LoginPage = () => {
 
   
       if (userType === 1) {
-        navigate('/SSO_Dashboard', { state: { userObject } });
+        navigate('/SSODashboard', { state: { userObject } });
       } else if (userType === 2) {
         navigate('/PrincipalDashboard', { state: { userObject } });
       } else if (userType === 3) {

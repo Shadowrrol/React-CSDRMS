@@ -12,6 +12,8 @@ import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const Pendings = () => {
+    const authToken = localStorage.getItem('authToken');
+    const loggedInUser = JSON.parse(authToken);
     const navigate = useNavigate(); 
     const createSidebarLink = (to, text, IconComponent) => (
         <Link to={to} className={styles['styled-link']}>
@@ -31,14 +33,15 @@ const Pendings = () => {
             <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
                 <div className={styles.sidenav}>
                     <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
-                    {createSidebarLink("/account", "Account", AccountBoxIcon)}
-                    {createSidebarLink("/student", "Student", SchoolIcon)}
-                    {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                    {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-                    {createSidebarLink("/case", "Case", PostAddIcon)}
-                    {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
-                    {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                     {createSidebarLink("/report", "Report", AssessmentIcon)}
+                    {loggedInUser.userType !== 2 && createSidebarLink("/account", "Account", AccountBoxIcon)}
+                    {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
+                    {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+                    {loggedInUser.userType !== 2 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+                    {loggedInUser.userType !== 2 && createSidebarLink("/case", "Case", PostAddIcon)}
+                    {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
+                    {loggedInUser.userType !== 1 && loggedInUser.userType !== 3 && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
+                    {loggedInUser.userType !== 2 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                     <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
                 </div>
                 <div className={styles.content}>

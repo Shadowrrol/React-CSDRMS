@@ -13,14 +13,9 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
-const createSidebarLink = (to, text, IconComponent) => (
-    <Link to={to} className={styles['styled-link']}>
-        <IconComponent className={styles.icon} /> 
-        <span className={styles['link-text']}>{text}</span> 
-    </Link>
-);
-
 const AddStudent = () => {
+    const authToken = localStorage.getItem('authToken');
+    const loggedInUser = JSON.parse(authToken);
     const navigate = useNavigate(); 
     const [studentData, setStudentData] = useState({
         sid: '',
@@ -29,8 +24,16 @@ const AddStudent = () => {
         lastname: '',
         grade: '',
         section: '',
+        schoolYear: '',
         con_num: ''
     });
+    
+    const createSidebarLink = (to, text, IconComponent) => (
+        <Link to={to} className={styles['styled-link']}>
+            <IconComponent className={styles.icon} /> 
+            <span className={styles['link-text']}>{text}</span> 
+        </Link>
+    );
     
     const handleLogout = () => {
         // Clear the authentication token from localStorage
@@ -70,19 +73,19 @@ const AddStudent = () => {
         <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
-                {createSidebarLink("/account", "Account", AccountBoxIcon)}
+                {createSidebarLink("/report", "Report", AssessmentIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                 {createSidebarLink("/case", "Case", PostAddIcon)}
-                {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
-                {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                {createSidebarLink("/report", "Report", AssessmentIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles1.content}>
-                <h2>Add Student</h2>
                 <div className={styles1.contentform}>
+                    <h2>Add Student</h2>
                     <form onSubmit={handleSubmit} className={styles1['add-student-form']}>
                         <div className={styles1['form-container']}>
                             <div className={styles1['form-group']}>
@@ -153,6 +156,18 @@ const AddStudent = () => {
                                     <option value="B">B</option>
                                     <option value="C">C</option>
                                 </select>
+                            </div>
+                            <div className={styles1['form-group']}>
+                                <label htmlFor="schoolYear">School Year:</label>
+                                <input
+                                type="text"
+                                id="schoolYear"
+                                name="schoolYear"
+                                value={studentData.schoolYear}
+                                onChange={handleChange}
+                                placeholder="School Year"
+                                required
+                                />
                             </div>
                             <div className={styles1['form-group']}>
                                 <label htmlFor="con_num">Contact Number:</label>

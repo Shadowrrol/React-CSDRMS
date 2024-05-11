@@ -34,6 +34,7 @@ const Account = () => {
     <div className={navigationStyles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
       <div className={navigationStyles.sidenav}>
         <img src="/image-removebg-preview (1).png" alt="Logo" className={navigationStyles['sidebar-logo']} />
+        {createSidebarLink("/report", "Report", AssessmentIcon)}
         {createSidebarLink("/account", "Account", AccountBoxIcon)}
         {createSidebarLink("/student", "Student", SchoolIcon)}
         {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
@@ -41,21 +42,21 @@ const Account = () => {
         {createSidebarLink("/case", "Case", PostAddIcon)}
         {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
         {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-        {createSidebarLink("/report", "Report", AssessmentIcon)}
         <button className={navigationStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
       </div>
       
       
       <div className="Frame">
-      <Link to="/register/principal">
-        <button type="submit" className="But">Principal</button>
+        <h2 className={navigationStyles.h2}>Register Account</h2>
+        <Link to="/register/principal">
+          <button type="submit" className="But">Principal</button>
+          </Link>
+          <Link to="/register/sso">
+          <button type="submit" className="But">SSO Officer</button>
         </Link>
-        <Link to="/register/sso">
-        <button type="submit" className="But">SSO Officer</button>
-      </Link>
-      <Link to="/register/adviser">
-        <button type="submit"className="But">Adviser</button>
-      </Link>
+        <Link to="/register/adviser">
+          <button type="submit"className="But">Adviser</button>
+        </Link>
       </div>
     </div>
   );

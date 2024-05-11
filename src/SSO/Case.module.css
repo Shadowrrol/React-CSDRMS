@@ -20,14 +20,13 @@
 
 .add-case {
     padding: 10px 20px;
-    border: 2px solid #000;
-    background-color: #fff;
-    color: #000;
+    background-color: #861b1c;
+    color: #fff;
     cursor: pointer;
 }
 
 .add-case:hover {
-    background-color: #000;
+    background-color: #863537;
     color: #fff;
 }
 
@@ -40,7 +39,7 @@
     margin-left: 1px;
     padding: 8px 16px;
     margin-top: 10px;
-    background-color: red;
+    background-color: #861b1c;
     color: white;
     border: none;
     cursor: pointer;

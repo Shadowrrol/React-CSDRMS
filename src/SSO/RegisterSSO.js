@@ -56,6 +56,7 @@ const RegisterSSO = () => {
     <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
         <div className={styles.sidenav}>
             <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
+            {createSidebarLink("/report", "Report", AssessmentIcon)}
             {createSidebarLink("/account", "Account", AccountBoxIcon)}
             {createSidebarLink("/student", "Student", SchoolIcon)}
             {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
@@ -63,7 +64,6 @@ const RegisterSSO = () => {
             {createSidebarLink("/case", "Case", PostAddIcon)}
             {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
             {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-            {createSidebarLink("/report", "Report", AssessmentIcon)}
             <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
         </div>
         <div className={styles1.content}>

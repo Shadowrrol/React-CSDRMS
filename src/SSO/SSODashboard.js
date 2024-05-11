@@ -1,6 +1,6 @@
 import React from 'react';
-import { useLocation, Link, useNavigate } from 'react-router-dom';
-import './SSO_Dashboard.css';
+import { Link, useNavigate } from 'react-router-dom';
+import './SSODashboard.css';
 import styles from '../Navigation.module.css'; // Import CSS module
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -45,6 +45,7 @@ const SSO_Dashboard = () => {
     <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
     <div className={styles.sidenav}>
         <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
+        {createSidebarLink("/report", "Report", AssessmentIcon)}
         {createSidebarLink("/account", "Account", AccountBoxIcon)}
         {createSidebarLink("/student", "Student", SchoolIcon)}
         {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
@@ -52,7 +53,6 @@ const SSO_Dashboard = () => {
         {createSidebarLink("/case", "Case", PostAddIcon)}
         {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
         {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-        {createSidebarLink("/report", "Report", AssessmentIcon)}
         <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
     </div>
       <div className='content'>

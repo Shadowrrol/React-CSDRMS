@@ -36,6 +36,7 @@ const RegisterAdviser = () => {
     lastname: '',
     email: '',
     section: '',
+    schoolYear: '',
     userType: 3 // Adviser
   });
 
@@ -57,6 +58,7 @@ const RegisterAdviser = () => {
     <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
         <div className={styles.sidenav}>
             <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
+            {createSidebarLink("/report", "Report", AssessmentIcon)}
             {createSidebarLink("/account", "Account", AccountBoxIcon)}
             {createSidebarLink("/student", "Student", SchoolIcon)}
             {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
@@ -64,7 +66,6 @@ const RegisterAdviser = () => {
             {createSidebarLink("/case", "Case", PostAddIcon)}
             {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
             {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-            {createSidebarLink("/report", "Report", AssessmentIcon)}
             <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
         </div>
       <div className={styles1.content}>
@@ -144,6 +145,18 @@ const RegisterAdviser = () => {
                   required
                 />
               </div>
+              <div className={styles1['form-group']}>
+                  <label htmlFor="schoolYear">School Year:</label>
+                  <input
+                  type="text"
+                  id="schoolYear"
+                  name="schoolYear"
+                  value={userData.schoolYear}
+                  onChange={handleChange}
+                  placeholder="School Year"
+                  required
+                  />
+              </div>              
               <button type="submit" className={styles1['global-button']}>Register</button>
             </div>
           </form>

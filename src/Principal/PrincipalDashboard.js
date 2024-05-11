@@ -2,7 +2,6 @@ import React from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css'; // Import CSS module
 
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
@@ -26,10 +25,6 @@ const PrincipalDashboard = () => {
         <Link to="/report" className={styles['styled-link']}>
           <AssessmentIcon className={styles.icon} /> 
           <span className={styles['link-text']}>Report</span> 
-        </Link>
-        <Link to="/pendings" className={styles['styled-link']}>
-          <PendingActionsIcon className={styles.icon} /> 
-          <span className={styles['link-text']}>Pendings</span> 
         </Link>
         <Link to="/viewSanctions" className={styles['styled-link']}>
           <LocalPoliceIcon className={styles.icon} /> 

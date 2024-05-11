@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './Navigation.module.css'; // Import CSS module
 import './Student.css';
 
@@ -84,6 +84,7 @@ const AdviserStudent = () => {
         <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
+                {createSidebarLink("/report", "Report", AssessmentIcon)}
                 {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
@@ -91,7 +92,6 @@ const AdviserStudent = () => {
                 {createSidebarLink("/case", "Case", PostAddIcon)}
                 {loggedInUser.userType !== 3 && createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
                 {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                {createSidebarLink("/report", "Report", AssessmentIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className='content'>
@@ -103,7 +103,7 @@ const AdviserStudent = () => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search by SID, First Name, or Last Name"
                     />
-                     {loggedInUser.userType == 3 && (
+                     {loggedInUser.userType === 3 && (
                     <Link to="/add-student">
                         <button>Add Student</button>
                     </Link>
@@ -133,7 +133,7 @@ const AdviserStudent = () => {
                                     <td>{student.section}</td>
                                     <td>{student.con_num}</td>
                                     <td>
-                                    {loggedInUser.userType == 3 && (
+                                    {loggedInUser.userType === 3 && (
                                         <>
                                         <Link to={`/update-student/${student.sid}`}>
                                             <button>Update</button>

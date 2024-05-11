@@ -14,6 +14,8 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
  
 const Feedback = () => {
     const navigate = useNavigate();
+    const authToken = localStorage.getItem('authToken');
+    const loggedInUser = JSON.parse(authToken);
     const handleLogout = () => {
         // Clear the authentication token from localStorage
         localStorage.removeItem('authToken');
@@ -33,14 +35,14 @@ const Feedback = () => {
             <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
                 <div className={styles.sidenav}>
                     <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
-                    {createSidebarLink("/account", "Account", AccountBoxIcon)}
+                    {createSidebarLink("/report", "Report", AssessmentIcon)}
+                    {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                     {createSidebarLink("/student", "Student", SchoolIcon)}
                     {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                     {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                     {createSidebarLink("/case", "Case", PostAddIcon)}
-                    {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
-                    {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                    {createSidebarLink("/report", "Report", AssessmentIcon)}
+                    {loggedInUser.userType !== 3 && createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
+                    {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                     <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
                 </div>
                 <div className={styles.content}>

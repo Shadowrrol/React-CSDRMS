@@ -1,7 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import styles from '../Navigation.module.css'; // Import CSS module
+import styles1 from '../GlobalForm.module.css';
+
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import SchoolIcon from '@mui/icons-material/School';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const UpdateStudent = () => {
+    const authToken = localStorage.getItem('authToken');
+    const loggedInUser = JSON.parse(authToken);
+    const navigate = useNavigate(); 
     const { sid } = useParams();
     const [studentData, setStudentData] = useState({
         firstname: '',
@@ -11,6 +25,20 @@ const UpdateStudent = () => {
         section: '',
         con_num: '',
     });
+
+    const createSidebarLink = (to, text, IconComponent) => (
+    <Link to={to} className={styles['styled-link']}>
+        <IconComponent className={styles.icon} />
+        <span className={styles['link-text']}>{text}</span>
+    </Link>
+    );
+
+    const handleLogout = () => {
+        // Clear the authentication token from localStorage
+        localStorage.removeItem('authToken');
+        // Redirect the user to the login page
+        navigate('/');
+    };
 
     useEffect(() => {
         fetch(`http://localhost:8080/student/getStudent/${sid}`)
@@ -47,65 +75,51 @@ const UpdateStudent = () => {
     };
 
     return (
-        <div>
-            <h2>Update Student</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    First Name:
-                    <input
-                        type="text"
-                        name="firstname"
-                        value={studentData.firstname}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Middle Name:
-                    <input
-                        type="text"
-                        name="middlename"
-                        value={studentData.middlename}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Last Name:
-                    <input
-                        type="text"
-                        name="lastname"
-                        value={studentData.lastname}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Grade:
-                    <input
-                        type="number"
-                        name="grade"
-                        value={studentData.grade}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Section:
-                    <input
-                        type="text"
-                        name="section"
-                        value={studentData.section}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Contact Number:
-                    <input
-                        type="text"
-                        name="con_num"
-                        value={studentData.con_num}
-                        onChange={handleChange}
-                    />
-                </label>
-                <button type="submit">Update Student</button>
-            </form>
+        <div className={styles.wrapper}>
+            <div className={styles.sidenav}>
+                <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
+                {createSidebarLink("/report", "Report", AssessmentIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
+                {createSidebarLink("/student", "Student", SchoolIcon)}
+                {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+                {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+                {createSidebarLink("/case", "Case", PostAddIcon)}
+                <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
+            </div>
+            <div className={styles1.content}>
+                <div className={styles1.contentform}>
+                    <h2>Update Student</h2>
+                        <form onSubmit={handleSubmit}>
+                            <div className={styles1['form-group']}>
+                                <label> First Name: </label>
+                                    <input type="text" name="firstname" value={studentData.firstname} onChange={handleChange}/>
+                            </div>
+                            <div className={styles1['form-group']}>
+                                <label> Middle Name: </label>
+                                    <input type="text" name="middlename" value={studentData.middlename} onChange={handleChange}/>
+                            </div>
+                            <div className={styles1['form-group']}>
+                                <label> Last Name: </label>
+                                    <input type="text" name="lastname"  value={studentData.lastname} onChange={handleChange}/>
+                            </div>
+                            <div className={styles1['form-group']}>
+                                <label> Grade: </label>
+                                    <input  type="number" name="grade" value={studentData.grade}  onChange={handleChange}/>
+                            </div>
+                            <div className={styles1['form-group']}>
+                                <label>  Section: </label>
+                                    <input type="text" name="section"  value={studentData.section} onChange={handleChange}/>
+                            </div>
+                            <div className={styles1['form-group']}>
+                                <label> Contact Number: </label>
+                                    <input type="text"  name="con_num" value={studentData.con_num} onChange={handleChange}/>
+                            </div>
+                            <button type="submit">Update Student</button>
+                        </form>
+                </div>
+            </div>
         </div>
     );
 };

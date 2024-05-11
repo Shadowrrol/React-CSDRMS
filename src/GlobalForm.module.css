@@ -6,7 +6,7 @@
 
 .contentform{
     max-width: 500px; /* Limit form container width */
-    margin: 30px auto; /* Center the form container horizontally */
+    margin: 1px auto; /* Center the form container horizontally */
     padding: 20px; /* Add padding to the form container */
     border: 1px solid #ddd; /* Add border to the form container */
     border-radius: 5px; /* Add border radius to the form container */

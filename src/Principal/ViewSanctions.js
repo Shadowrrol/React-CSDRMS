@@ -82,21 +82,9 @@ const ViewSanctions = () => {
           <AssessmentIcon className={styles.icon} /> 
           <span className={styles['link-text']}>Report</span> 
         </Link>
-        <Link to="/pendings" className={styles['styled-link']}>
-          <PendingActionsIcon className={styles.icon} /> 
-          <span className={styles['link-text']}>Pendings</span> 
-        </Link>
         <Link to="/viewSanctions" className={styles['styled-link']}>
           <LocalPoliceIcon className={styles.icon} /> 
           <span className={styles['link-text']}>Sanctions</span> 
-        </Link>
-        <Link to="/viewCases" className={styles['styled-link']}>
-          <LocalPoliceIcon className={styles.icon} /> 
-          <span className={styles['link-text']}>Cases</span> 
-        </Link>
-        <Link to="/viewRecords" className={styles['styled-link']}>
-          <LocalPoliceIcon className={styles.icon} /> 
-          <span className={styles['link-text']}>Records</span> 
         </Link>
         <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
       </div>

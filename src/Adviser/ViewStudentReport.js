@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate} from 'react-router-dom';
 import styles from '../Navigation.module.css';
-import styles2 from './ViewStudentReport.module.css';
+import styles1 from '../GlobalForm.module.css';
+
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
@@ -21,9 +22,19 @@ const createSidebarLink = (to, text, IconComponent) => (
 
 
 const ViewStudentReport = () => {
+    const authToken = localStorage.getItem('authToken');
+    const loggedInUser = JSON.parse(authToken);
+    const navigate = useNavigate(); 
     const { sid } = useParams();
     const [student, setStudent] = useState(null);
     const [reports, setReports] = useState([]);
+
+    const handleLogout = () => {
+        // Clear the authentication token from localStorage
+        localStorage.removeItem('authToken');
+        // Redirect the user to the login page
+        navigate('/');
+    };
 
     useEffect(() => {
         const fetchStudent = async () => {
@@ -54,13 +65,17 @@ const ViewStudentReport = () => {
         <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
+                {createSidebarLink("/report", "Report", AssessmentIcon)}
+                {loggedInUser.userType !== 2 && loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-                {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                {createSidebarLink("/report", "Report", AssessmentIcon)}
+                {createSidebarLink("/case", "Case", PostAddIcon)}
+                {loggedInUser.userType !== 3 &&     createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+                <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
-            <div>
+            <div className={styles1.content}>
                 <h2>Student Details</h2>
                 {student && (
                     <div className={styles['student-details']}>

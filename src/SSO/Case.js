@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import navigationStyles from '../Navigation.module.css';
+import styles1 from '../GlobalForm.module.css';
 import caseStyles from './Case.module.css';
 import modalStyles from './Modal.module.css';
 
@@ -21,6 +22,8 @@ const createSidebarLink = (to, text, IconComponent) => (
 );
 
 const Case = () => {
+    const authToken = localStorage.getItem('authToken');
+    const loggedInUser = JSON.parse(authToken);
     const navigate = useNavigate(); 
   const handleLogout = () => {
     // Clear the authentication token from localStorage
@@ -121,15 +124,15 @@ const Case = () => {
     return (
         <div className={navigationStyles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className={navigationStyles.sidenav}>
-                <img src="/image-removebg-preview (1).png" alt="" className={navigationStyles['sidebar-logo']} />
-                {createSidebarLink("/account", "Account", AccountBoxIcon)}
+                <img src="/image-removebg-preview (1).png" alt="" className={navigationStyles['sidebar-logo']}/>
+                {createSidebarLink("/report", "Report", AssessmentIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                 {createSidebarLink("/case", "Case", PostAddIcon)}
-                {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
-                {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                {createSidebarLink("/report", "Report", AssessmentIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 <button className={navigationStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className={navigationStyles.content}>
@@ -173,15 +176,85 @@ const Case = () => {
                     {isModalOpen && (
                         <div className={modalStyles.overlay}>
                             <div className={modalStyles.modal}>
-                                <button onClick={closeModal} className={modalStyles.closeButton}>✖</button>
-                                <form onSubmit={handleSubmit} className={caseStyles['add-case-form']}>
-                                    <input name="sid" value={formData.sid} onChange={handleInputChange} placeholder="Student ID" required />
-                                    <input name="case_name" value={formData.case_name} onChange={handleInputChange} placeholder="Case Name" required />
-                                    <input name="investigator" value={formData.investigator} onChange={handleInputChange} placeholder="Investigator" required />
-                                    <input name="violation" value={formData.violation} onChange={handleInputChange} placeholder="Violation" required />
-                                    <input name="description" value={formData.description} onChange={handleInputChange} placeholder="Description" required />
-                                    <input name="status" value={formData.status} onChange={handleInputChange} placeholder="Status" required />
-                                    <button type="submit">Add Case</button>
+                                <form onSubmit={handleSubmit} className={styles1['add-student-form']}>
+                                    <div className={modalStyles.space}>
+                                        <button onClick={closeModal} className={modalStyles.closeButton}>✖</button>
+                                    </div>
+                                    <div className={styles1['form-container']}>
+                                        <div className={styles1['form-group']}>
+                                            <label htmlFor="sid">Student ID:</label>
+                                            <input 
+                                                type="text"
+                                                id="sid"
+                                                name="sid"
+                                                value={formData.sid}
+                                                onChange={handleInputChange}
+                                                placeholder="Student ID"
+                                                required
+                                            />
+                                        </div>
+                                        <div className={styles1['form-group']}>
+                                            <label htmlFor="case_name">Case Name:</label>
+                                            <input
+                                                type="text"
+                                                id="case_name"
+                                                name="case_name"
+                                                value={formData.case_name}
+                                                onChange={handleInputChange}
+                                                placeholder="Case Name"
+                                                required
+                                            />
+                                        </div>
+                                        <div className={styles1['form-group']}>
+                                            <label htmlFor="investigator">Investigator:</label>
+                                            <input
+                                                type="text"
+                                                id="investigator"
+                                                name="investigator"
+                                                value={formData.investigator}
+                                                onChange={handleInputChange}
+                                                placeholder="Investigator"
+                                                required
+                                            />
+                                        </div>
+                                        <div className={styles1['form-group']}>
+                                            <label htmlFor="violation">Violation:</label>
+                                            <input
+                                                type="text"
+                                                id="violation"
+                                                name="violation"
+                                                value={formData.violation}
+                                                onChange={handleInputChange}
+                                                placeholder="Violation"
+                                                required
+                                            />
+                                        </div>
+                                        <div className={styles1['form-group']}>
+                                            <label htmlFor="description">Description:</label>
+                                            <input
+                                                type="text"
+                                                id="description"
+                                                name="description"
+                                                value={formData.description}
+                                                onChange={handleInputChange}
+                                                placeholder="Description"
+                                                required
+                                            />
+                                        </div>
+                                        <div className={styles1['form-group']}>
+                                            <label htmlFor="status">Status:</label>
+                                            <input
+                                                type="text"
+                                                id="status"
+                                                name="status"
+                                                value={formData.status}
+                                                onChange={handleInputChange}
+                                                placeholder="Status"
+                                                required
+                                            />
+                                        </div>
+                                        <button type="submit" className={styles1['add-student-button']}>Add Case</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>

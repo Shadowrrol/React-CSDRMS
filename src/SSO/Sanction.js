@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import './SSO_Dashboard.css';
 import styles from '../Navigation.module.css'; // Import CSS module
 import styles1 from '../GlobalForm.module.css'; // Import GlobalForm CSS module
 
@@ -17,6 +16,8 @@ import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const Sanction = () => {
+    const authToken = localStorage.getItem('authToken');
+    const loggedInUser = JSON.parse(authToken);
     const navigate = useNavigate();
     const createSidebarLink = (to, text, IconComponent) => (
         <Link to={to} className={styles['styled-link']}>
@@ -72,6 +73,7 @@ const Sanction = () => {
         <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
+                {createSidebarLink("/report", "Report", AssessmentIcon)}
                 {createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
@@ -79,7 +81,6 @@ const Sanction = () => {
                 {createSidebarLink("/case", "Case", PostAddIcon)}
                 {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
                 {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                {createSidebarLink("/report", "Report", AssessmentIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles1.content}>

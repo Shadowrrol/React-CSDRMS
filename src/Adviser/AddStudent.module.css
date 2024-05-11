@@ -11,6 +11,7 @@
     border: 1px solid #ddd; /* Add border to the form container */
     border-radius: 5px; /* Add border radius to the form container */
     background-color: #fff; /* White background for the form container */
+    margin-top: -20px;
 }
 
 .form-container {
