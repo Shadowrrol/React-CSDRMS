@@ -22,17 +22,12 @@ const createSidebarLink = (to, text, IconComponent) => (
 );
 
 const Case = () => {
-    const authToken = localStorage.getItem('authToken');
-    const loggedInUser = JSON.parse(authToken);
-    const navigate = useNavigate(); 
-  const handleLogout = () => {
-    // Clear the authentication token from localStorage
-    localStorage.removeItem('authToken');
-    // Redirect the user to the login page
-    navigate('/');
-  };
     const [cases, setCases] = useState([]);
     const [selectedCaseId, setSelectedCaseId] = useState(null);
+    const [feedbackResult, setFeedbackResult] = useState('');
+    const authToken = localStorage.getItem('authToken');
+    const navigate = useNavigate(); 
+    const loggedInUser = JSON.parse(authToken);
     const [isModalOpen, setModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         sid: '',
@@ -42,7 +37,7 @@ const Case = () => {
         description: '',
         status: ''
     });
-
+    
     // Fetch cases from the API
     useEffect(() => {
         const fetchCases = async () => {
@@ -59,6 +54,13 @@ const Case = () => {
         };
         fetchCases();
     }, []);
+
+    const handleLogout = () => {
+        // Clear the authentication token from localStorage
+        localStorage.removeItem('authToken');
+        // Redirect the user to the login page
+        navigate('/');
+      };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -111,20 +113,48 @@ const Case = () => {
         }
     };
 
-    const selectCase = (id) => {
+    const selectCase = (id, status) => {
         setSelectedCaseId(id);
+        if (status === 'Completed') {
+            setFeedbackResult('');
+        }
     };
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
 
-    const location = useLocation();
-    const userInfo = location.state ? location.state.userInfo : null;
+
+    const handleFeedbackSubmit = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/feedback/insertFeedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    uid: cases.find(caseItem => caseItem.cid === selectedCaseId)?.student.adviser_id, // Assuming uid is the current user's ID
+                    cid: selectedCaseId,
+                    isAcknowledged: 0, // Set to 0 for unacknowledged
+                    result: feedbackResult
+                })
+            });
+
+            if (response.ok) {
+                // Feedback submitted successfully
+                console.log('Feedback submitted successfully');
+                // You can update UI if needed
+            } else {
+                console.error('Failed to submit feedback');
+            }
+        } catch (error) {
+            console.error('Error submitting feedback:', error);
+        }
+    };
 
     return (
         <div className={navigationStyles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className={navigationStyles.sidenav}>
-                <img src="/image-removebg-preview (1).png" alt="" className={navigationStyles['sidebar-logo']}/>
+                <img src="/image-removebg-preview (1).png" alt="" className={navigationStyles['sidebar-logo']} />
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
                 {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
@@ -138,6 +168,7 @@ const Case = () => {
             <div className={navigationStyles.content}>
                 <div className={caseStyles['case-container']}>
                     <h1>Case List</h1>
+                    {/* Case list table */}
                     <table className={caseStyles['case-table']}>
                         <thead>
                             <tr>
@@ -154,7 +185,7 @@ const Case = () => {
                             {cases.map((caseItem) => (
                                 <tr
                                     key={caseItem.cid}
-                                    onClick={() => selectCase(caseItem.cid)}
+                                    onClick={() => selectCase(caseItem.cid, caseItem.status)}
                                     className={selectedCaseId === caseItem.cid ? caseStyles['selected-row'] : ''}
                                 >
                                     <td>{caseItem.cid}</td>
@@ -170,12 +201,16 @@ const Case = () => {
                             ))}
                         </tbody>
                     </table>
+
+                    {/* Add Case and Delete Case buttons */}
                     <button onClick={openModal} className={caseStyles['add-case']}>Add Case</button>
                     <button onClick={handleDelete} className={caseStyles['delete-case']} disabled={selectedCaseId === null}>Delete Case</button>
 
+                    {/* Add Case Modal */}
                     {isModalOpen && (
                         <div className={modalStyles.overlay}>
                             <div className={modalStyles.modal}>
+                                <button onClick={closeModal} className={modalStyles.closeButton}>✖</button>
                                 <form onSubmit={handleSubmit} className={styles1['add-student-form']}>
                                     <div className={modalStyles.space}>
                                         <button onClick={closeModal} className={modalStyles.closeButton}>✖</button>
@@ -257,6 +292,20 @@ const Case = () => {
                                     </div>
                                 </form>
                             </div>
+                        </div>
+                    )}
+
+                    {/* Feedback Form */}
+                    {selectedCaseId && cases.find(caseItem => caseItem.cid === selectedCaseId)?.status === 'completed' && (
+                        <div className={caseStyles['feedback-container']}>
+                             <h2>Feedback to {cases.find(caseItem => caseItem.cid === selectedCaseId)?.student.firstname}'s Adviser</h2>
+                            <textarea
+                                value={feedbackResult}
+                                onChange={(e) => setFeedbackResult(e.target.value)}
+                                placeholder="Enter feedback result..."
+                                className={caseStyles['feedback-textarea']}
+                            />
+                            <button onClick={handleFeedbackSubmit} className={caseStyles['submit-feedback']}>Submit</button>
                         </div>
                     )}
                 </div>

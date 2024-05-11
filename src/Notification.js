@@ -24,9 +24,18 @@ const Notification = () => {
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
 
-
-
     useEffect(() => {
+        // Fetch sanctions data when component mounts
+        fetchSanctions();
+    }, [loggedInUser]);
+
+    const handleLogout = () => {
+        // Clear the authentication token from localStorage
+        localStorage.removeItem('authToken');
+        // Redirect the user to the login page
+        navigate('/');
+      };
+
     const fetchSanctions = async () => {
         try {
             let response;
@@ -41,18 +50,53 @@ const Notification = () => {
             console.error('Error fetching sanctions:', error);
         }
     };
-    fetchSanctions();
-}, [loggedInUser]);
 
-    const handleLogout = () => {
-        // Clear the authentication token from localStorage
-        localStorage.removeItem('authToken');
-        // Redirect the user to the login page
-        navigate('/');
+    const handleAcknowledge = async (sanctionId) => {
+        try {
+            const response = await fetch('http://localhost:8080/feedback/insertFeedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    uid: loggedInUser.uid, // Assuming uid is the current user's ID
+                    sanction_id: sanctionId,
+                    isAcknowledged: 1, // Set to 1 for acknowledged
+                }),
+            });
+            if (response.ok) {
+                // If feedback insertion is successful, fetch sanctions again to update the UI
+                fetchSanctions();
+            } else {
+                console.error('Failed to insert feedback');
+            }
+        } catch (error) {
+            console.error('Error inserting feedback:', error);
+        }
     };
 
     const getSanctionStatus = (isApproved) => {
         return isApproved === 1 ? 'Accepted' : isApproved === 2 ? 'Declined' : 'Pending';
+    };
+
+    const renderSanctions = () => {
+        return (
+            <div>
+                <h2>Approved and Declined Sanctions</h2>
+                <ul>
+                    {sanctions.map((sanction) => (
+                        <li key={sanction.sanction_id}>
+                            <div>Student Name: {sanction.student.firstname} {sanction.student.lastname}</div>
+                            <div>Behavior Details: {sanction.behaviorDetails}</div>
+                            <div>Sanction Recommendation: {sanction.sanctionRecommendation}</div>
+                            <div><b>Status: {getSanctionStatus(sanction.isApproved)}</b></div>
+                            {/* Add acknowledge button */}
+                            <button onClick={() => handleAcknowledge(sanction.sanction_id)}>Acknowledge</button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        );
     };
 
     return (
@@ -71,22 +115,10 @@ const Notification = () => {
             </div>
             <div className={styles.content}>
                 <h1>Notifications</h1>
-                <div>
-                    <h2>Approved and Declined Sanctions</h2>
-                    <ul>
-                        {sanctions.map(sanction => (
-                            <li key={sanction.sanction_id}>
-                                <div>Student Name: {sanction.student.firstname} {sanction.student.lastname}</div>
-                                <div>Behavior Details: {sanction.behaviorDetails}</div>
-                                <div>Sanction Recommendation: {sanction.sanctionRecommendation}</div>
-                                <div><b>Status: {getSanctionStatus(sanction.isApproved)}</b></div>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                {renderSanctions()}
             </div>
         </div>
     );
-}
+};
 
 export default Notification;
