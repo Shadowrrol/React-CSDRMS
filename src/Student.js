@@ -46,7 +46,7 @@ const AdviserStudent = () => {
         } else {
             console.error('Logged-in user details are missing.');
         }
-    }, [loggedInUser]);
+    }, []);
 
     const handleLogout = () => {
         // Clear the authentication token from localStorage

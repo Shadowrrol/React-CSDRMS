@@ -60,7 +60,7 @@ const Report = () => {
         let filteredReports = studentReports;
 
         if (yearFilter) {
-            filteredReports = filteredReports.filter(report => report.schoolYear === yearFilter);
+            filteredReports = filteredReports.filter(report => report.student.schoolYear === yearFilter);
         }
 
         if (monthFilter) {
@@ -68,7 +68,7 @@ const Report = () => {
         }
 
         if (gradeFilter) {
-            filteredReports = filteredReports.filter(report => report.grade === gradeFilter);
+            filteredReports = filteredReports.filter(report => report.student.grade === gradeFilter);
         }
 
         // Count occurrences of each monitored_record
@@ -135,7 +135,7 @@ const Report = () => {
                     <ul>
                         {filteredReports.map(report => (
                             <li key={report.rid}>
-                                {report.name} - Year: {report.schoolYear}, Grade: {report.grade}
+                                {report.student.firstname} - Year: {report.student.schoolYear}, Grade: {report.student.grade}
                             </li>
                         ))}
                     </ul>

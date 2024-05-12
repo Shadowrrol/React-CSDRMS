@@ -37,7 +37,7 @@ const Feedback = () => {
             }
         };
         fetchFeedback();
-    }, [loggedInUser]); // Include loggedInUser in the dependencies array
+    }, []); // Include loggedInUser in the dependencies array
 
     const handleLogout = () => {
         // Clear the authentication token from localStorage
