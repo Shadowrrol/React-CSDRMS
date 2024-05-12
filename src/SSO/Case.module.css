@@ -51,3 +51,14 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+.feedbacked-button {
+    background-color: #861b1c;
+    color: white;
+    opacity: 0.5;
+    border: none;
+    padding: 8px 16px;
+    cursor: not-allowed; /* Change cursor to indicate button is disabled */
+    border-radius: 4px;
+    pointer-events: none; /* Prevent pointer events on the button */
+}

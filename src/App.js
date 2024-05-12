@@ -20,7 +20,7 @@ import Pendings from './SSO/Pendings';
 import Report from './SSO/Report';
 import AddStudentReport from './SSO/AddStudentReport';
 import ViewStudentReport from './Adviser/ViewStudentReport';
-import Followup from './SSO/Followup';
+import Followup from './Adviser/Followup';
 import Sanction from './SSO/Sanction';
 import ViewSanctions from './Principal/ViewSanctions';
 import './App.css';
