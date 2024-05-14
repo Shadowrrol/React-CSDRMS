@@ -350,11 +350,11 @@ const Case = () => {
                                         {caseItem.status === 'Pending' && !caseItem.followedUp ? (
                                             <button onClick={() => openFollowUpModal(caseItem.cid)}>Investigate</button>
                                         ) : caseItem.status === 'Pending' && caseItem.followedUp ? (
-                                            <button disabled>Followed up</button>
+                                            <button className={caseStyles['disabled-button']} disabled>Followed up</button>
                                         ) : caseItem.status === 'Completed' && !feedbackedCases.includes(caseItem.cid) ? (
                                             <button onClick={() => openFeedbackModal(caseItem.cid)}>Feedback</button>
                                         ) : (
-                                            <button disabled>Feedbacked</button>
+                                            <button className={caseStyles['disabled-button']} disabled>Feedbacked</button>
                                         )}
                                     </td>
                                 </tr>

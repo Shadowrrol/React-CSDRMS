@@ -41,7 +41,13 @@ const RegisterAdviser = () => {
   });
 
   const handleChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === 'grade') {
+      // Clear section when grade changes
+      setUserData({ ...userData, [name]: value, section: '' });
+    } else {
+      setUserData({ ...userData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -49,8 +55,90 @@ const RegisterAdviser = () => {
     try {
       const response = await axios.post('http://localhost:8080/user/registerAdviser', userData);
       console.log(response.data); // Handle success response
+      alert(`Adviser ${userData.username} is successfully registered.`);
+      navigate('/account');
     } catch (error) {
       console.error('Error:', error); // Handle error
+    }
+  };
+
+  // Define sections based on selected grade
+  const renderSections = () => {
+    const { grade } = userData;
+    switch (grade) {
+      case '1':
+        return (
+          <select
+            id="section"
+            name="section"
+            value={userData.section}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Section</option>
+            <option value="Confidence">Confidence</option>
+            <option value="Appreciation">Appreciation</option>
+            {/* Add more options as needed */}
+          </select>
+        );
+      case '2':
+        return (
+          <select
+            id="section"
+            name="section"
+            value={userData.section}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Section</option>
+            <option value="Joy">Joy</option>
+            <option value="Gratitude">Gratitude</option>
+            {/* Add more options as needed */}
+          </select>
+        );
+      case '3':
+        return (
+          <select
+            id="section"
+            name="section"
+            value={userData.section}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Section</option>
+            <option value="Kindness">Kindness</option>
+            <option value="Optimism">Optimism</option>
+            {/* Add more options as needed */}
+          </select>
+        );
+      case '4':
+        return (
+          <select
+            id="section"
+            name="section"
+            value={userData.section}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Section</option>
+            <option value="Kindness">Kindness</option>
+            <option value="Optimism">Optimism</option>
+            {/* Add more options as needed */}
+          </select>
+        );
+      default:
+        return (
+          <select
+            id="section"
+            name="section"
+            value={userData.section}
+            onChange={handleChange}
+            required
+            disabled
+          >
+            <option value="">Select Grade First</option>
+          </select>
+        );
     }
   };
 
@@ -134,29 +222,43 @@ const RegisterAdviser = () => {
                 />
               </div>
               <div className={styles1['form-group']}>
-                <label htmlFor="section">Section:</label>
-                <input
-                  type="text"
-                  id="section"
-                  name="section"
-                  value={userData.section}
+                <label htmlFor="grade">Grade:</label>
+                <select
+                  id="grade"
+                  name="grade"
+                  value={userData.grade}
                   onChange={handleChange}
-                  placeholder="Section"
                   required
-                />
+                >
+                  <option value="">Select Grade</option>
+                  <option value="1">Grade 7</option>
+                  <option value="2">Grade 8</option>
+                  <option value="3">Grade 9</option>
+                  <option value="4">Grade 10</option>
+                  {/* Add more options as needed */}
+                </select>
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="section">Section:</label>
+                {renderSections()}
               </div>
               <div className={styles1['form-group']}>
                   <label htmlFor="schoolYear">School Year:</label>
-                  <input
-                  type="text"
-                  id="schoolYear"
-                  name="schoolYear"
-                  value={userData.schoolYear}
-                  onChange={handleChange}
-                  placeholder="School Year"
-                  required
-                  />
-              </div>              
+                  <select
+                    id="schoolYear"
+                    name="schoolYear"
+                    value={userData.schoolYear}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">Select School Year</option>
+                    <option value="2023-2024">2023-2024</option>
+                    <option value="2024-2025">2024-2025</option>
+                    <option value="2025-2026">2025-2026</option>
+                    <option value="2026-2027">2026-2027</option>
+                    {/* Add more options as needed */}
+                  </select>
+              </div>                 
               <button type="submit" className={styles1['global-button']}>Register</button>
             </div>
           </form>

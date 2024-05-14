@@ -92,7 +92,14 @@ const Report = () => {
                 {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/case", "Case", PostAddIcon)}
+                {loggedInUser.userType !== 2 && (
+                    <>
+                        {loggedInUser.userType === 3 ? 
+                            createSidebarLink("/adviserCase", "Case", PostAddIcon) :
+                            createSidebarLink("/case", "Case", PostAddIcon)
+                        }
+                    </>
+                )}
                 {loggedInUser.userType !== 2 && loggedInUser.userType !== 3 && createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 3 && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType !== 2 && loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}

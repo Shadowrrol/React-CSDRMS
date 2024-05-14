@@ -108,7 +108,14 @@ const Notification = () => {
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-                {createSidebarLink("/case", "Case", PostAddIcon)}
+                {loggedInUser.userType !== 2 && (
+                    <>
+                        {loggedInUser.userType === 3 ? 
+                            createSidebarLink("/adviserCase", "Case", PostAddIcon) :
+                            createSidebarLink("/case", "Case", PostAddIcon)
+                        }
+                    </>
+                )}
                 {loggedInUser.userType !== 3 && createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
                 {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PostAddIcon)}

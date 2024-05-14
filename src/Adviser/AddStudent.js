@@ -23,7 +23,7 @@ const AddStudent = () => {
         middlename: '',
         lastname: '',
         grade: '',
-        section: '',
+        section: loggedInUser.section,
         schoolYear: loggedInUser.schoolYear,
         adviser_id:  loggedInUser.uid,
         con_num: ''
