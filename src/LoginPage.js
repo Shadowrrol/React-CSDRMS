@@ -4,90 +4,78 @@ import axios from 'axios';
 import styles from "./Login.module.css";
 
 const LoginPage = () => {
-  // Initialize the navigate hook
   const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     const authToken = localStorage.getItem('authToken');
-   
-  
     if (authToken) {
       try {
-        // Attempt to parse the authTokenString
         const authTokenObj = JSON.parse(authToken);
-       
-        const userType = authTokenObj?.userType;
         if (!authTokenObj) {
-          // If the authentication token is still not available, navigate to the login page
           navigate('/');
         } else {
-          // If the authentication token exists, navigate based on user type and pass userObject as state
-          if (userType === 1) {
-            const userObject = authTokenObj;
-            navigate('/SSODashboard', { state: { userObject } });
-          } else if (userType === 2) {
-            const userObject = authTokenObj;
-            navigate('/PrincipalDashboard', { state: { userObject } });
-          } else if (userType === 3) {
-            const userObject = authTokenObj;
-            navigate('/AdviserDashboard', { state: { userObject } });
-          } else {
-            // Handle unexpected userType
-            navigate('/');
+          const { userType, userObject } = authTokenObj;
+          switch (userType) {
+            case 1:
+              navigate('/SSODashboard', { state: { userObject } });
+              break;
+            case 2:
+              navigate('/PrincipalDashboard', { state: { userObject } });
+              break;
+            case 3:
+              navigate('/AdviserDashboard', { state: { userObject } });
+              break;
+            default:
+              navigate('/');
           }
         }
       } catch (error) {
         console.error('Error parsing authToken:', error);
-        // Handle error if parsing fails, for example, navigate to the login page
         navigate('/');
       }
     } else {
-      // If the authentication token doesn't exist, navigate to the login page
       navigate('/');
     }
   }, [navigate]);
-  
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
 
-  // Function to handle login
   const handleLogin = async (e) => {
     e.preventDefault();
-  
     try {
       const response = await axios.post('http://localhost:8080/user/login', {
         username,
         password,
       });
-  
+
       if (!response.data.userType) {
-        setError('Incorrect Username or Password');
+        alert('Incorrect Username or Password');
         return;
       }
-  
+
       const authTokenString = JSON.stringify(response.data);
       localStorage.setItem('authToken', authTokenString);
-  
-      const userType = response.data.userType;
-      const userObject = response.data;
 
-  
-      if (userType === 1) {
-        navigate('/SSODashboard', { state: { userObject } });
-      } else if (userType === 2) {
-        navigate('/PrincipalDashboard', { state: { userObject } });
-      } else if (userType === 3) {
-        navigate('/AdviserDashboard', { state: { userObject } });
-      } else {
-        setError('Incorrect Username or Password');
+      const { userType, userObject } = response.data;
+      switch (userType) {
+        case 1:
+          navigate('/SSODashboard', { state: { userObject } });
+          break;
+        case 2:
+          navigate('/PrincipalDashboard', { state: { userObject } });
+          break;
+        case 3:
+          navigate('/AdviserDashboard', { state: { userObject } });
+          break;
+        default:
+          alert('Incorrect Username or Password'); 
       }
-  
     } catch (error) {
       console.error('Login Failed', error.response.data);
-      setError('Incorrect Username or Password');
+      alert('Incorrect Username or Password'); 
     }
   };
+
   return (
     <div>
         <form onSubmit={handleLogin}>

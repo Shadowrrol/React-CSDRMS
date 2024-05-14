@@ -16,7 +16,7 @@
 
 .sidenav {
     width: 20%;
-    height: auto;
+    height: 100vh;
     background: linear-gradient(180deg, #863537, #200d0d);
     padding: 20px;
     color: #fff;
