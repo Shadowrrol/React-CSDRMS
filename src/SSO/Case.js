@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import navigationStyles from '../Navigation.module.css';
 import styles1 from '../GlobalForm.module.css';
 import caseStyles from './Case.module.css';
 import modalStyles from './Modal.module.css';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
@@ -31,8 +30,9 @@ const Case = () => {
     const [feedbackResult, setFeedbackResult] = useState('');
     const [feedbackedCases, setFeedbackedCases] = useState([]);
     const [followedUpCases, setFollowedUpCases] = useState([]);
+    const [filter, setFilter] = useState('All');
     const authToken = localStorage.getItem('authToken');
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     const loggedInUser = JSON.parse(authToken);
     const [isModalOpen, setModalOpen] = useState(false);
     const [isFeedbackModalOpen, setFeedbackModalOpen] = useState(false);
@@ -42,8 +42,7 @@ const Case = () => {
         case_name: '',
         investigator: '',
         violation: '',
-        description: '',
-        status: ''
+        description: ''
     });
 
     const [followUpData, setFollowUpData] = useState({
@@ -81,7 +80,7 @@ const Case = () => {
             }
         };
 
-        const fetchStudents = async () => { // New useEffect to fetch students
+        const fetchStudents = async () => {
             try {
                 const response = await fetch('http://localhost:8080/student/getAllStudents');
                 if (!response.ok) {
@@ -98,8 +97,7 @@ const Case = () => {
         fetchFollowedUpCases();
         fetchStudents();
     }, []);
-    
-    // Fetch cases from the API
+
     useEffect(() => {
         const fetchCases = async () => {
             try {
@@ -117,9 +115,7 @@ const Case = () => {
     }, []);
 
     const handleLogout = () => {
-        // Clear the authentication token from localStorage
         localStorage.removeItem('authToken');
-        // Redirect the user to the login page
         navigate('/');
     };
 
@@ -136,14 +132,14 @@ const Case = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ ...formData, sid: selectedStudent?.sid })
+                body: JSON.stringify({ ...formData, sid: selectedStudent?.sid, status: 'Pending' })
             });
 
             if (response.ok) {
                 const newCase = await response.json();
                 setCases((prevCases) => [...prevCases, newCase]);
-                setFormData({ sid: '', case_name: '', investigator: '', violation: '', description: '', status: '' });
-                setModalOpen(false); // Close the modal
+                setFormData({ sid: '', case_name: '', investigator: '', violation: '', description: '' });
+                setModalOpen(false);
             } else {
                 console.error('Failed to add case');
             }
@@ -157,20 +153,50 @@ const Case = () => {
             console.warn("No case selected for deletion");
             return;
         }
-
+    
         try {
             const response = await fetch(`http://localhost:8080/api/cases/${selectedCaseId}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
-
+    
             if (response.ok) {
                 setCases((prevCases) => prevCases.filter((caseItem) => caseItem.cid !== selectedCaseId));
-                setSelectedCaseId(null); // Clear the selected case after deletion
+                setSelectedCaseId(null);
             } else {
-                console.error('Failed to delete case');
+                console.error('Failed to delete case:', response.statusText);
             }
         } catch (error) {
             console.error('Error deleting case:', error);
+        }
+    };
+
+    const handleComplete = async () => {
+        if (selectedCaseId === null) {
+            console.warn("No case selected for completion");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/cases/complete/${selectedCaseId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                setCases((prevCases) => prevCases.map((caseItem) =>
+                    caseItem.cid === selectedCaseId ? { ...caseItem, status: 'Completed' } : caseItem
+                ));
+                setSelectedCaseId(null);
+            } else {
+                console.error('Failed to complete case');
+            }
+        } catch (error) {
+            console.error('Error completing case:', error);
         }
     };
 
@@ -184,7 +210,6 @@ const Case = () => {
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
 
-   
     const closeFeedbackModal = () => setFeedbackModalOpen(false);
     const openFeedbackModal = (caseId) => {
         setSelectedCaseId(caseId);
@@ -200,18 +225,16 @@ const Case = () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    uid: cases.find(caseItem => caseItem.cid === selectedCaseId)?.student.adviser_id, // Assuming uid is the current user's ID
+                    uid: cases.find(caseItem => caseItem.cid === selectedCaseId)?.student.adviser_id,
                     cid: selectedCaseId,
-                    isAcknowledged: 0, // Set to 0 for unacknowledged
+                    isAcknowledged: 0,
                     result: feedbackResult
                 })
             });
 
             if (response.ok) {
-                // Feedback submitted successfully
-                console.log('Feedback submitted successfully');
                 setFeedbackModalOpen(false);
-                // You can update UI if needed
+                setFeedbackedCases((prevFeedbackedCases) => [...prevFeedbackedCases, selectedCaseId]);
             } else {
                 console.error('Failed to submit feedback');
             }
@@ -233,33 +256,40 @@ const Case = () => {
     };
 
     const handleSubmitFollowUp = async (e) => {
-    e.preventDefault();
-    try {
-        const response = await fetch('http://localhost:8080/followup/insertFollowUp', { // Updated endpoint
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                cid: selectedCaseId,
-                date: followUpData.date,
-                time: followUpData.time,
-                violation: followUpData.violation,
-                name: followUpData.name,
-                reasoning: followUpData.reasoning
-            })
-        });
+        e.preventDefault();
+        try {
+            const response = await fetch('http://localhost:8080/followup/insertFollowUp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cid: selectedCaseId,
+                    date: followUpData.date,
+                    time: followUpData.time,
+                    violation: followUpData.violation,
+                    name: followUpData.name,
+                    reasoning: followUpData.reasoning
+                })
+            });
 
-        if (response.ok) {
-            console.log('Follow-up added successfully');
-            setFollowUpModalOpen(false);
-        } else {
-            console.error('Failed to add follow-up');
+            if (response.ok) {
+                setFollowUpModalOpen(false);
+                setCases((prevCases) => prevCases.map((caseItem) =>
+                    caseItem.cid === selectedCaseId ? { ...caseItem, followedUp: true } : caseItem
+                ));
+            } else {
+                console.error('Failed to add follow-up');
+            }
+        } catch (error) {
+            console.error('Error adding follow-up:', error);
         }
-    } catch (error) {
-        console.error('Error adding follow-up:', error);
-    }
-};
+    };
+
+    const filteredCases = cases.filter(caseItem => {
+        if (filter === 'All') return true;
+        return caseItem.status === filter;
+    });
 
     return (
         <div className={navigationStyles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
@@ -279,7 +309,14 @@ const Case = () => {
             <div className={navigationStyles.content}>
                 <div className={caseStyles['case-container']}>
                     <h1>Case List</h1>
-                    {/* Case list table */}
+                    <div className={caseStyles['filter-container']}>
+                        <label htmlFor="status-filter">Filter by status: </label>
+                        <select id="status-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
+                            <option value="All">All</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
                     <table className={caseStyles['case-table']}>
                         <thead>
                             <tr>
@@ -294,12 +331,12 @@ const Case = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {cases.map((caseItem) => (
-                               <tr
-                                   key={caseItem.cid}
-                                   onClick={() => selectCase(caseItem.cid, caseItem.status)}
-                                   className={selectedCaseId === caseItem.cid ? caseStyles['selected-row'] : ''}
-                               >
+                            {filteredCases.map((caseItem) => (
+                                <tr
+                                    key={caseItem.cid}
+                                    onClick={() => selectCase(caseItem.cid, caseItem.status)}
+                                    className={selectedCaseId === caseItem.cid ? caseStyles['selected-row'] : ''}
+                                >
                                     <td>{caseItem.cid}</td>
                                     <td>{caseItem.sid}</td>
                                     <td>{caseItem.case_name}</td>
@@ -310,9 +347,9 @@ const Case = () => {
                                         {caseItem.status}
                                     </td>
                                     <td>
-                                        {caseItem.status === 'Pending' && !followedUpCases.includes(caseItem.cid) ? (
+                                        {caseItem.status === 'Pending' && !caseItem.followedUp ? (
                                             <button onClick={() => openFollowUpModal(caseItem.cid)}>Investigate</button>
-                                        ) : caseItem.status === 'Pending' && followedUpCases.includes(caseItem.cid) ? (
+                                        ) : caseItem.status === 'Pending' && caseItem.followedUp ? (
                                             <button disabled>Followed up</button>
                                         ) : caseItem.status === 'Completed' && !feedbackedCases.includes(caseItem.cid) ? (
                                             <button onClick={() => openFeedbackModal(caseItem.cid)}>Feedback</button>
@@ -325,11 +362,12 @@ const Case = () => {
                         </tbody>
                     </table>
 
-                    {/* Add Case and Delete Case buttons */}
-                    <button onClick={openModal} className={caseStyles['add-case']}>Add Case</button>
-                    <button onClick={handleDelete} className={caseStyles['delete-case']} disabled={selectedCaseId === null}>Delete Case</button>
+                    <div className={caseStyles['button-container']}>
+                        <button onClick={openModal} className={caseStyles['add-case']}>Add Case</button>
+                        <button onClick={handleDelete} className={caseStyles['delete-case']} disabled={selectedCaseId === null}>Delete Case</button>
+                        <button onClick={handleComplete} className={caseStyles['complete-case']} disabled={selectedCaseId === null}>Complete Case</button>
+                    </div>
 
-                    {/* Add Case Modal */}
                     {isModalOpen && (
                         <div className={modalStyles.overlay}>
                             <div className={modalStyles.modal}>
@@ -342,15 +380,15 @@ const Case = () => {
                                         <div className={styles1['form-group']}>
                                             <label htmlFor="sid">Student ID:</label>
                                             <Autocomplete
-                                                    id="student"
-                                                    value={selectedStudent}
-                                                    options={students}
-                                                    getOptionLabel={(option) => `${option.firstname} ${option.sid} Grade:${option.grade}  Section:${option.section}`}
-                                                    onChange={(event, newValue) => {
-                                                        setSelectedStudent(newValue);
-                                                    }}
-                                                    renderInput={(params) => <TextField {...params} style={{ width: 300 }} />}
-                                                />
+                                                id="student"
+                                                value={selectedStudent}
+                                                options={students}
+                                                getOptionLabel={(option) => `${option.firstname} ${option.sid} Grade:${option.grade} Section:${option.section}`}
+                                                onChange={(event, newValue) => {
+                                                    setSelectedStudent(newValue);
+                                                }}
+                                                renderInput={(params) => <TextField {...params} style={{ width: 300 }} />}
+                                            />
                                         </div>
                                         <div className={styles1['form-group']}>
                                             <label htmlFor="case_name">Case Name:</label>
@@ -400,18 +438,6 @@ const Case = () => {
                                                 required
                                             />
                                         </div>
-                                        <div className={styles1['form-group']}>
-                                            <label htmlFor="status">Status:</label>
-                                            <input
-                                                type="text"
-                                                id="status"
-                                                name="status"
-                                                value={formData.status}
-                                                onChange={handleInputChange}
-                                                placeholder="Status"
-                                                required
-                                            />
-                                        </div>
                                         <button type="submit" className={styles1['add-student-button']}>Add Case</button>
                                     </div>
                                 </form>
@@ -419,7 +445,6 @@ const Case = () => {
                         </div>
                     )}
 
-                    {/* Feedback Modal */}
                     {isFeedbackModalOpen && (
                         <div className={modalStyles.overlay}>
                             <div className={modalStyles.modal}>
@@ -437,6 +462,7 @@ const Case = () => {
                             </div>
                         </div>
                     )}
+                    
                     {isFollowUpModalOpen && (
                         <div className={modalStyles.overlay}>
                             <div className={modalStyles.modal}>
