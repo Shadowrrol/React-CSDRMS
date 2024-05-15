@@ -219,9 +219,8 @@ const AdviserCase = () => {
                         }
                     </>
                 )}
-                {loggedInUser.userType !== 3 && createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
                 {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PostAddIcon)}
+                {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={navigationStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             {/* Main content */}

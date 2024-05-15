@@ -40,3 +40,7 @@
   touch-action: manipulation;
   will-change: transform;
 }
+
+.But:hover{
+  background-color: #ffffff5b;
+}

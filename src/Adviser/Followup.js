@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css';
+
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RateReviewIcon from '@mui/icons-material/RateReview';
-import AssessmentIcon from '@mui/icons-material/Assessment';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+
 
 const Followup = () => {
   const authToken = localStorage.getItem('authToken');
@@ -47,6 +52,7 @@ const Followup = () => {
       <div className={styles.sidenav}>
         <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
         {createSidebarLink("/report", "Report", AssessmentIcon)}
+        {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
         {createSidebarLink("/student", "Student", SchoolIcon)}
         {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
         {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
@@ -58,7 +64,8 @@ const Followup = () => {
                         }
                     </>
                 )}
-        {createSidebarLink("/Followup", "Followups", PostAddIcon)}
+        {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+        {createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
         <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
       </div>
       <div className='content'>

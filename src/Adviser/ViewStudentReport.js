@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate} from 'react-router-dom';
 import styles from '../Navigation.module.css';
 import styles1 from '../GlobalForm.module.css';
+import styles2 from '../GlobalTable.module.css';
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
@@ -71,8 +72,8 @@ const ViewStudentReport = () => {
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                 {createSidebarLink("/case", "Case", PostAddIcon)}
-                {loggedInUser.userType !== 3 &&     createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
                 {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles1.content}>
@@ -92,13 +93,12 @@ const ViewStudentReport = () => {
                         <button>Add Report</button>
                     </Link>
                 </div>
-                <table className={styles['reports-table']}>
+                <table className={styles2.table}>
                     <thead>
                         <tr>
                             <th>Report ID</th>
                             <th>Date</th>
                             <th>Time</th>
-                            <th>Name</th>
                             <th>Monitored Record</th>
                             <th>Remarks</th>
                             <th>Sanction</th>
@@ -110,7 +110,6 @@ const ViewStudentReport = () => {
                                 <td>{report.rid}</td>
                                 <td>{report.date}</td>
                                 <td>{report.time}</td>
-                                <td>{report.name}</td>
                                 <td>{report.monitored_record}</td>
                                 <td>{report.remarks}</td>
                                 <td>{report.sanction}</td>

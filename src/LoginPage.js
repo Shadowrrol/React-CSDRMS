@@ -102,7 +102,7 @@ const LoginPage = () => {
                   <div className={styles.frameParent}>
                     <div className={styles.usernameParent}>
                       <div className={styles.username}>Username</div>
-                      <input className={styles.frameItem} type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                      <input className={styles.frameItem} type="username" value={username} onChange={(e) => setUsername(e.target.value)} />
                     </div>
                     <div className={styles.passwordParent}>
                       <div className={styles.password}>Password</div>

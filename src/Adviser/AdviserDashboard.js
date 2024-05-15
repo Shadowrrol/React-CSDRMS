@@ -9,6 +9,7 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
 
 const AdviserDashboard = () => {
   // Access location state to get userInfo
@@ -47,7 +48,7 @@ const AdviserDashboard = () => {
                         }
                     </>
                 )}
-          {createSidebarLink("/Followup", "Followups", PostAddIcon)}
+          {createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
           <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
       </div>
       <div className='content'>

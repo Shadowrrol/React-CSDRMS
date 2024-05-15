@@ -40,10 +40,10 @@ const Account = () => {
         {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
         {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
         {createSidebarLink("/case", "Case", PostAddIcon)}
-        {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
         {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+        {createSidebarLink("/Followup", "Followups",PendingActionsIcon)}
         <button className={navigationStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
-      </div>
+      </div>  
       
       
       <div className="Frame">

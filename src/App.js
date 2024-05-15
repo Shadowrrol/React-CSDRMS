@@ -12,7 +12,6 @@ import RegisterAdviser from './SSO/RegisterAdviser';
 import RegisterSSO from './SSO/RegisterSSO';
 import Feedback from './SSO/Feedback';
 import Case from './SSO/Case';
-import Pendings from './SSO/Pendings';
 import Report from './SSO/Report';
 import AddStudentReport from './SSO/AddStudentReport';
 import Sanction from './SSO/Sanction';
@@ -51,7 +50,6 @@ function App() {
           <Route path="/notification" element={<Notification />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/case" element={<Case />} />
-          <Route path="/pendings" element={<Pendings />} />
           <Route path="/sanctions" element={<Sanction />} />
           <Route path="/viewSanctions" element={<ViewSanctions />} />
           <Route path="/report" element={<Report />} /> 

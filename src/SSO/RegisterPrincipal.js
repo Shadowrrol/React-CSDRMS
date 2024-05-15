@@ -55,16 +55,16 @@ const RegisterPrincipal = () => {
   return (
     <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
         <div className={styles.sidenav}>
-            <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
-            {createSidebarLink("/report", "Report", AssessmentIcon)}
-            {createSidebarLink("/account", "Account", AccountBoxIcon)}
-            {createSidebarLink("/student", "Student", SchoolIcon)}
-            {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-            {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-            {createSidebarLink("/case", "Case", PostAddIcon)}
-            {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
-            {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-            <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
+          <img src="/image-removebg-preview (1).png" alt="Logo" className={styles['sidebar-logo']} />
+          {createSidebarLink("/report", "Report", AssessmentIcon)}
+          {createSidebarLink("/account", "Account", AccountBoxIcon)}
+          {createSidebarLink("/student", "Student", SchoolIcon)}
+          {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+          {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+          {createSidebarLink("/case", "Case", PostAddIcon)}
+          {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+          {createSidebarLink("/Followup", "Followups",PendingActionsIcon)}
+          <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
         </div>
       <div className={styles1.content}>
         <div className={styles1.contentform}>
