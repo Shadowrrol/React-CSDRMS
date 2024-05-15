@@ -74,18 +74,19 @@ const AddStudentReport = () => {
             <p>Section: {student.section}</p>
             <p>Contact Number: {student.con_num}</p>
             <form onSubmit={handleSubmit}>
-                <input type="hidden" name="sid" value={report.sid} />
+                <input type="hidden" name="sid" value={report.sid} required />
                 <label>
                     Date:
-                    <input type="date" name="date" value={report.date} onChange={handleChange} />
+                    <input type="date" name="date" value={report.date} onChange={handleChange} required />
                 </label>
                 <label>
                     Time:
-                    <input type="time" name="time" value={report.time} onChange={handleChange} />
+                    <input type="time" name="time" value={report.time} onChange={handleChange} required />
                 </label>
                 <label>
                     Monitored Record:
-                    <select name="monitored_record" value={report.monitored_record} onChange={handleChange}>
+                    <select name="monitored_record" value={report.monitored_record} onChange={handleChange} required>
+                        <option value="">Select Monitored Record</option>
                         <option value="Clinic">Clinic</option>
                         <option value="Tardy">Tardy</option>
                         <option value="Absent">Absent</option>
@@ -98,14 +99,15 @@ const AddStudentReport = () => {
                 </label>
                 <label>
                     Remarks:
-                    <input type="text" name="remarks" value={report.remarks} onChange={handleChange} />
+                    <input type="text" name="remarks" value={report.remarks} onChange={handleChange} required />
                 </label>
                 <label>
                     Sanction:
-                    <input type="text" name="sanction" value={report.sanction} onChange={handleChange} />
+                    <input type="text" name="sanction" value={report.sanction} onChange={handleChange} required />
                 </label>
                 <button type="submit">Submit</button>
             </form>
+
         </div>
     );
 };

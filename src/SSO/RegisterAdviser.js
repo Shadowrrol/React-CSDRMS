@@ -35,6 +35,7 @@ const RegisterAdviser = () => {
     firstname: '',
     lastname: '',
     email: '',
+    grade: '',
     section: '',
     schoolYear: '',
     userType: 3 // Adviser
@@ -66,7 +67,7 @@ const RegisterAdviser = () => {
   const renderSections = () => {
     const { grade } = userData;
     switch (grade) {
-      case '1':
+      case '7':
         return (
           <select
             id="section"
@@ -81,7 +82,7 @@ const RegisterAdviser = () => {
             {/* Add more options as needed */}
           </select>
         );
-      case '2':
+      case '8':
         return (
           <select
             id="section"
@@ -96,7 +97,7 @@ const RegisterAdviser = () => {
             {/* Add more options as needed */}
           </select>
         );
-      case '3':
+      case '9':
         return (
           <select
             id="section"
@@ -106,12 +107,12 @@ const RegisterAdviser = () => {
             required
           >
             <option value="">Select Section</option>
-            <option value="Kindness">Kindness</option>
-            <option value="Optimism">Optimism</option>
+            <option value="Kindness">Happiness</option>
+            <option value="Optimism">Greatness</option>
             {/* Add more options as needed */}
           </select>
         );
-      case '4':
+      case '10':
         return (
           <select
             id="section"
@@ -231,10 +232,10 @@ const RegisterAdviser = () => {
                   required
                 >
                   <option value="">Select Grade</option>
-                  <option value="1">Grade 7</option>
-                  <option value="2">Grade 8</option>
-                  <option value="3">Grade 9</option>
-                  <option value="4">Grade 10</option>
+                  <option value="7">Grade 7</option>
+                  <option value="8">Grade 8</option>
+                  <option value="9">Grade 9</option>
+                  <option value="10">Grade 10</option>
                   {/* Add more options as needed */}
                 </select>
               </div>

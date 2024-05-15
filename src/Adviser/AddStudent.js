@@ -22,7 +22,7 @@ const AddStudent = () => {
         firstname: '',
         middlename: '',
         lastname: '',
-        grade: '',
+        grade: loggedInUser.grade,
         section: loggedInUser.section,
         schoolYear: loggedInUser.schoolYear,
         adviser_id:  loggedInUser.uid,
@@ -142,32 +142,31 @@ const AddStudent = () => {
                                     value={studentData.grade}
                                     onChange={handleChange}
                                     placeholder="Grade"
+                                    disabled // Disable input
                                 />
                             </div>
                             <div className={styles1['form-group']}>
                                 <label htmlFor="section">Section:</label>
-                                <select
+                                <input
+                                    type="text"
                                     id="section"
                                     name="section"
                                     value={studentData.section}
                                     onChange={handleChange}
-                                >
-                                    <option value="">Select Section</option>
-                                    <option value="A">A</option>
-                                    <option value="B">B</option>
-                                    <option value="C">C</option>
-                                </select>
+                                    placeholder="Section"
+                                    disabled // Disable input
+                                />
                             </div>
                             <div className={styles1['form-group']}>
                                 <label htmlFor="schoolYear">School Year:</label>
                                 <input
-                                type="text"
-                                id="schoolYear"
-                                name="schoolYear"
-                                value={studentData.schoolYear}
-                                onChange={handleChange}
-                                placeholder="School Year"
-                                required
+                                    type="text"
+                                    id="schoolYear"
+                                    name="schoolYear"
+                                    value={studentData.schoolYear}
+                                    onChange={handleChange}
+                                    placeholder="School Year"
+                                    disabled // Disable input
                                 />
                             </div>
                             <div className={styles1['form-group']}>
