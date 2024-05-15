@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css'; // Import CSS module
-import styles1 from '../GlobalForm.module.css'; // Import GlobalForm CSS module
+import styles1 from '../GlobalForm.module.css'; // Import RegisterAdviser CSS module
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
@@ -20,7 +20,7 @@ const createSidebarLink = (to, text, IconComponent) => (
   </Link>
 );
 
-const RegisterPrincipal = () => {
+const RegisterAdviser = () => {
   const navigate = useNavigate(); 
   const handleLogout = () => {
     // Clear the authentication token from localStorage
@@ -35,20 +35,111 @@ const RegisterPrincipal = () => {
     firstname: '',
     lastname: '',
     email: '',
-    userType: 2 // Principal
+    grade: '',
+    section: '',
+    schoolYear: '',
+    userType: 3 // Adviser
   });
 
   const handleChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === 'grade') {
+      // Clear section when grade changes
+      setUserData({ ...userData, [name]: value, section: '' });
+    } else {
+      setUserData({ ...userData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/user/registerPrincipal', userData);
+      const response = await axios.post('http://localhost:8080/user/registerAdviser', userData);
       console.log(response.data); // Handle success response
+      alert(`Adviser ${userData.username} is successfully registered.`);
+      navigate('/account');
     } catch (error) {
       console.error('Error:', error); // Handle error
+    }
+  };
+
+  // Define sections based on selected grade
+  const renderSections = () => {
+    const { grade } = userData;
+    switch (grade) {
+      case '7':
+        return (
+          <select
+            id="section"
+            name="section"
+            value={userData.section}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Section</option>
+            <option value="Confidence">Confidence</option>
+            <option value="Appreciation">Appreciation</option>
+            {/* Add more options as needed */}
+          </select>
+        );
+      case '8':
+        return (
+          <select
+            id="section"
+            name="section"
+            value={userData.section}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Section</option>
+            <option value="Joy">Joy</option>
+            <option value="Gratitude">Gratitude</option>
+            {/* Add more options as needed */}
+          </select>
+        );
+      case '9':
+        return (
+          <select
+            id="section"
+            name="section"
+            value={userData.section}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Section</option>
+            <option value="Kindness">Happiness</option>
+            <option value="Optimism">Greatness</option>
+            {/* Add more options as needed */}
+          </select>
+        );
+      case '10':
+        return (
+          <select
+            id="section"
+            name="section"
+            value={userData.section}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Section</option>
+            <option value="Kindness">Kindness</option>
+            <option value="Optimism">Optimism</option>
+            {/* Add more options as needed */}
+          </select>
+        );
+      default:
+        return (
+          <select
+            id="section"
+            name="section"
+            value={userData.section}
+            onChange={handleChange}
+            required
+            disabled
+          >
+            <option value="">Select Grade First</option>
+          </select>
+        );
     }
   };
 
@@ -68,29 +159,109 @@ const RegisterPrincipal = () => {
         </div>
       <div className={styles1.content}>
         <div className={styles1.contentform}>
-          <h2>Register as Principal</h2>
-          <form onSubmit={handleSubmit} className={styles1['form-container']}>
-            <div className={styles1['form-group']}>
-              <label htmlFor="username">Username:</label>
-              <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
+          <h2>Register as Adviser</h2>
+          <form onSubmit={handleSubmit} className={styles1['addadviser-form']}>
+            <div className={styles1['form-container']}>
+              <div className={styles1['form-group']}>
+                <label htmlFor="username">Username:</label>
+                <input 
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={userData.username}
+                  onChange={handleChange}
+                  placeholder="Username"
+                  required
+                />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="password">Password:</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={userData.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                  required
+                />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="firstname">First Name:</label>
+                <input
+                  type="text"
+                  id="firstname"
+                  name="firstname"
+                  value={userData.firstname}
+                  onChange={handleChange}
+                  placeholder="First Name"
+                  required
+                />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="lastname">Last Name:</label>
+                <input
+                  type="text"
+                  id="lastname"
+                  name="lastname"
+                  value={userData.lastname}
+                  onChange={handleChange}
+                  placeholder="Last Name"
+                  required
+                />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="email">Email:</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={userData.email}
+                  onChange={handleChange}
+                  placeholder="Email"
+                  required
+                />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="grade">Grade:</label>
+                <select
+                  id="grade"
+                  name="grade"
+                  value={userData.grade}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select Grade</option>
+                  <option value="7">Grade 7</option>
+                  <option value="8">Grade 8</option>
+                  <option value="9">Grade 9</option>
+                  <option value="10">Grade 10</option>
+                  {/* Add more options as needed */}
+                </select>
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="section">Section:</label>
+                {renderSections()}
+              </div>
+              <div className={styles1['form-group']}>
+                  <label htmlFor="schoolYear">School Year:</label>
+                  <select
+                    id="schoolYear"
+                    name="schoolYear"
+                    value={userData.schoolYear}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">Select School Year</option>
+                    <option value="2023-2024">2023-2024</option>
+                    <option value="2024-2025">2024-2025</option>
+                    <option value="2025-2026">2025-2026</option>
+                    <option value="2026-2027">2026-2027</option>
+                    {/* Add more options as needed */}
+                  </select>
+              </div>                 
+              <button type="submit" className={styles1['global-button']}>Register</button>
             </div>
-            <div className={styles1['form-group']}>
-              <label htmlFor="password">Password:</label>
-              <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-            </div>
-            <div className={styles1['form-group']}>
-              <label htmlFor="firstname">First Name:</label>
-              <input type="text" name="firstname" placeholder="First Name" onChange={handleChange} required />
-            </div>
-            <div className={styles1['form-group']}>
-              <label htmlFor="lastname">Last Name:</label>
-              <input type="text" name="lastname" placeholder="Last Name" onChange={handleChange} required />
-            </div>
-            <div className={styles1['form-group']}>
-              <label htmlFor="email">Email:</label>
-              <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-            </div>
-            <button type="submit" className={styles1['global-button']}>Register</button>
           </form>
         </div>
       </div>
@@ -98,4 +269,4 @@ const RegisterPrincipal = () => {
   );
 }
 
-export default RegisterPrincipal;
+export default RegisterAdviser;
