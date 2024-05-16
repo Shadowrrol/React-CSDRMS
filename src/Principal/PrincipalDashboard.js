@@ -1,23 +1,17 @@
 import React from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css'; // Import CSS module
-
+import MenuPopupState from '../components/MenuPopupState'; // Assuming MenuPopupState is in the same directory
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const PrincipalDashboard = () => {
   // Access location state to get userInfo
-  const location = useLocation();
+  const location = useLocation(); 
   const userInfo = location.state ? location.state.userInfo : null;
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Implement logout functionality, e.g., clear tokens
-    localStorage.removeItem('authToken');
-    // Then navigate to the login page
-    navigate('/');
-  };
-
+  
   return (
     <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
       <div className={styles.sidenav}>
@@ -30,7 +24,8 @@ const PrincipalDashboard = () => {
           <LocalPoliceIcon className={styles.icon} /> 
           <span className={styles['link-text']}>Sanctions</span> 
         </Link>
-        <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
+        {/* Replace the logout button with MenuPopupState component */}
+        <MenuPopupState />
       </div>
       <div className='content'>
         <h1>Principal Dashboard</h1>

@@ -28,8 +28,10 @@ import AddStudent from './Adviser/AddStudent';
 import UpdateStudent from './Adviser/UpdateStudent';
 import ViewStudentReport from './Adviser/ViewStudentReport';
 import AdvivserCase from './Adviser/AdviserCase';
+import UpdateAccount from './SSO/UpdateAccount';
 
 function App() {
+
 
   return (
     <Router>
@@ -58,6 +60,7 @@ function App() {
           <Route path="/view-student-cases/:sid" element={<ViewStudentCases />} /> 
           <Route path="/view-student-sanctions/:sid" element={<ViewStudentSanctions />} /> 
           <Route path="/adviserCase" element={<AdvivserCase />} /> 
+          <Route path="/UpdateAccount" element={<UpdateAccount />} /> 
         </Routes>
       </div>
     </Router>

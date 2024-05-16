@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css'; // Import CSS module
 import '../SSO/SSODashboard.css';
+import MenuPopupState from '../components/MenuPopupState';
 
 // Import icons from Material-UI
 import SchoolIcon from '@mui/icons-material/School';
@@ -49,7 +50,7 @@ const AdviserDashboard = () => {
                     </>
                 )}
           {createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
-          <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
+          <MenuPopupState />
       </div>
       <div className='content'>
         <h1>Adviser Dashboard</h1>
