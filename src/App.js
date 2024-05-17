@@ -28,7 +28,7 @@ import AddStudent from './Adviser/AddStudent';
 import UpdateStudent from './Adviser/UpdateStudent';
 import ViewStudentReport from './Adviser/ViewStudentReport';
 import AdvivserCase from './Adviser/AdviserCase';
-import UpdateAccount from './SSO/UpdateAccount';
+import UpdateAccount from './UpdateAccount';
 
 function App() {
 

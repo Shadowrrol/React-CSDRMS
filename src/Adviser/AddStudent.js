@@ -59,7 +59,7 @@ const AddStudent = () => {
         })
         .then((response) => {
             if (response.ok) {
-                // Handle successful insertion, maybe redirect or show a success message
+                navigate(`/student`);
             } else {
                 // Handle errors, maybe show an error message
             }

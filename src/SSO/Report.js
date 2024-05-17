@@ -161,7 +161,7 @@ const Report = () => {
                         <option value="area">Area Chart</option>
                     </select>
                 </div>
-                <div>
+                {/* <div>
                     <h2>Filtered Student Reports:</h2>
                     <ul>
                         {filteredReports.map(report => (
@@ -170,7 +170,7 @@ const Report = () => {
                             </li>
                         ))}
                     </ul>
-                </div>
+                </div> */}
                 <div>
                     <h2>Monitored Record Counts:</h2>
                     <CanvasJSChart options={chartOptions} />

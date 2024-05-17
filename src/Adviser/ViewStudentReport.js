@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate} from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css';
 import styles1 from '../GlobalForm.module.css';
 import styles2 from '../GlobalTable.module.css';
@@ -13,7 +13,6 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
-
 const createSidebarLink = (to, text, IconComponent) => (
     <Link to={to} className={styles['styled-link']}>
         <IconComponent className={styles.icon} /> {/* Icon */}
@@ -21,6 +20,12 @@ const createSidebarLink = (to, text, IconComponent) => (
     </Link>
 );
 
+const formatTime = (time) => {
+    const [hours, minutes] = time.split(':');
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    return `${formattedHours}:${minutes} ${period}`;
+};
 
 const ViewStudentReport = () => {
     const authToken = localStorage.getItem('authToken');
@@ -109,7 +114,7 @@ const ViewStudentReport = () => {
                             <tr key={report.rid}>
                                 <td>{report.rid}</td>
                                 <td>{report.date}</td>
-                                <td>{report.time}</td>
+                                <td>{formatTime(report.time)}</td>
                                 <td>{report.monitored_record}</td>
                                 <td>{report.remarks}</td>
                                 <td>{report.sanction}</td>
