@@ -47,6 +47,8 @@ const RegisterPrincipal = () => {
     try {
       const response = await axios.post('http://localhost:8080/user/registerPrincipal', userData);
       console.log(response.data); // Handle success response
+      alert(`Principal ${userData.username} is successfully registered.`);
+      navigate('/account');
     } catch (error) {
       console.error('Error:', error); // Handle error
     }
