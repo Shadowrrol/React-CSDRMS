@@ -10,13 +10,17 @@ const MenuPopupState = () => {
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
 
+    const user = loggedInUser
+
     let userTypeLabel;
-    if (loggedInUser && loggedInUser.userType === 1) {
-        userTypeLabel = `${loggedInUser.firstname} - SSO`;
-    } else if (loggedInUser && loggedInUser.userType === 2) {
-        userTypeLabel = `${loggedInUser.firstname} - Principal`;
-    } else if (loggedInUser && loggedInUser.userType === 3) {
-        userTypeLabel = `${loggedInUser.firstname} - Adviser`;
+    if (user && user.userType === 1) {
+        userTypeLabel = `${user.firstname} - SSO`;
+    } else if (user && user.userType === 2) {
+        userTypeLabel = `${user.firstname} - Principal`;
+    } else if (user && user.userType === 3) {
+        userTypeLabel = `${user.firstname} - Adviser`;
+    } else if (user && user.userType === 4) {
+        userTypeLabel = `${user.firstname} - Admin`;
     } else {
         userTypeLabel = 'Dashboard';
     }
@@ -30,7 +34,7 @@ const MenuPopupState = () => {
 
     const handleProfileClick = () => {
         // Navigate to '/UpdateAccount' when profile is clicked
-        navigate('/UpdateAccount');
+        navigate(`/UpdateAccount`, { state: { user } });
     };
 
     return (

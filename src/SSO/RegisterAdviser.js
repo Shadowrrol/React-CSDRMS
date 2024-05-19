@@ -1,33 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from '../Navigation.module.css'; // Import CSS module
-import styles1 from '../GlobalForm.module.css'; // Import RegisterAdviser CSS module
-
+import styles from '../Navigation.module.css';
+import styles1 from '../GlobalForm.module.css';
+import MenuPopupState from '../components/MenuPopupState';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import SchoolIcon from '@mui/icons-material/School';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import RateReviewIcon from '@mui/icons-material/RateReview';
-import PostAddIcon from '@mui/icons-material/PostAdd';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const createSidebarLink = (to, text, IconComponent) => (
   <Link to={to} className={styles['styled-link']}>
-      <IconComponent className={styles.icon} /> {/* Icon */}
-      <span className={styles['link-text']}>{text}</span> {/* Text */}
+      <IconComponent className={styles.icon} />
+      <span className={styles['link-text']}>{text}</span>
   </Link>
 );
 
 const RegisterAdviser = () => {
-  const navigate = useNavigate(); 
-  const handleLogout = () => {
-    // Clear the authentication token from localStorage
-    localStorage.removeItem('authToken');
-    // Redirect the user to the login page
-    navigate('/');
-  };
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     uid: '',
     username: '',
@@ -38,124 +27,70 @@ const RegisterAdviser = () => {
     grade: '',
     section: '',
     schoolYear: '',
-    userType: 3 // Adviser
+    userType: 3
   });
+  const [grades, setGrades] = useState([]);
+  const [sections, setSections] = useState([]);
+  const [schoolYears, setSchoolYears] = useState([]);
+
+  useEffect(() => {
+    // Fetch grades
+    axios.get('http://localhost:8080/class/allUniqueGrades')
+      .then(response => {
+        setGrades(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching grades:', error);
+      });
+
+    // Fetch school years
+    axios.get('http://localhost:8080/schoolYear/getAllSchoolYears')
+      .then(response => {
+        setSchoolYears(response.data.map(year => year.schoolYear));
+      })
+      .catch(error => {
+        console.error('Error fetching school years:', error);
+      });
+  }, []);
+
+  const handleGradeChange = (e) => {
+    const grade = e.target.value;
+    setUserData({ ...userData, grade, section: '', schoolYear: '' });
+    // Fetch sections based on selected grade
+    axios.get(`http://localhost:8080/class/sections/${grade}`)
+      .then(response => {
+        setSections(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching sections:', error);
+      });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'grade') {
-      // Clear section when grade changes
-      setUserData({ ...userData, [name]: value, section: '' });
-    } else {
-      setUserData({ ...userData, [name]: value });
-    }
+    setUserData({ ...userData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:8080/user/registerAdviser', userData);
-      console.log(response.data); // Handle success response
+      console.log(response.data);
       alert(`Adviser ${userData.username} is successfully registered.`);
       navigate('/account');
     } catch (error) {
-      console.error('Error:', error); // Handle error
-    }
-  };
-
-  // Define sections based on selected grade
-  const renderSections = () => {
-    const { grade } = userData;
-    switch (grade) {
-      case '7':
-        return (
-          <select
-            id="section"
-            name="section"
-            value={userData.section}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Section</option>
-            <option value="Confidence">Confidence</option>
-            <option value="Appreciation">Appreciation</option>
-            {/* Add more options as needed */}
-          </select>
-        );
-      case '8':
-        return (
-          <select
-            id="section"
-            name="section"
-            value={userData.section}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Section</option>
-            <option value="Joy">Joy</option>
-            <option value="Gratitude">Gratitude</option>
-            {/* Add more options as needed */}
-          </select>
-        );
-      case '9':
-        return (
-          <select
-            id="section"
-            name="section"
-            value={userData.section}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Section</option>
-            <option value="Kindness">Happiness</option>
-            <option value="Optimism">Greatness</option>
-            {/* Add more options as needed */}
-          </select>
-        );
-      case '10':
-        return (
-          <select
-            id="section"
-            name="section"
-            value={userData.section}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Section</option>
-            <option value="Kindness">Kindness</option>
-            <option value="Optimism">Optimism</option>
-            {/* Add more options as needed */}
-          </select>
-        );
-      default:
-        return (
-          <select
-            id="section"
-            name="section"
-            value={userData.section}
-            onChange={handleChange}
-            required
-            disabled
-          >
-            <option value="">Select Grade First</option>
-          </select>
-        );
+      console.error('Error:', error);
     }
   };
 
   return (
-    <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
+    <div className={styles.wrapper}>
         <div className={styles.sidenav}>
           <img src="/image-removebg-preview (1).png" alt="Logo" className={styles['sidebar-logo']} />
-          {createSidebarLink("/report", "Report", AssessmentIcon)}
+          {createSidebarLink("/AdminDashboard", "Dashboard", AssessmentIcon)}
           {createSidebarLink("/account", "Account", AccountBoxIcon)}
-          {createSidebarLink("/student", "Student", SchoolIcon)}
-          {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-          {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-          {createSidebarLink("/case", "Case", PostAddIcon)}
-          {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-          {createSidebarLink("/Followup", "Followups",PendingActionsIcon)}
-          <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
+          {createSidebarLink("/class", "Class", MeetingRoomIcon)}
+          <MenuPopupState />
         </div>
       <div className={styles1.content}>
         <div className={styles1.contentform}>
@@ -228,20 +163,29 @@ const RegisterAdviser = () => {
                   id="grade"
                   name="grade"
                   value={userData.grade}
-                  onChange={handleChange}
+                  onChange={handleGradeChange}
                   required
                 >
                   <option value="">Select Grade</option>
-                  <option value="7">Grade 7</option>
-                  <option value="8">Grade 8</option>
-                  <option value="9">Grade 9</option>
-                  <option value="10">Grade 10</option>
-                  {/* Add more options as needed */}
+                  {grades.map(grade => (
+                    <option key={grade} value={grade}>Grade {grade}</option>
+                  ))}
                 </select>
               </div>
               <div className={styles1['form-group']}>
                 <label htmlFor="section">Section:</label>
-                {renderSections()}
+                <select
+                  id="section"
+                  name="section"
+                  value={userData.section}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select Section</option>
+                  {sections.map(section => (
+                    <option key={section} value={section}>{section}</option>
+                  ))}
+                </select>
               </div>
               <div className={styles1['form-group']}>
                   <label htmlFor="schoolYear">School Year:</label>
@@ -253,11 +197,9 @@ const RegisterAdviser = () => {
                     required
                   >
                     <option value="">Select School Year</option>
-                    <option value="2023-2024">2023-2024</option>
-                    <option value="2024-2025">2024-2025</option>
-                    <option value="2025-2026">2025-2026</option>
-                    <option value="2026-2027">2026-2027</option>
-                    {/* Add more options as needed */}
+                    {schoolYears.map(year => (
+                      <option key={year} value={year}>{year}</option>
+                    ))}
                   </select>
               </div>                 
               <button type="submit" className={styles1['global-button']}>Register</button>

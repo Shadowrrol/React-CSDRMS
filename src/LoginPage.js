@@ -27,6 +27,9 @@ const LoginPage = () => {
             case 3:
               navigate('/AdviserDashboard', { state: { userObject } });
               break;
+            case 4:
+                navigate('/AdminDashboard', { state: { userObject } });
+                break;
             default:
               navigate('/');
           }
@@ -49,7 +52,7 @@ const LoginPage = () => {
       });
 
       if (!response.data.userType) {
-        alert('Incorrect Username or Password');
+        alert('Incorrect Username or Password1');
         return;
       }
 
@@ -66,6 +69,9 @@ const LoginPage = () => {
           break;
         case 3:
           navigate('/AdviserDashboard', { state: { userObject } });
+          break;
+        case 4:
+          navigate('/AdminDashboard', { state: { userObject } });
           break;
         default:
           alert('Incorrect Username or Password'); 

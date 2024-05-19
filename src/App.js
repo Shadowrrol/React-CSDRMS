@@ -30,6 +30,9 @@ import ViewStudentReport from './Adviser/ViewStudentReport';
 import AdvivserCase from './Adviser/AdviserCase';
 import UpdateAccount from './UpdateAccount';
 
+import AdminDashboard from './Admin/AdminDashboard';
+import Class from './Admin/Class'
+
 function App() {
 
 
@@ -61,6 +64,8 @@ function App() {
           <Route path="/view-student-sanctions/:sid" element={<ViewStudentSanctions />} /> 
           <Route path="/adviserCase" element={<AdvivserCase />} /> 
           <Route path="/UpdateAccount" element={<UpdateAccount />} /> 
+          <Route path="/AdminDashboard" element={<AdminDashboard />} />
+          <Route path="/Class" element={<Class />} />  
         </Routes>
       </div>
     </Router>

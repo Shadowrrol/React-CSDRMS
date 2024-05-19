@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import styles from './Navigation.module.css';
 import styles1 from './GlobalForm.module.css';
@@ -21,21 +21,28 @@ const createSidebarLink = (to, text, IconComponent) => (
 );
 
 const UpdateAccount = () => {
-  const [loggedInUserType, setLoggedInUserType] = useState(null);
+  const location = useLocation(); 
+  console.log("Location state:", location.state);
+  const user = location.state ? location.state.user : null;
+  console.log("User:", user);
+  const [UserType, setUserType] = useState(null);
   const authToken = localStorage.getItem('authToken');
   const loggedInUser = JSON.parse(authToken);
+
+  
+
   const navigate = useNavigate();
   const [updatedUser, setUpdatedUser] = useState({
     // Initialize with empty values for all fields
-    username: loggedInUser.username,
+    username: user.username,
     password: '',
-    firstname: loggedInUser.firstname,
-    lastname: loggedInUser.lastname,
-    email: loggedInUser.email,
-    userType: loggedInUser.userType,
-    schoolYear: loggedInUser.schoolYear || '',
-    grade: loggedInUser.grade || null,
-    section: loggedInUser.section || ''
+    firstname: user.firstname,
+    lastname: user.lastname,
+    email: user.email,
+    userType: user.userType,
+    schoolYear: user.schoolYear || '',
+    grade: user.grade || null,
+    section: user.section || ''
   });
   
   const handleLogout = () => {
@@ -46,10 +53,13 @@ const UpdateAccount = () => {
   };
 
   useEffect(() => {
-    if (loggedInUser) {
-      setLoggedInUserType(loggedInUser.userType);
+    console.log("User:", user);
+    if (user && user.userType) {
+      console.log("UserType:", user.userType);
+      setUserType(user.userType);
     }
-  }, [loggedInUser]);
+  }, [user]);
+    
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -57,7 +67,7 @@ const UpdateAccount = () => {
   };
 
   const handleUpdate = () => {
-    switch (loggedInUserType) {
+    switch (UserType) {
       case 1:
         axios.put('http://localhost:8080/user/updateSSO', updatedUser)
           .then(response => {
@@ -91,11 +101,23 @@ const UpdateAccount = () => {
             // Handle error, e.g., show error message
           });
         break;
+      case 4:
+          axios.put('http://localhost:8080/user/updateAdmin', updatedUser)
+            .then(response => {
+              console.log(response.data);
+              // Handle success, e.g., show success message
+            })
+            .catch(error => {
+              console.error('Error updating Admin:', error);
+              // Handle error, e.g., show error message
+            });
+          break; 
       default:
         // Handle default case
         break;
     }
   };
+  
 
   return (
     <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
@@ -134,7 +156,7 @@ const UpdateAccount = () => {
             <label>Email:</label>
             <input type="email" name="email" value={updatedUser.email} onChange={handleInputChange} />
           </div>
-          {loggedInUserType === 3 && (
+          {UserType === 3 && (
             <div>
               <label>School Year:</label>
               <input type="text" name="schoolYear" value={updatedUser.schoolYear} onChange={handleInputChange} />

@@ -3,13 +3,11 @@ import navigationStyles from '../Navigation.module.css';
 
 import { Link, useNavigate } from 'react-router-dom';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import SchoolIcon from '@mui/icons-material/School';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import RateReviewIcon from '@mui/icons-material/RateReview';
-import PostAddIcon from '@mui/icons-material/PostAdd';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
+
+
+import MenuPopupState from '../components/MenuPopupState';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 
 // Function to create sidebar links
 
@@ -34,15 +32,10 @@ const Account = () => {
     <div className={navigationStyles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
       <div className={navigationStyles.sidenav}>
         <img src="/image-removebg-preview (1).png" alt="Logo" className={navigationStyles['sidebar-logo']} />
-        {createSidebarLink("/report", "Report", AssessmentIcon)}
+        {createSidebarLink("/AdminDashboard", "Dashboard", AssessmentIcon)}
         {createSidebarLink("/account", "Account", AccountBoxIcon)}
-        {createSidebarLink("/student", "Student", SchoolIcon)}
-        {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-        {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-        {createSidebarLink("/case", "Case", PostAddIcon)}
-        {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-        {createSidebarLink("/Followup", "Followups",PendingActionsIcon)}
-        <button className={navigationStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
+        {createSidebarLink("/class", "Class", MeetingRoomIcon)}
+        <MenuPopupState />
       </div>  
       
       
