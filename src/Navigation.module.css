@@ -68,6 +68,7 @@
 }
 
 .logoutbtn {
+    width: 100%;
     background-color: #ffc800; /* Red */
     border: none;
     color: #000;

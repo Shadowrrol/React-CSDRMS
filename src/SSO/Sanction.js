@@ -73,14 +73,14 @@ const Sanction = () => {
         <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
-                {createSidebarLink("/report", "Report", AssessmentIcon)}
-                {createSidebarLink("/account", "Account", AccountBoxIcon)}
-                {createSidebarLink("/student", "Student", SchoolIcon)}
-                {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-                {createSidebarLink("/case", "Case", PostAddIcon)}
-                {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
-                {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType === 1 && createSidebarLink("/report", "Report", AssessmentIcon)}
+                {loggedInUser.userType === 1 && createSidebarLink("/account", "Account", AccountBoxIcon)}
+                {loggedInUser.userType === 1 && createSidebarLink("/student", "Student", SchoolIcon)}
+                {loggedInUser.userType === 1 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+                {loggedInUser.userType === 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+                {loggedInUser.userType === 1 && createSidebarLink("/case", "Case", PostAddIcon)}
+                {loggedInUser.userType === 1 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType === 1 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles1.content}>

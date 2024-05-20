@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css'; // Import CSS module
 import '../SSO/SSODashboard.css';
+import MenuPopupState from '../components/MenuPopupState';
 
 // Import icons from Material-UI
 import SchoolIcon from '@mui/icons-material/School';
@@ -9,6 +10,7 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
 
 const AdviserDashboard = () => {
   // Access location state to get userInfo
@@ -39,9 +41,16 @@ const AdviserDashboard = () => {
           {createSidebarLink("/student", "Student", SchoolIcon)}
           {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
           {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-          {createSidebarLink("/case", "Case", PostAddIcon)}
-          {createSidebarLink("/Followup", "Followups", PostAddIcon)}
-          <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
+          {loggedInUser.userType !== 2 && (
+                    <>
+                        {loggedInUser.userType === 3 ? 
+                            createSidebarLink("/adviserCase", "Case", PostAddIcon) :
+                            createSidebarLink("/case", "Case", PostAddIcon)
+                        }
+                    </>
+                )}
+          {createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
+          <MenuPopupState />
       </div>
       <div className='content'>
         <h1>Adviser Dashboard</h1>

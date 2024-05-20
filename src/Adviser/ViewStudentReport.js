@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate} from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css';
 import styles1 from '../GlobalForm.module.css';
+import styles2 from '../GlobalTable.module.css';
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
@@ -12,7 +13,6 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
-
 const createSidebarLink = (to, text, IconComponent) => (
     <Link to={to} className={styles['styled-link']}>
         <IconComponent className={styles.icon} /> {/* Icon */}
@@ -20,6 +20,12 @@ const createSidebarLink = (to, text, IconComponent) => (
     </Link>
 );
 
+const formatTime = (time) => {
+    const [hours, minutes] = time.split(':');
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    return `${formattedHours}:${minutes} ${period}`;
+};
 
 const ViewStudentReport = () => {
     const authToken = localStorage.getItem('authToken');
@@ -67,12 +73,12 @@ const ViewStudentReport = () => {
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
                 {loggedInUser.userType !== 2 && loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
-                {createSidebarLink("/student", "Student", SchoolIcon)}
-                {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-                {createSidebarLink("/case", "Case", PostAddIcon)}
-                {loggedInUser.userType !== 3 &&     createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
+                {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
+                {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+                {loggedInUser.userType !== 2 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+                {loggedInUser.userType !== 2 && createSidebarLink("/case", "Case", PostAddIcon)}
                 {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles1.content}>
@@ -92,13 +98,12 @@ const ViewStudentReport = () => {
                         <button>Add Report</button>
                     </Link>
                 </div>
-                <table className={styles['reports-table']}>
+                <table className={styles2.table}>
                     <thead>
                         <tr>
                             <th>Report ID</th>
                             <th>Date</th>
                             <th>Time</th>
-                            <th>Name</th>
                             <th>Monitored Record</th>
                             <th>Remarks</th>
                             <th>Sanction</th>
@@ -109,8 +114,7 @@ const ViewStudentReport = () => {
                             <tr key={report.rid}>
                                 <td>{report.rid}</td>
                                 <td>{report.date}</td>
-                                <td>{report.time}</td>
-                                <td>{report.name}</td>
+                                <td>{formatTime(report.time)}</td>
                                 <td>{report.monitored_record}</td>
                                 <td>{report.remarks}</td>
                                 <td>{report.sanction}</td>

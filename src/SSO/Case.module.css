@@ -52,7 +52,7 @@
     cursor: not-allowed;
 }
 
-.feedbacked-button {
+.disabled-button {
     background-color: #861b1c;
     color: white;
     opacity: 0.5;

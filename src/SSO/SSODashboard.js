@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './SSODashboard.css';
 import styles from '../Navigation.module.css'; // Import CSS module
+import MenuPopupState from '../components/MenuPopupState';
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
@@ -43,18 +44,18 @@ const SSO_Dashboard = () => {
 
   return (
     <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
-    <div className={styles.sidenav}>
-        <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
-        {createSidebarLink("/report", "Report", AssessmentIcon)}
-        {createSidebarLink("/account", "Account", AccountBoxIcon)}
-        {createSidebarLink("/student", "Student", SchoolIcon)}
-        {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-        {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-        {createSidebarLink("/case", "Case", PostAddIcon)}
-        {createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
-        {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-        <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
-    </div>
+        <div className={styles.sidenav}>
+          <img src="/image-removebg-preview (1).png" alt="Logo" className={styles['sidebar-logo']} />
+          {createSidebarLink("/report", "Report", AssessmentIcon)}
+          {createSidebarLink("/account", "Account", AccountBoxIcon)}
+          {createSidebarLink("/student", "Student", SchoolIcon)}
+          {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+          {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+          {createSidebarLink("/case", "Case", PostAddIcon)}
+          {createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+          {createSidebarLink("/Followup", "Followups",PendingActionsIcon)}
+          <MenuPopupState />
+        </div>
       <div className='content'>
         <h1>SSO Dashboard</h1>
         {/* Display first name and last name if userInfo is available */}

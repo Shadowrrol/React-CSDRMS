@@ -176,47 +176,27 @@ const Notification = () => {
     );
   };
 
-  return (
-    <div className={styles.wrapper} style={{ backgroundImage: "url(/public/image-2-3@2x.png)" }}>
-      <div className={styles.sidenav}>
-        <img src="/image-removebg-preview (1).png" alt="" className={styles["sidebar-logo"]} />
-        {createSidebarLink("/report", "Report", AssessmentIcon)}
-        {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
-        {createSidebarLink("/student", "Student", SchoolIcon)}
-        {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-        {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-        {loggedInUser.userType !== 2 && (
-          <>
-            {loggedInUser.userType === 3
-              ? createSidebarLink("/adviserCase", "Case", PostAddIcon)
-              : createSidebarLink("/case", "Case", PostAddIcon)}
-          </>
-        )}
-        {loggedInUser.userType !== 3 &&
-          createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-        {loggedInUser.userType !== 2 &&
-          createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
-        <button className={styles["logoutbtn"]} onClick={handleLogout}>
-          Logout
-        </button>
-      </div>
-      <div className={styles.content}>
-        <h1>Notifications</h1>
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "linear-gradient(to top, rgba(100,0,0,.9), rgba(100,0,0,0.3))",
-            borderRadius: "12px",
-          }}
-        >
-          {renderSanctions()}
+    return (
+        <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
+            <div className={styles.sidenav}>
+                <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
+                {createSidebarLink("/report", "Report", AssessmentIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
+                {createSidebarLink("/student", "Student", SchoolIcon)}
+                {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+                {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+                {createSidebarLink("/case", "Case", PostAddIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PostAddIcon)}
+                <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
+            </div>
+            <div className={styles.content}>
+                <h1>Notifications</h1>
+                {renderSanctions()}
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Notification;

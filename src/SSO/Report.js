@@ -12,6 +12,9 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
+import CanvasJSReact from '@canvasjs/react-charts';
+const CanvasJSChart = CanvasJSReact.CanvasJSChart;
+
 const createSidebarLink = (to, text, IconComponent) => (
     <Link to={to} className={styles['styled-link']}>
         <IconComponent className={styles.icon} />
@@ -27,9 +30,9 @@ const Report = () => {
     const [yearFilter, setYearFilter] = useState(null);
     const [monthFilter, setMonthFilter] = useState(null);
     const [gradeFilter, setGradeFilter] = useState(null);
+    const [chartType, setChartType] = useState("column"); // State to hold the selected chart type
 
     useEffect(() => {
-        // Function to fetch student reports based on user type
         const fetchStudentReports = async () => {
             try {
                 let response;
@@ -48,14 +51,10 @@ const Report = () => {
     }, [yearFilter]);
 
     const handleLogout = () => {
-        // Clear the authentication token from localStorage
         localStorage.removeItem('authToken');
-        // Redirect the user to the login page
         navigate('/');
     };
     
-
-    // Function to filter student reports by year, month, and/or grade
     const filterStudentReports = () => {
         let filteredReports = studentReports;
 
@@ -71,7 +70,6 @@ const Report = () => {
             filteredReports = filteredReports.filter(report => report.student.grade === gradeFilter);
         }
 
-        // Count occurrences of each monitored_record
         const monitoredRecordCounts = {};
         filteredReports.forEach(report => {
             const monitoredRecord = report.monitored_record;
@@ -83,6 +81,21 @@ const Report = () => {
 
     const { filteredReports, monitoredRecordCounts } = filterStudentReports();
 
+    const chartOptions = {
+        animationEnabled: true,
+        exportEnabled: true,
+        theme: "light2",
+        axisY: {
+            includeZero: true
+        },
+        data: [{
+            type: chartType, // Use the selected chart type
+            indexLabelFontColor: "#5A5757",
+            indexLabelPlacement: "outside",
+            dataPoints: Object.entries(monitoredRecordCounts).map(([label, y]) => ({ label, y }))
+        }]
+    };
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.sidenav}>
@@ -92,11 +105,17 @@ const Report = () => {
                 {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/case", "Case", PostAddIcon)}
-                {loggedInUser.userType !== 2 && loggedInUser.userType !== 3 && createSidebarLink("/pendings", "Pendings", PendingActionsIcon)}
+                {loggedInUser.userType !== 2 && (
+                    <>
+                        {loggedInUser.userType === 3 ? 
+                            createSidebarLink("/adviserCase", "Case", PostAddIcon) :
+                            createSidebarLink("/case", "Case", PostAddIcon)
+                        }
+                    </>
+                )}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 3 && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType !== 2 && loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PostAddIcon)}
+                {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles.content}>
@@ -109,7 +128,6 @@ const Report = () => {
                         <option value="2022-2023">2022-2023</option>
                         <option value="2023-2024">2023-2024</option>
                         <option value="2024-2025">2024-2025</option>
-                        {/* Add more years as needed */}
                     </select>
                     )}
                     <select onChange={e => setMonthFilter(e.target.value)}>
@@ -119,19 +137,31 @@ const Report = () => {
                         <option value="03">March</option>
                         <option value="04">April</option>
                         <option value="05">May</option>
-                        {/* Add more months as needed */}
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
                     </select>
                     {loggedInUser.userType !== 3 && (
                     <select onChange={e => setGradeFilter(parseInt(e.target.value))}>
                         <option value="">All Grades</option>
-                        <option value="7">Grade 7</option>
-                        <option value="8">Grade 8</option>
-                        <option value="9">Grade 9</option>
-                        {/* Add more grades as needed */}
+                        <option value="13">Grade 7</option>
+                        <option value="14">Grade 8</option>
+                        <option value="15">Grade 9</option>
+                        <option value="16">Grade 10</option>
                     </select>
                     )}
+                    <select onChange={e => setChartType(e.target.value)}> {/* Dropdown to select chart type */}
+                        <option value="column">Bar Graph</option>
+                        <option value="line">Line Graph</option>
+                        <option value="pie">Pie Chart</option>
+                        <option value="area">Area Chart</option>
+                    </select>
                 </div>
-                <div>
+                {/* <div>
                     <h2>Filtered Student Reports:</h2>
                     <ul>
                         {filteredReports.map(report => (
@@ -140,16 +170,10 @@ const Report = () => {
                             </li>
                         ))}
                     </ul>
-                </div>
+                </div> */}
                 <div>
                     <h2>Monitored Record Counts:</h2>
-                    <ul>
-                        {Object.entries(monitoredRecordCounts).map(([monitoredRecord, count]) => (
-                            <li key={monitoredRecord}>
-                                {monitoredRecord}: {count}
-                            </li>
-                        ))}
-                    </ul>
+                    <CanvasJSChart options={chartOptions} />
                 </div>
             </div>
         </div>
