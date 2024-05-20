@@ -163,7 +163,19 @@ const Notification = () => {
                   {/* Add acknowledge button */}
                   <button
                     onClick={() => handleAcknowledge(sanction.sanction_id)}
-                    style={{ height: "64px", alignSelf: "center" }}
+                    style={{
+                      height: "64px",
+                      alignSelf: "center",
+                      backgroundColor: "#e8bd26",
+                      color: "black",
+                      transition: "background-color 0.5s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.color = "white";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.color = "black";
+                    }}
                   >
                     Acknowledge
                   </button>
