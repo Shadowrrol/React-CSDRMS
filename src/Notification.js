@@ -199,7 +199,7 @@ const Notification = () => {
         <button className={styles["logoutbtn"]} onClick={handleLogout}>
           Logout
         </button>
-      </div>
+       </div>
       <div className={styles.content}>
         <h1>Notifications</h1>
 
