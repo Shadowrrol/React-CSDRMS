@@ -125,85 +125,132 @@ const ViewSanctions = () => {
             }}
           >
             {sanctions.map((sanction) => (
-              <div
-                style={{
-                  border: "1px black solid",
-                  width: "80vh",
-                  borderRadius: "15px",
-                  background: "linear-gradient(to right, #a43737 40%, #e8bd26 95%)",
-                }}
-              >
-                <li key={sanction.sanction_id} style={{ listStyle: "none" }}>
-                  {/* Display sanction details */}
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      color: "white",
-                      padding: "10px",
-                    }}
-                  >
+              <div style={{ width: "90hv", display: "flex" }}>
+                <div
+                  style={{
+                    border: "1px black solid",
+                    width: "80vh",
+                    borderRadius: "15px",
+                    background: "linear-gradient(to right, #a43737 40%, #e8bd26 95%)",
+                  }}
+                >
+                  <li key={sanction.sanction_id} style={{ listStyle: "none" }}>
+                    {/* Display sanction details */}
                     <div
                       style={{
                         display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        padding: "8px",
-                        gap: "8px",
+                        justifyContent: "space-between",
+                        color: "white",
+                        padding: "10px",
                       }}
                     >
-                      <div>Sanction ID: {sanction.sanction_id}</div>
-                      <div>
-                        Student Name: {sanction.student.firstname} {sanction.student.lastname}
-                      </div>
-                      <div>Behavior Details: {sanction.behaviorDetails}</div>
-                      <div>Sanction Recommendation: {sanction.sanctionRecommendation}</div>
-                    </div>
-                    {/* Approve and decline buttons */}
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      {sanction.isApproved !== 1 && (
-                        <div style={{ display: "flex", gap: "8px" }}>
-                          <button onClick={() => handleApprove(sanction.sanction_id)}>
-                            Approve
-                          </button>
-                          <button onClick={() => handleDecline(sanction.sanction_id)}>
-                            Decline
-                          </button>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          padding: "8px",
+                          gap: "8px",
+                        }}
+                      >
+                        <div>Sanction ID: {sanction.sanction_id}</div>
+                        <div>
+                          Student Name: {sanction.student.firstname} {sanction.student.lastname}
                         </div>
-                      )}
-                      {/* View associated cases, sanctions, and records */}
-                      <div>
-                        <Link
-                          onMouseEnter={(e) => (e.target.style.color = "black")}
-                          onMouseLeave={(e) => (e.target.style.color = "white")}
-                          style={{ color: "white", fontWeight: "bold" }}
-                          to={`/view-student-cases/${sanction.sid}`}
-                        >
-                          View Cases
-                        </Link>
-                        <br></br>
-                        <Link
-                          onMouseEnter={(e) => (e.target.style.color = "black")}
-                          onMouseLeave={(e) => (e.target.style.color = "white")}
-                          style={{ color: "white", fontWeight: "bold" }}
-                          to={`/view-student-sanctions/${sanction.sid}`}
-                        >
-                          View Sanctions
-                        </Link>
-                        <br></br>
-                        <Link
-                          onMouseEnter={(e) => (e.target.style.color = "black")}
-                          onMouseLeave={(e) => (e.target.style.color = "white")}
-                          style={{ color: "white", fontWeight: "bold" }}
-                          to={`/view-student-report/${sanction.sid}`}
-                        >
-                          View Records
-                        </Link>
-                        <br></br>
+                        <div>Behavior Details: {sanction.behaviorDetails}</div>
+                        <div>Sanction Recommendation: {sanction.sanctionRecommendation}</div>
+                      </div>
+                      {/* Approve and decline buttons */}
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginTop: "15px",
+                        }}
+                      >
+                        {sanction.isApproved !== 1 && (
+                          <div style={{ display: "flex", gap: "8px" }}>
+                            <button onClick={() => handleApprove(sanction.sanction_id)}>
+                              Approve
+                            </button>
+                            <button onClick={() => handleDecline(sanction.sanction_id)}>
+                              Decline
+                            </button>
+                          </div>
+                        )}
+                        {/* View associated cases, sanctions, and records */}
                       </div>
                     </div>
-                  </div>
-                </li>
+                  </li>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "start",
+                    justifyContent: "center",
+                    marginLeft: "4px",
+                  }}
+                >
+                  <button
+                    style={{
+                      color: "white",
+                      fontWeight: "bold",
+                      backgroundColor: "#861b1c;",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: "8px",
+                      fontSize: "16px",
+                    }}
+                  >
+                    <Link
+                      style={{ color: "inherit", textDecoration: "none" }}
+                      to={`/view-student-cases/${sanction.sid}`}
+                    >
+                      View Cases
+                    </Link>
+                  </button>
+
+                  <button
+                    style={{
+                      color: "white",
+                      fontWeight: "bold",
+                      backgroundColor: "#861b1c;",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: "8px",
+                      fontSize: "16px",
+                    }}
+                  >
+                    <Link
+                      style={{ color: "inherit", textDecoration: "none" }}
+                      to={`/view-student-report/${sanction.sid}`}
+                    >
+                      View Records
+                    </Link>
+                  </button>
+                  <button
+                    style={{
+                      color: "white",
+                      fontWeight: "bold",
+                      backgroundColor: "#861b1c;",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: "8px",
+                      fontSize: "16px",
+                    }}
+                  >
+                    <Link
+                      style={{ color: "inherit", textDecoration: "none" }}
+                      to={`/view-student-sanctions/${sanction.sid}`}
+                    >
+                      View Sanctions
+                    </Link>
+                  </button>
+                </div>
               </div>
             ))}
           </div>
