@@ -202,7 +202,18 @@ const Notification = () => {
       </div>
       <div className={styles.content}>
         <h1>Notifications</h1>
-        {renderSanctions()}
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "linear-gradient(to top, rgba(100,0,0,.9), rgba(100,0,0,0.3))",
+            borderRadius: "12px",
+          }}
+        >
+          {renderSanctions()}
+        </div>
       </div>
     </div>
   );
