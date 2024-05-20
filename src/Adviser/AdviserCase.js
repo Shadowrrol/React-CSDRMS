@@ -230,7 +230,7 @@ const AdviserCase = () => {
                     <table className={caseStyles['case-table']}>
                         <thead>
                             <tr>
-                                <th>Date</th>
+                                <th>ID</th>
                                 <th>Case#</th>
                                 <th>Case Name</th>
                                 <th>Investigator</th>
@@ -242,11 +242,11 @@ const AdviserCase = () => {
                         </thead>
                         <tbody>
                             {cases.map((caseItem) => (
-                               <tr
-                               key={caseItem.cid}
-                               onClick={() => selectCase(caseItem.cid, caseItem.status)}
-                               className={selectedCaseId === caseItem.cid ? caseStyles['selected-row'] : ''}
-                           >
+                                <tr
+                                    key={caseItem.cid}
+                                    onClick={() => selectCase(caseItem.cid)}
+                                    className={selectedCaseId === caseItem.cid ? caseStyles['selected-row'] : ''}
+                                >
                                     <td>{caseItem.cid}</td>
                                     <td>{caseItem.sid}</td>
                                     <td>{caseItem.case_name}</td>
@@ -272,7 +272,7 @@ const AdviserCase = () => {
                     {isModalOpen && (
                         <div className={modalStyles.overlay}>
                             <div className={modalStyles.modal}>
-                            <form onSubmit={handleSubmit} className={styles1['add-student-form']}>
+                                <form onSubmit={handleSubmit} className={styles1['add-student-form']}>
                                     <div className={modalStyles.space}>
                                         <button onClick={closeModal} className={modalStyles.closeButton}>✖</button>
                                     </div>

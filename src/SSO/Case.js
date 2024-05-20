@@ -15,6 +15,7 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
+
 const createSidebarLink = (to, text, IconComponent) => (
     <Link to={to} className={navigationStyles['styled-link']}>
         <IconComponent className={navigationStyles.icon} />

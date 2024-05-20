@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Navigation.module.css'; // Import CSS module
 import './Student.css';
-
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
@@ -18,13 +20,14 @@ const createSidebarLink = (to, text, IconComponent) => (
         <span className={styles['link-text']}>{text}</span> {/* Text */}
     </Link>
 );
- 
+
 const AdviserStudent = () => {
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
     const [students, setStudents] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const navigate = useNavigate(); 
+    const [selectedStudent, setSelectedStudent] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Check if the logged-in user's school year and section exist
@@ -37,7 +40,7 @@ const AdviserStudent = () => {
                 // Use the default URL
                 url = 'http://localhost:8080/student/getAllStudents';
             }
-            
+
             // Fetch students based on the URL
             fetch(url)
                 .then(response => response.json())
@@ -53,7 +56,7 @@ const AdviserStudent = () => {
         localStorage.removeItem('authToken');
         // Redirect the user to the login page
         navigate('/');
-      };
+    };
 
     const handleDelete = (sid) => {
         fetch(`http://localhost:8080/student/deleteStudent/${sid}`, {
@@ -73,6 +76,10 @@ const AdviserStudent = () => {
         });
     };
 
+    const handleSelectStudent = (student) => {
+        setSelectedStudent(student);
+    };
+
     // Function to filter students based on search query
     const filteredStudents = students.filter(student =>
         student.sid.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -81,7 +88,7 @@ const AdviserStudent = () => {
     );
 
     return (
-        <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
+        <div className={styles.wrapper}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
@@ -110,13 +117,12 @@ const AdviserStudent = () => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search by SID, First Name, or Last Name"
                     />
-                     {loggedInUser.userType === 3 && (
-                    <Link to="/add-student">
-                        <button>Add Student</button>
-                    </Link>
-                     )}
-                    {/* <Link to="/add-report"><button>Add Student Report</button></Link> */}
-                    <table>
+                    {loggedInUser.userType === 3 && (
+                        <Link to="/add-student">
+                            <button>Add Student</button>
+                        </Link>
+                    )}
+                    <table className="student-table">
                         <thead>
                             <tr>
                                 <th>SID</th>
@@ -131,7 +137,11 @@ const AdviserStudent = () => {
                         </thead>
                         <tbody>
                             {filteredStudents.map(student => (
-                                <tr key={student.sid}>
+                                <tr 
+                                    key={student.sid} 
+                                    onClick={() => handleSelectStudent(student)}
+                                    className={selectedStudent?.sid === student.sid ? 'selected-row' : ''}
+                                >
                                     <td>{student.sid}</td>
                                     <td>{student.firstname}</td>
                                     <td>{student.middlename}</td>
@@ -140,25 +150,27 @@ const AdviserStudent = () => {
                                     <td>{student.section}</td>
                                     <td>{student.con_num}</td>
                                     <td>
-                                    {loggedInUser.userType === 3 && (
-                                        <>
-                                        <Link to={`/update-student/${student.sid}`}>
-                                            <button>Update</button>
-                                        </Link>
-                                        <button onClick={() => handleDelete(student.sid)}>Delete</button>
-                                        </>
-                                    )}
-                                        <Link to={`/add-report/${student.sid}`}>
-                                            <button>Add Report</button>
-                                        </Link>
-                                        <Link to={`/view-student-report/${student.sid}`}>
-                                            <button>View Report</button>
-                                        </Link>
+                                        {loggedInUser.userType === 3 && (
+                                            <>
+                                                <Link to={`/update-student/${student.sid}`}>
+                                                    <EditIcon className="icon-button icon-edit" />
+                                                </Link>
+                                                <DeleteIcon className="icon-button icon-delete" onClick={() => handleDelete(student.sid)} />
+                                            </>
+                                        )}
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                    <div className="report-buttons">
+                        <Link to={selectedStudent ? `/add-report/${selectedStudent.sid}` : "#"}>
+                            <button disabled={!selectedStudent}>Add Report</button>
+                        </Link>
+                        <Link to={selectedStudent ? `/view-student-report/${selectedStudent.sid}` : "#"}>
+                            <button disabled={!selectedStudent}>View Report</button>
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>
