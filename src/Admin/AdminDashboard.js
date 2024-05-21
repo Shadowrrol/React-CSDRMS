@@ -7,6 +7,7 @@ import styles from '../Navigation.module.css';
 import MenuPopupState from '../components/MenuPopupState';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -44,7 +45,7 @@ const AdminDashboard = () => {
       <div className={styles.sidenav}>
         <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
         <Link to="/AdminDashboard" className={styles['styled-link']}>
-          <AccountBoxIcon className={styles.icon} />
+          <AssessmentIcon className={styles.icon} />
           <span className={styles['link-text']}>Dashboard</span>
         </Link>
         <Link to="/account" className={styles['styled-link']}>

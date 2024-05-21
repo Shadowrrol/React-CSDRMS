@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Import axios for making HTTP requests
+import { Link } from 'react-router-dom';
+import styles from '../Navigation.module.css';
+import MenuPopupState from '../components/MenuPopupState';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
 function Class() {
   const [classes, setClasses] = useState([]);
@@ -87,93 +93,111 @@ function Class() {
   }, []);
 
   return (
-    <div>
-      <h2>Classes</h2>
-      <ul>
-        {classes.map((classItem) => (
-          <li key={classItem.class_id}>
-            Grade: {classItem.grade}, Section: {classItem.section}
-          </li>
-        ))}
-      </ul>
+    <div className={styles.wrapper}>
+      <div className={styles.sidenav}>
+        <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
+        <Link to="/AdminDashboard" className={styles['styled-link']}>
+          <AssessmentIcon className={styles.icon} />
+          <span className={styles['link-text']}>Dashboard</span>
+        </Link>
+        <Link to="/account" className={styles['styled-link']}>
+          <AccountBoxIcon className={styles.icon} />
+          <span className={styles['link-text']}>Account</span>
+        </Link>
+        <Link to="/class" className={styles['styled-link']}>
+          <MeetingRoomIcon className={styles.icon} />
+          <span className={styles['link-text']}>Class</span>
+        </Link>
+        <MenuPopupState />
+      </div>
+      <div className={styles.mainContent}>
+        <h2>Classes</h2>
+        <ul>
+          {classes.map((classItem) => (
+            <li key={classItem.class_id}>
+              Grade: {classItem.grade}, Section: {classItem.section}
+            </li>
+          ))}
+        </ul>
 
-      <h2>School Years</h2>
-      <ul>
-        {schoolYears.map((schoolYear) => (
-          <li key={schoolYear.schoolYear_ID}>
-            {schoolYear.schoolYear}
-          </li>
-        ))}
-      </ul>
+        <h2>School Years</h2>
+        <ul>
+          {schoolYears.map((schoolYear) => (
+            <li key={schoolYear.schoolYear_ID}>
+              {schoolYear.schoolYear}
+            </li>
+          ))}
+        </ul>
 
-      {/* Add Grade Pop-up */}
-      {showAddGrade && (
-        <div className="popup">
-          <div className="popup-content">
-            <input
-              type="number"
-              value={newGrade}
-              onChange={(e) => setNewGrade(e.target.value)}
-              placeholder="Enter grade"
-            />
-            <input
-              type="text"
-              value={newSection}
-              onChange={(e) => setNewSection(e.target.value)}
-              placeholder="Enter section"
-            />
-            <button onClick={addGrade}>Add Grade</button>
-            <button onClick={() => setShowAddGrade(false)}>Cancel</button>
+        {/* Add Grade Pop-up */}
+        {showAddGrade && (
+          <div className="popup">
+            <div className="popup-content">
+              <input
+                type="number"
+                value={newGrade}
+                onChange={(e) => setNewGrade(e.target.value)}
+                placeholder="Enter grade"
+              />
+              <input
+                type="text"
+                value={newSection}
+                onChange={(e) => setNewSection(e.target.value)}
+                placeholder="Enter section"
+              />
+              <button onClick={addGrade}>Add Grade</button>
+              <button onClick={() => setShowAddGrade(false)}>Cancel</button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Add Section Pop-up */}
-      {/* {showAddSection && (
-        <div className="popup">
-          <div className="popup-content">
-            <select
-              value={selectedGrade}
-              onChange={(e) => setSelectedGrade(e.target.value)}
-            >
-              <option value="">Select Grade</option>
-              {grades.map((grade) => (
-                <option key={grade} value={grade}>Grade {grade}</option>
-              ))}
-            </select>
-            <input
-              type="text"
-              value={newSection}
-              onChange={(e) => setNewSection(e.target.value)}
-              placeholder="Enter section"
-            />
-            <button onClick={addSection}>Add Section</button>
-            <button onClick={() => setShowAddSection(false)}>Cancel</button>
+        {/* Add Section Pop-up */}
+        {showAddSection && (
+          <div className="popup">
+            <div className="popup-content">
+              <select
+                value={selectedGrade}
+                onChange={(e) => setSelectedGrade(e.target.value)}
+              >
+                <option value="">Select Grade</option>
+                {grades.map((grade) => (
+                  <option key={grade} value={grade}>Grade {grade}</option>
+                ))}
+              </select>
+              <input
+                type="text"
+                value={newSection}
+                onChange={(e) => setNewSection(e.target.value)}
+                placeholder="Enter section"
+              />
+              <button onClick={addSection}>Add Section</button>
+              <button onClick={() => setShowAddSection(false)}>Cancel</button>
+            </div>
           </div>
-        </div>
-      )} */}
+        )}
 
-      {/* Add School Year Pop-up */}
-      {showAddSchoolYear && (
-        <div className="popup">
-          <div className="popup-content">
-            <input
-              type="text"
-              value={newSchoolYear}
-              onChange={(e) => setNewSchoolYear(e.target.value)}
-              placeholder="Enter school year"
-            />
-            <button onClick={addSchoolYear}>Add School Year</button>
-            <button onClick={() => setShowAddSchoolYear(false)}>Cancel</button>
+        {/* Add School Year Pop-up */}
+        {showAddSchoolYear && (
+          <div className="popup">
+            <div className="popup-content">
+              <input
+                type="text"
+                value={newSchoolYear}
+                onChange={(e) => setNewSchoolYear(e.target.value)}
+                placeholder="Enter school year"
+              />
+              <button onClick={addSchoolYear}>Add School Year</button>
+              <button onClick={() => setShowAddSchoolYear(false)}>Cancel</button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Buttons to show pop-ups */}
-      <div>
-        <button onClick={() => setShowAddGrade(true)}>Add Grade</button>
-        {/* <button onClick={() => setShowAddSection(true)}>Add Section</button> */}
-        <button onClick={() => setShowAddSchoolYear(true)}>Add School Year</button>
+        {/* Buttons to show pop-ups */}
+        <div>
+          <button onClick={() => setShowAddGrade(true)}>Add Grade</button>
+          <button onClick={() => setShowAddSection(true)}>Add Section</button>
+          <button onClick={() => setShowAddSchoolYear(true)}>Add School Year</button>
+        </div>
       </div>
     </div>
   );
