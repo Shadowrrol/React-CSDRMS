@@ -23,6 +23,7 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
+    document.title = "SSO | Dashboard";
     fetchUsers();
   }, []);
 

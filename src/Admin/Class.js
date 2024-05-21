@@ -87,6 +87,7 @@ function Class() {
 
   // Fetch classes, school years, and grades when the component mounts
   useEffect(() => {
+    document.title = "SSO | Class Management";
     fetchClasses();
     fetchSchoolYears();
     fetchGrades();
