@@ -1,6 +1,6 @@
 import "./Account.css";
 import navigationStyles from '../Navigation.module.css';
-
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
@@ -21,6 +21,9 @@ const createSidebarLink = (to, text, IconComponent) => (
 
 
 const Account = () => {
+  useEffect(() => {
+    document.title = "SSO | Accounts";
+  }, []); 
   const navigate = useNavigate(); 
   const handleLogout = () => {
     // Clear the authentication token from localStorage

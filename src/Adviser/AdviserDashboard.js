@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css'; // Import CSS module
 import '../SSO/SSODashboard.css';
@@ -13,6 +13,9 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 
 const AdviserDashboard = () => {
+  useEffect(() => {
+    document.title = "Adviser | Dashboard";
+  }, []); 
   // Access location state to get userInfo
   const authToken = localStorage.getItem('authToken');
   const loggedInUser = JSON.parse(authToken);

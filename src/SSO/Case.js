@@ -55,6 +55,7 @@ const Case = () => {
     });
 
     useEffect(() => {
+        document.title = "SSO | Cases";
         const fetchFeedbackedCases = async () => {
             try {
                 const response = await fetch('http://localhost:8080/feedback/getFeedbacks');

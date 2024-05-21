@@ -9,6 +9,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
+    document.title = "Login";
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
       try {

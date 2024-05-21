@@ -18,6 +18,7 @@ const Followup = () => {
   const [followups, setFollowups] = useState([]);
 
   useEffect(() => {
+    document.title = "Followup";
     const fetchFollowups = async () => {
       try {
         const response = await fetch(

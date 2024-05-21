@@ -7,6 +7,7 @@ const ViewStudentSanctions = () => {
   const [sanctions, setSanctions] = useState([]);
 
   useEffect(() => {
+    document.title = "Student Sanctions";
     const fetchSanctions = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/sanction/getSanctionsBySid/${sid}`);

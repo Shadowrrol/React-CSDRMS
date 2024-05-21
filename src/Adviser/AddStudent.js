@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css'; // Import CSS module
 import styles1 from './AddStudent.module.css'; // Import AddStudent.css
@@ -14,6 +14,9 @@ import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const AddStudent = () => {
+    useEffect(() => {
+        document.title = "Adviser | Add Student";
+      }, []); 
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
     const navigate = useNavigate(); 

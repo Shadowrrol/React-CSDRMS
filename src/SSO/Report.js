@@ -33,6 +33,7 @@ const Report = () => {
     const [chartType, setChartType] = useState("column"); // State to hold the selected chart type
 
     useEffect(() => {
+        document.title = "Report";
         const fetchStudentReports = async () => {
             try {
                 let response;

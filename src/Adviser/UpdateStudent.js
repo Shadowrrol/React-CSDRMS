@@ -41,6 +41,7 @@ const UpdateStudent = () => {
     };
 
     useEffect(() => {
+        document.title = "Adviser | Update Student";
         fetch(`http://localhost:8080/student/getStudent/${sid}`)
             .then(response => response.json())
             .then(data => setStudentData(data))

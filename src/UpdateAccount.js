@@ -53,6 +53,7 @@ const UpdateAccount = () => {
   };
 
   useEffect(() => {
+    document.title = "SSO | Update Account";
     console.log("User:", user);
     if (user && user.userType) {
       console.log("UserType:", user.userType);

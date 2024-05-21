@@ -43,6 +43,7 @@ const ViewStudentReport = () => {
     };
 
     useEffect(() => {
+        document.title = "Adviser | View Report";
         const fetchStudent = async () => {
             try {
                 const response = await fetch(`http://localhost:8080/student/getStudent/${sid}`);

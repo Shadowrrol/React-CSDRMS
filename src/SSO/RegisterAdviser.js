@@ -34,6 +34,7 @@ const RegisterAdviser = () => {
   const [schoolYears, setSchoolYears] = useState([]);
 
   useEffect(() => {
+    document.title = "SSO | Register Adviser";
     // Fetch grades
     axios.get('http://localhost:8080/class/allUniqueGrades')
       .then(response => {

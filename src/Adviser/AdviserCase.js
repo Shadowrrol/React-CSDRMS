@@ -44,6 +44,7 @@ const AdviserCase = () => {
     const [students, setStudents] = useState([]);
 
     useEffect(() => {
+        document.title = "Adviser | Cases";
         const fetchCases = async () => {
             try {
                 const response = await fetch('http://localhost:8080/api/cases/handledByAdviser');

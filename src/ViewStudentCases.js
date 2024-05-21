@@ -7,6 +7,7 @@ const ViewStudentCases = () => {
   const [cases, setCases] = useState([]);
 
   useEffect(() => {
+    document.title = "Student Cases";
     const fetchCases = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/api/cases/student/${sid}`);

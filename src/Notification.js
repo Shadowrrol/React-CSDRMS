@@ -26,6 +26,7 @@ const Notification = () => {
 
   useEffect(() => {
     // Fetch sanctions data when component mounts
+    document.title = "Notification";
     fetchSanctions();
   }, [loggedInUser]);
 

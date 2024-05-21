@@ -30,6 +30,7 @@ const AdviserStudent = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.title = "Student";
         // Check if the logged-in user's school year and section exist
         if (loggedInUser) {
             let url;

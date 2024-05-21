@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../Navigation.module.css'; // Import CSS module
@@ -17,6 +17,11 @@ const createSidebarLink = (to, text, IconComponent) => (
 );
 
 const RegisterSSO = () => {
+  
+  useEffect(() => {
+    document.title = "SSO | Register SSO";
+  }, []); 
+  
   const navigate = useNavigate(); 
   const handleLogout = () => {
     // Clear the authentication token from localStorage

@@ -19,6 +19,7 @@ const Feedback = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.title = "Feedback";
         const fetchFeedback = async () => {
             try {
                 let feedbackEndpoint = 'http://localhost:8080/feedback/getFeedbacks';

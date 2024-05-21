@@ -34,6 +34,7 @@ const SSO_Dashboard = () => {
   };
 
   React.useEffect(() => {
+    document.title = "SSO | Dashboard";
     if (!loggedInUser) {
       // If userObject is null or undefined, redirect to login page
       navigate('/');
