@@ -48,8 +48,8 @@ select {
 
 /* Button styling */
 button {
-    background-color: #861b1c;
-    color: #fff;
+    background-color: #861b1c; /* White button background */
+    color: #fff; /* Maroon button text color */
     border: none;
     border-radius: 4px;
     padding: 12px 20px;
@@ -58,14 +58,6 @@ button {
     cursor: pointer;
     margin-top: 10px;
     margin-bottom: 10px;
-    background-color: #8B0000;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.3s;
-    font-size: 14px;
 }
 
 button:hover {
