@@ -9,11 +9,10 @@ function Class() {
   const [grades, setGrades] = useState([]);
   const [newGrade, setNewGrade] = useState("");
   const [newSection, setNewSection] = useState("");
-  const [selectedGrade, setSelectedGrade] = useState("");
   const [newSchoolYear, setNewSchoolYear] = useState("");
   const [showAddGrade, setShowAddGrade] = useState(false);
-  const [showAddSection, setShowAddSection] = useState(false);
   const [showAddSchoolYear, setShowAddSchoolYear] = useState(false);
+
   const handleOpen = () => setShowAddGrade(true);
   const handleClose = () => setShowAddGrade(false);
   const handleOpenSchoolYear = () => setShowAddSchoolYear(true);
@@ -49,38 +48,32 @@ function Class() {
     }
   };
 
-  // Function to add a new grade
+  // Function to add a new grade and section
   const addGrade = async () => {
+    if (!newGrade || !newSection) {
+      alert("Please fill in all fields");
+      return;
+    }
+
     try {
       await axios.post("http://localhost:8080/class/addClass", {
         grade: newGrade,
         section: newSection,
       });
-      // Refresh the classes list after adding a new grade
       fetchClasses();
       setShowAddGrade(false); // Close the pop-up after adding the grade
     } catch (error) {
       console.error("Error adding grade:", error);
-    }
-  };
-
-  // Function to add a new section
-  const addSection = async () => {
-    try {
-      await axios.post("http://localhost:8080/class/addClass", {
-        grade: selectedGrade,
-        section: newSection,
-      });
-      // Refresh the classes list after adding a new section
-      fetchClasses();
-      setShowAddSection(false); // Close the pop-up after adding the section
-    } catch (error) {
-      console.error("Error adding section:", error);
+      alert("Failed to add grade and section"); // User-friendly error message
     }
   };
 
   // Function to add a new school year
   const addSchoolYear = async () => {
+    if (!newSchoolYear) {
+      alert("Please fill in all fields");
+      return;
+    }
     try {
       await axios.post("http://localhost:8080/schoolYear/addSchoolYear", {
         schoolYear: newSchoolYear,
@@ -90,11 +83,13 @@ function Class() {
       setShowAddSchoolYear(false); // Close the pop-up after adding the school year
     } catch (error) {
       console.error("Error adding school year:", error);
+      alert("Failed to add school year"); // User-friendly error message
     }
   };
 
   // Fetch classes, school years, and grades when the component mounts
   useEffect(() => {
+    document.title = "SSO | Class";
     fetchClasses();
     fetchSchoolYears();
     fetchGrades();
@@ -146,6 +141,7 @@ function Class() {
           >
             {classes.map((classItem) => (
               <div
+                key={classItem.class_id}
                 style={{
                   display: "flex",
                   border: "1px solid black",
@@ -159,7 +155,7 @@ function Class() {
                     "linear-gradient(180deg, rgba(179, 63, 73, 0.8) 11.82%, #1d0809 94.83%)",
                 }}
               >
-                <li style={{ listStyle: "none", fontWeight: "bold" }} key={classItem.class_id}>
+                <li style={{ listStyle: "none", fontWeight: "bold" }}>
                   Grade: {classItem.grade}, Section: {classItem.section}
                 </li>
               </div>
@@ -189,6 +185,7 @@ function Class() {
           >
             {schoolYears.map((schoolYear) => (
               <div
+                key={schoolYear.schoolYear_ID}
                 style={{
                   display: "flex",
                   border: "1px solid black",
@@ -202,7 +199,7 @@ function Class() {
                     "linear-gradient(180deg, rgba(179, 63, 73, 0.8) 11.82%, #1d0809 94.83%)",
                 }}
               >
-                <li style={{ listStyle: "none" }} key={schoolYear.schoolYear_ID}>
+                <li style={{ listStyle: "none" }}>
                   {schoolYear.schoolYear}
                 </li>
               </div>
@@ -220,7 +217,7 @@ function Class() {
           justifyContent: "center",
         }}
       >
-        {/* Add Grade Pop-up */}
+        {/* Add Grade and Section Pop-up */}
         {showAddGrade ? (
           <Modal open={showAddGrade} onClose={handleClose}>
             <Box
@@ -269,9 +266,8 @@ function Class() {
             </Box>
           </Modal>
         ) : (
-          <button onClick={() => handleOpen()}>Add Grade and Section</button>
+          <button onClick={handleOpen}>Add Grade and Section</button>
         )}
-
 
         {/* Add School Year Pop-up */}
         {showAddSchoolYear ? (
@@ -316,7 +312,7 @@ function Class() {
             </Box>
           </Modal>
         ) : (
-          <button onClick={() => handleOpenSchoolYear()}>Add School Year</button>
+          <button onClick={handleOpenSchoolYear}>Add School Year</button>
         )}
         {/* Buttons to show pop-ups */}
       </div>
