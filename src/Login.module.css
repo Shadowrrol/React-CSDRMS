@@ -207,7 +207,7 @@
   box-sizing: border-box;
 }
 .image23Parent {
-  height: 897px;
+  height: 100vh;
   flex: 1;
   flex-direction: column;
   align-items: center;
