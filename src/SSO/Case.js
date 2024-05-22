@@ -15,7 +15,6 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
-
 const createSidebarLink = (to, text, IconComponent) => (
     <Link to={to} className={navigationStyles['styled-link']}>
         <IconComponent className={navigationStyles.icon} />
@@ -53,6 +52,14 @@ const Case = () => {
         name: '',
         reasoning: ''
     });
+
+    const getTodayDate = () => {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    };
 
     useEffect(() => {
         document.title = "SSO | Cases";
@@ -254,6 +261,7 @@ const Case = () => {
             name: '',
             reasoning: ''
         });
+        setSelectedCaseId(caseId); // Ensure selectedCaseId is set when opening the modal
         setFollowUpModalOpen(true);
     };
 
@@ -280,6 +288,7 @@ const Case = () => {
                 setCases((prevCases) => prevCases.map((caseItem) =>
                     caseItem.cid === selectedCaseId ? { ...caseItem, followedUp: true } : caseItem
                 ));
+                setFollowedUpCases((prevFollowedUpCases) => [...prevFollowedUpCases, selectedCaseId]); // Update the followed up cases list
             } else {
                 console.error('Failed to add follow-up');
             }
@@ -348,9 +357,9 @@ const Case = () => {
                                         {caseItem.status}
                                     </td>
                                     <td>
-                                        {caseItem.status === 'Pending' && !caseItem.followedUp ? (
+                                        {caseItem.status === 'Pending' && !followedUpCases.includes(caseItem.cid) ? (
                                             <button onClick={() => openFollowUpModal(caseItem.cid)}>Investigate</button>
-                                        ) : caseItem.status === 'Pending' && caseItem.followedUp ? (
+                                        ) : caseItem.status === 'Pending' && followedUpCases.includes(caseItem.cid) ? (
                                             <button className={caseStyles['disabled-button']} disabled>Followed up</button>
                                         ) : caseItem.status === 'Completed' && !feedbackedCases.includes(caseItem.cid) ? (
                                             <button onClick={() => openFeedbackModal(caseItem.cid)}>Feedback</button>
@@ -479,6 +488,7 @@ const Case = () => {
                                                 type="date"
                                                 id="date"
                                                 value={followUpData.date}
+                                                min={getTodayDate()}
                                                 onChange={(e) => setFollowUpData({ ...followUpData, date: e.target.value })}
                                                 required
                                             />
