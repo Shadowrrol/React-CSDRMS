@@ -133,7 +133,6 @@ const AdviserStudent = () => {
                                 <th>Grade</th>
                                 <th>Section</th>
                                 <th>Contact Number</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -150,28 +149,28 @@ const AdviserStudent = () => {
                                     <td>{student.grade}</td>
                                     <td>{student.section}</td>
                                     <td>{student.con_num}</td>
-                                    <td>
-                                        {loggedInUser.userType === 3 && (
-                                            <>
-                                                <Link to={`/update-student/${student.sid}`}>
-                                                    <EditIcon className="icon-button icon-edit" />
-                                                </Link>
-                                                <DeleteIcon className="icon-button icon-delete" onClick={() => handleDelete(student.sid)} />
-                                            </>
-                                        )}
-                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                    <div className="report-buttons">
-                        <Link to={selectedStudent ? `/add-report/${selectedStudent.sid}` : "#"}>
-                            <button disabled={!selectedStudent}>Add Report</button>
-                        </Link>
-                        <Link to={selectedStudent ? `/view-student-report/${selectedStudent.sid}` : "#"}>
-                            <button disabled={!selectedStudent}>View Report</button>
-                        </Link>
-                    </div>
+                    {selectedStudent && (
+                        <div className="action-buttons">
+                            {loggedInUser.userType === 3 && (
+                                <>
+                                    <Link to={`/update-student/${selectedStudent.sid}`}>
+                                        <EditIcon className="icon-button icon-edit" />
+                                    </Link>
+                                    <DeleteIcon className="icon-button icon-delete" onClick={() => handleDelete(selectedStudent.sid)} />
+                                </>
+                            )}
+                            <Link to={`/add-report/${selectedStudent.sid}`}>
+                                <button>Add Report</button>
+                            </Link>
+                            <Link to={`/view-student-report/${selectedStudent.sid}`}>
+                                <button>View Report</button>
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
