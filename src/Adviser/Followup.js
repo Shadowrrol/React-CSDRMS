@@ -86,7 +86,7 @@ const Followup = () => {
         >
           <div
             style={{
-              width: "160vh",
+              width: "80vh",
               border: "2px solid black",
               borderRadius: "12px",
               alignItems: "center",
