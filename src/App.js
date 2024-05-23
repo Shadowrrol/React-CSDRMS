@@ -12,6 +12,7 @@ import Case from './SSO/Case';
 import AddStudentReport from './SSO/AddStudentReport';
 import Sanction from './SSO/Sanction';
 
+
 import ViewStudentCases from './ViewStudentCases';
 import ViewStudentSanctions from './ViewStudentSanctions';
 import ViewSanctions from './Principal/ViewSanctions';
@@ -30,40 +31,85 @@ import RegisterAdviser from './Admin/RegisterAdviser';
 import RegisterSSO from './Admin/RegisterSSO';
 
 
+import PrivateRoute from './PrivateRoute';
+import { AuthContext, AuthProvider } from './AuthContext';
+
 
 function App() {
+  const { loggedInUser } = useContext(AuthContext);
 
   return (
     <Router>
       <div className="App">
         <Routes>
-            <Route exact path="/" element={<LoginPage/>} />
-            <Route path="/report" element={<Report />} />
-            <Route path="/view-student-report/:sid" element={<ViewStudentReport />} />
-            <Route path="/UpdateAccount" element={<UpdateAccount />} /> 
-            <Route path="/case" element={<Case />} />
-            <Route path="/sanctions" element={<Sanction />} />     
-            <Route path="/viewSanctions" element={<ViewSanctions />} />
-            <Route path="/view-student-cases/:sid" element={<ViewStudentCases />} /> 
-            <Route path="/view-student-sanctions/:sid" element={<ViewStudentSanctions />} /> 
+          <Route exact path="/" element={<LoginPage/>} />
+
+          {loggedInUser && (
+            <>
+             <Route path="/report" element={<Report />} />
+             <Route path="/view-student-report/:sid" element={<ViewStudentReport />} />
+             <Route path="/UpdateAccount" element={<UpdateAccount />} /> 
+            </>
+
+          )}
+
+          {loggedInUser && loggedInUser.userType === 1 && (
+            <>
+           <Route path="/case" element={<Case />} />
+           <Route path="/sanctions" element={<Sanction />} />
+            </>
+
+          )}
+
+          {loggedInUser && loggedInUser.userType === 2 && (
+            <>
+             <Route path="/viewSanctions" element={<ViewSanctions />} />
+             <Route path="/view-student-cases/:sid" element={<ViewStudentCases />} /> 
+             <Route path="/view-student-sanctions/:sid" element={<ViewStudentSanctions />} /> 
+            </>
+
+          )}
+
+          {loggedInUser && loggedInUser.userType === 3 && (
+            <>
             <Route path="/Followup" element={<Followup />} />
             <Route path="/add-student" element={<AddStudent />} />
             <Route path="/update-student/:sid" element={<UpdateStudent />} />
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/adviserCase" element={<AdvivserCase />} /> 
-            <Route path="/account" element={<Account  />} />
-            <Route path="/register/principal" element={<RegisterPrincipal />} />
-            <Route path="/register/adviser" element={<RegisterAdviser />} />
-            <Route path="/register/sso" element={<RegisterSSO />} />
-            <Route path="/AdminDashboard"  element={<AdminDashboard />} />
-            <Route path="/Class" element={<Class />} />
+            </>
+          )}
+
+          {loggedInUser && loggedInUser.userType === 4 && (
+            <>
+              <Route path="/account" element={<Account  />} />
+              <Route path="/register/principal" element={<RegisterPrincipal />} />
+              <Route path="/register/adviser" element={<RegisterAdviser />} />
+               <Route path="/register/sso" element={<RegisterSSO />} />
+              <Route path="/AdminDashboard" element={<PrivateRoute element={<AdminDashboard />} />} />
+              <Route path="/Class" element={<PrivateRoute element={<Class />} />} />
+            </>
+          )}
+
+          {(loggedInUser && (loggedInUser.userType === 1 || loggedInUser.userType === 3)) && (
+            <>
             <Route path="/notification" element={<Notification />} />
-            <Route path="/student" element={<Student />}   />
+            <Route path="/student" element={<PrivateRoute element={<Student />} />}  />
             <Route path="/add-report/:sid" element={<AddStudentReport />} /> 
+            </>
+
+          )}
+
         </Routes>
       </div>
     </Router>
   );
 }
 
-export default App;
+export default function AppWrapper() {
+  return (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  );
+}
