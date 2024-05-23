@@ -4,7 +4,6 @@ import './AddStudentReport.css'; // Import CSS file for styling
 import styles from '../Navigation.module.css';
 import styles1 from '../GlobalForm.module.css';
 
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RateReviewIcon from '@mui/icons-material/RateReview';
