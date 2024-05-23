@@ -14,6 +14,7 @@
     align-items: center;
     flex-grow: 1;
     padding: 20px;
+    animation: fadeIn 1s ease-in-out;
 }
 
 .feedbackContent {
@@ -26,12 +27,14 @@
     width: 80%; /* Adjust width as needed */
     max-width: 800px;
     margin: auto;
+    animation: slideIn 1s ease-in-out;
 }
 
 h1 {
     margin-bottom: 20px;
     color: #fff; /* White text color */
     font-family: 'Arial', sans-serif; /* Modern font */
+    animation: fadeInDown 1s ease-in-out;
 }
 
 .error {
@@ -40,6 +43,7 @@ h1 {
 
 .feedbackList {
     margin-top: 20px;
+    animation: fadeInUp 1s ease-in-out;
 }
 
 .feedbackItem {
@@ -52,6 +56,7 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 .feedbackItem p {
@@ -93,6 +98,26 @@ h1 {
 }
 
 /* Keyframes for animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
