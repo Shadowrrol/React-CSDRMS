@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import styles from './Navigation.module.css';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
+import styles1 from './GlobalDesign.module.css';
 
 const ViewStudentSanctions = () => {
     const { sid } = useParams();
@@ -33,7 +33,7 @@ const ViewStudentSanctions = () => {
     }, [sid]);
 
     return (
-        <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
+        <div className={styles.wrapper}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
                 <Link to="/report" className={styles['styled-link']}>
@@ -48,17 +48,21 @@ const ViewStudentSanctions = () => {
                     Logout
                 </button>
             </div>
-            <div>
-                <h2>Sanctions for Student ID: {sid}</h2>
-                <ul>
-                    {sanctions.map((sanction) => (
-                        <li key={sanction.sanction_id}>
-                            <div>Behavior Details: {sanction.behaviorDetails}</div>
-                            <div>Sanction Recommendation: {sanction.sanctionRecommendation}</div>
-                            <div>Status: {sanction.isApproved === 1 ? 'Approved' : sanction.isApproved === 2 ? 'Declined' : 'Pending'}</div>
-                        </li>
-                    ))}
-                </ul>
+            <div className={styles.content}>
+                <div className={styles1.box}>
+                    <div className={styles1.maroonbox}>
+                        <h2 style={{ color: "white" }}>Sanctions for Student ID: {sid}</h2>
+                    </div>
+                    <div className={styles1.sanctionsGrid}>
+                        {sanctions.map((sanction) => (
+                            <div key={sanction.sanction_id} className={styles1.sanctionItem}>
+                                <div className={styles1.gridItem}><span className={styles1.label}>Behavior Details:</span> {sanction.behaviorDetails}</div>
+                                <div className={styles1.gridItem}><span className={styles1.label}>Sanction Recommendation:</span> {sanction.sanctionRecommendation}</div>
+                                <div className={styles1.gridItem}><span className={styles1.label}>Status:</span> {sanction.isApproved === 1 ? 'Approved' : sanction.isApproved === 2 ? 'Declined' : 'Pending'}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </div>
     );

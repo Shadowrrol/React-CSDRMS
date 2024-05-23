@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../Navigation.module.css"; // Import CSS module
+import styles1 from '../GlobalDesign.module.css';
 
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -198,7 +199,7 @@ const ViewSanctions = () => {
                   border: "1px black solid",
                   width: "80vh",
                   borderRadius: "15px",
-                  background: "linear-gradient(to right, #a43737 40%, #e8bd26 95%)",
+                  background: "#f9f9f9",
                 }}
               >
                 <li key={sanction.sanction_id} style={{ listStyle: "none" }}>
@@ -220,13 +221,23 @@ const ViewSanctions = () => {
                         gap: "8px",
                       }}
                     >
-                      <div>Sanction ID: {sanction.sanction_id}</div>
-                      <div>
-                        Student Name: {sanction.student.firstname} {sanction.student.lastname}
+                      <div className={styles1.gridItem}>
+                          <span className={styles1.label}>Sanction ID:</span> 
+                          {sanction.sanction_id}
                       </div>
-                      <div>Behavior Details: {sanction.behaviorDetails}</div>
-                      <div>Sanction Recommendation: {sanction.sanctionRecommendation}</div>
-                    </div>
+                      <div className={styles1.gridItem}>
+                          <span className={styles1.label}>Student Name:</span> 
+                          {sanction.student.firstname} {sanction.student.lastname}
+                      </div>
+                      <div className={styles1.gridItem}>
+                          <span className={styles1.label}>Behavior Details:</span> 
+                          {sanction.behaviorDetails}
+                      </div>
+                      <div className={styles1.gridItem}>
+                          <span className={styles1.label}>Sanction Recommendation:</span> 
+                          {sanction.sanctionRecommendation}
+                      </div>
+                    </div>   
                     {/* Approve and decline buttons */}
                     <div
                       style={{
