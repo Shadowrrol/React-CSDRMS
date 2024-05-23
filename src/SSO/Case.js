@@ -37,6 +37,7 @@ const Case = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [isFeedbackModalOpen, setFeedbackModalOpen] = useState(false);
     const [isFollowUpModalOpen, setFollowUpModalOpen] = useState(false);
+    const [isSanctionModalOpen, setSanctionModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         sid: '',
         case_name: '',
@@ -51,6 +52,11 @@ const Case = () => {
         violation: '',
         name: '',
         reasoning: ''
+    });
+
+    const [sanctionData, setSanctionData] = useState({
+        behaviorDetails: '',
+        sanctionRecommendation: ''
     });
 
     const getTodayDate = () => {
@@ -133,6 +139,11 @@ const Case = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    const handleSanctionInputChange = (e) => {
+        const { name, value } = e.target;
+        setSanctionData({ ...sanctionData, [name]: value });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -209,6 +220,33 @@ const Case = () => {
         }
     };
 
+    const handleSanctionSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('http://localhost:8080/sanction/insertSanction', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cid: selectedCaseId,
+                    sid: cases.find(caseItem => caseItem.cid === selectedCaseId)?.sid,
+                    behaviorDetails: sanctionData.behaviorDetails,
+                    sanctionRecommendation: sanctionData.sanctionRecommendation
+                })
+            });
+
+            if (response.ok) {
+                setSanctionModalOpen(false);
+                setSanctionData({ behaviorDetails: '', sanctionRecommendation: '' });
+            } else {
+                console.error('Failed to recommend sanction');
+            }
+        } catch (error) {
+            console.error('Error recommending sanction:', error);
+        }
+    };
+
     const selectCase = (id, status) => {
         setSelectedCaseId(id);
         if (status === 'Completed') {
@@ -232,7 +270,7 @@ const Case = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                },
+                },  
                 body: JSON.stringify({
                     uid: cases.find(caseItem => caseItem.cid === selectedCaseId)?.student.adviser_id,
                     cid: selectedCaseId,
@@ -264,6 +302,18 @@ const Case = () => {
         setSelectedCaseId(caseId); // Ensure selectedCaseId is set when opening the modal
         setFollowUpModalOpen(true);
     };
+
+    const openSanctionModal = (caseId) => {
+        setSanctionData({
+            behaviorDetails: '',
+            sanctionRecommendation: ''
+        });
+        setSelectedCaseId(caseId);
+        setSanctionModalOpen(true);
+    };
+    
+    const closeSanctionModal = () => setSanctionModalOpen(false);
+    
 
     const handleSubmitFollowUp = async (e) => {
         e.preventDefault();
@@ -303,234 +353,270 @@ const Case = () => {
     });
 
     return (
-        <div className={navigationStyles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
-            <div className={navigationStyles.sidenav}>
-                <img src="/image-removebg-preview (1).png" alt="" className={navigationStyles['sidebar-logo']} />
-                {createSidebarLink("/report", "Report", AssessmentIcon)}
-                {createSidebarLink("/student", "Student", SchoolIcon)}
-                {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-                {createSidebarLink("/case", "Case", PostAddIcon)}
-                {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
-                <button className={navigationStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
-            </div>
-            <div className={navigationStyles.content}>
-                <div className={caseStyles['case-container']}>
-                    <h1>Case List</h1>
-                    <div className={caseStyles['filter-container']}>
-                        <label htmlFor="status-filter">Filter by status: </label>
-                        <select id="status-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
-                            <option value="All">All</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Completed">Completed</option>
-                        </select>
-                    </div>
-                    <table className={caseStyles['case-table']}>
-                        <thead>
-                            <tr>
-                                <th>Case#</th>
-                                <th>StudentID</th>
-                                <th>Case Name</th>
-                                <th>Investigator</th>
-                                <th>Violation</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredCases.map((caseItem) => (
-                                <tr
-                                    key={caseItem.cid}
-                                    onClick={() => selectCase(caseItem.cid, caseItem.status)}
-                                    className={selectedCaseId === caseItem.cid ? caseStyles['selected-row'] : ''}
-                                >
-                                    <td>{caseItem.cid}</td>
-                                    <td>{caseItem.sid}</td>
-                                    <td>{caseItem.case_name}</td>
-                                    <td>{caseItem.investigator}</td>
-                                    <td>{caseItem.violation}</td>
-                                    <td>{caseItem.description}</td>
-                                    <td className={caseItem.status === "Completed" ? caseStyles['status-complete'] : caseStyles['status-ongoing']}>
-                                        {caseItem.status}
-                                    </td>
-                                    <td>
-                                        {caseItem.status === 'Pending' && !followedUpCases.includes(caseItem.cid) ? (
-                                            <button onClick={() => openFollowUpModal(caseItem.cid)}>Investigate</button>
-                                        ) : caseItem.status === 'Pending' && followedUpCases.includes(caseItem.cid) ? (
-                                            <button className={caseStyles['disabled-button']} disabled>Followed up</button>
-                                        ) : caseItem.status === 'Completed' && !feedbackedCases.includes(caseItem.cid) ? (
-                                            <button onClick={() => openFeedbackModal(caseItem.cid)}>Feedback</button>
-                                        ) : (
-                                            <button className={caseStyles['disabled-button']} disabled>Feedbacked</button>
-                                        )}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
-                    <div className={caseStyles['button-container']}>
-                        <button onClick={openModal} className={caseStyles['add-case']}>Add Case</button>
-                        <button onClick={handleDelete} className={caseStyles['delete-case']} disabled={selectedCaseId === null}>Delete Case</button>
-                        <button onClick={handleComplete} className={caseStyles['complete-case']} disabled={selectedCaseId === null}>Complete Case</button>
-                    </div>
-
-                    {isModalOpen && (
-                        <div className={modalStyles.overlay}>
-                            <div className={modalStyles.modal}>
-                                <button onClick={closeModal} className={modalStyles.closeButton}>✖</button>
-                                <form onSubmit={handleSubmit} className={styles1['add-student-form']}>
-                                    <div className={modalStyles.space}>
-                                        <button onClick={closeModal} className={modalStyles.closeButton}>✖</button>
-                                    </div>
-                                    <div className={styles1['form-container']}>
-                                        <div className={styles1['form-group']}>
-                                            <label htmlFor="sid">Student ID:</label>
-                                            <Autocomplete
-                                                id="student"
-                                                value={selectedStudent}
-                                                options={students}
-                                                getOptionLabel={(option) => `${option.firstname} ${option.sid} Grade:${option.grade} Section:${option.section}`}
-                                                onChange={(event, newValue) => {
-                                                    setSelectedStudent(newValue);
-                                                }}
-                                                renderInput={(params) => <TextField {...params} style={{ width: 300 }} />}
-                                            />
-                                        </div>
-                                        <div className={styles1['form-group']}>
-                                            <label htmlFor="case_name">Case Name:</label>
-                                            <input
-                                                type="text"
-                                                id="case_name"
-                                                name="case_name"
-                                                value={formData.case_name}
-                                                onChange={handleInputChange}
-                                                placeholder="Case Name"
-                                                required
-                                            />
-                                        </div>
-                                        <div className={styles1['form-group']}>
-                                            <label htmlFor="investigator">Investigator:</label>
-                                            <input
-                                                type="text"
-                                                id="investigator"
-                                                name="investigator"
-                                                value={formData.investigator}
-                                                onChange={handleInputChange}
-                                                placeholder="Investigator"
-                                                required
-                                            />
-                                        </div>
-                                        <div className={styles1['form-group']}>
-                                            <label htmlFor="violation">Violation:</label>
-                                            <input
-                                                type="text"
-                                                id="violation"
-                                                name="violation"
-                                                value={formData.violation}
-                                                onChange={handleInputChange}
-                                                placeholder="Violation"
-                                                required
-                                            />
-                                        </div>
-                                        <div className={styles1['form-group']}>
-                                            <label htmlFor="description">Description:</label>
-                                            <input
-                                                type="text"
-                                                id="description"
-                                                name="description"
-                                                value={formData.description}
-                                                onChange={handleInputChange}
-                                                placeholder="Description"
-                                                required
-                                            />
-                                        </div>
-                                        <button type="submit" className={styles1['add-student-button']}>Add Case</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    )}
-
-                    {isFeedbackModalOpen && (
-                        <div className={modalStyles.overlay}>
-                            <div className={modalStyles.modal}>
-                                <button onClick={closeFeedbackModal} className={modalStyles.closeButton}>✖</button>
-                                <div className={caseStyles['feedback-container']}>
-                                    <h2>Feedback</h2>
-                                    <textarea
-                                        value={feedbackResult}
-                                        onChange={(e) => setFeedbackResult(e.target.value)}
-                                        placeholder="Enter feedback result..."
-                                        className={caseStyles['feedback-textarea']}
-                                    />
-                                    <button onClick={handleFeedbackSubmit} className={caseStyles['submit-feedback']}>Submit</button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                    
-                    {isFollowUpModalOpen && (
-                        <div className={modalStyles.overlay}>
-                            <div className={modalStyles.modal}>
-                                <button onClick={closeFollowUpModal} className={modalStyles.closeButton}>✖</button>
-                                <form onSubmit={handleSubmitFollowUp} className={styles1['add-student-form']}>
-                                    <div className={modalStyles.space}>
-                                        <button onClick={closeFollowUpModal} className={modalStyles.closeButton}>✖</button>
-                                    </div>
-                                    <div className={styles1['form-container']}>
-                                        <div className={styles1['form-group']}>
-                                            <label htmlFor="date">Date:</label>
-                                            <input
-                                                type="date"
-                                                id="date"
-                                                value={followUpData.date}
-                                                min={getTodayDate()}
-                                                onChange={(e) => setFollowUpData({ ...followUpData, date: e.target.value })}
-                                                required
-                                            />
-                                        </div>
-                                        <div className={styles1['form-group']}>
-                                            <label htmlFor="time">Time:</label>
-                                            <input
-                                                type="time"
-                                                id="time"
-                                                value={followUpData.time}
-                                                onChange={(e) => setFollowUpData({ ...followUpData, time: e.target.value })}
-                                                required
-                                            />
-                                        </div>
-                                        <div className={styles1['form-group']}>
-                                            <label htmlFor="violation">Violation:</label>
-                                            <input
-                                                type="text"
-                                                id="violation"
-                                                value={followUpData.violation}
-                                                onChange={(e) => setFollowUpData({ ...followUpData, violation: e.target.value })}
-                                                required
-                                            />
-                                        </div>
-                                        <div className={styles1['form-group']}>
-                                            <label htmlFor="reasoning">Reasoning:</label>
-                                            <textarea
-                                                id="reasoning"
-                                                value={followUpData.reasoning}
-                                                onChange={(e) => setFollowUpData({ ...followUpData, reasoning: e.target.value })}
-                                                required
-                                            />
-                                        </div>
-                                        <button type="submit" className={styles1['add-student-button']}>Submit</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    )}
+    <div className={navigationStyles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
+        <div className={navigationStyles.sidenav}>
+            <img src="/image-removebg-preview (1).png" alt="" className={navigationStyles['sidebar-logo']} />
+            {createSidebarLink("/report", "Report", AssessmentIcon)}
+            {createSidebarLink("/student", "Student", SchoolIcon)}
+            {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+            {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+            {createSidebarLink("/case", "Case", PostAddIcon)}
+            {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+            {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
+            <button className={navigationStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
+        </div>
+        <div className={navigationStyles.content}>
+            <div className={caseStyles['case-container']}>
+                <h1>Case List</h1>
+                <div className={caseStyles['filter-container']}>
+                    <label htmlFor="status-filter">Filter by status: </label>
+                    <select id="status-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
+                        <option value="All">All</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Completed">Completed</option>
+                    </select>
                 </div>
+                <table className={caseStyles['case-table']}>
+                    <thead>
+                        <tr>
+                            <th>Case#</th>
+                            <th>StudentID</th>
+                            <th>Case Name</th>
+                            <th>Investigator</th>
+                            <th>Violation</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredCases.map((caseItem) => (
+                            <tr
+                                key={caseItem.cid}
+                                onClick={() => selectCase(caseItem.cid, caseItem.status)}
+                                className={selectedCaseId === caseItem.cid ? caseStyles['selected-row'] : ''}
+                            >
+                                <td>{caseItem.cid}</td>
+                                <td>{caseItem.sid}</td>
+                                <td>{caseItem.case_name}</td>
+                                <td>{caseItem.investigator}</td>
+                                <td>{caseItem.violation}</td>
+                                <td>{caseItem.description}</td>
+                                <td className={caseItem.status === "Completed" ? caseStyles['status-complete'] : caseStyles['status-ongoing']}>
+                                    {caseItem.status}
+                                </td>
+                                <td>
+                                    {caseItem.status === 'Pending' && !followedUpCases.includes(caseItem.cid) ? (
+                                        <button onClick={() => openFollowUpModal(caseItem.cid)}>Investigate</button>
+                                    ) : caseItem.status === 'Pending' && followedUpCases.includes(caseItem.cid) ? (
+                                        <button className={caseStyles['disabled-button']} disabled>Followed up</button>
+                                    ) : caseItem.status === 'Completed' && !feedbackedCases.includes(caseItem.cid) ? (
+                                        <button onClick={() => openFeedbackModal(caseItem.cid)}>Feedback</button>
+                                    ) : (
+                                        <button onClick={() => openSanctionModal(caseItem.cid)}>Recommend Sanction</button>
+                                    )}
+                                    
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                <div className={caseStyles['button-container']}>
+                    <button onClick={openModal} className={caseStyles['add-case']}>Add Case</button>
+                    <button onClick={handleDelete} className={caseStyles['delete-case']} disabled={selectedCaseId === null}>Delete Case</button>
+                    <button onClick={handleComplete} className={caseStyles['complete-case']} disabled={selectedCaseId === null}>Complete Case</button>
+                </div>
+
+                {isModalOpen && (
+                    <div className={modalStyles.overlay}>
+                        <div className={modalStyles.modal}>
+                            <button onClick={closeModal} className={modalStyles.closeButton}>✖</button>
+                            <form onSubmit={handleSubmit} className={styles1['add-student-form']}>
+                                <div className={modalStyles.space}>
+                                    <button onClick={closeModal} className={modalStyles.closeButton}>✖</button>
+                                </div>
+                                <div className={styles1['form-container']}>
+                                    <div className={styles1['form-group']}>
+                                        <label htmlFor="sid">Student ID:</label>
+                                        <Autocomplete
+                                            id="student"
+                                            value={selectedStudent}
+                                            options={students}
+                                            getOptionLabel={(option) => `${option.firstname} ${option.sid} Grade:${option.grade} Section:${option.section}`}
+                                            onChange={(event, newValue) => {
+                                                setSelectedStudent(newValue);
+                                            }}
+                                            renderInput={(params) => <TextField {...params} style={{ width: 300 }} />}
+                                        />
+                                    </div>
+                                    <div className={styles1['form-group']}>
+                                        <label htmlFor="case_name">Case Name:</label>
+                                        <input
+                                            type="text"
+                                            id="case_name"
+                                            name="case_name"
+                                            value={formData.case_name}
+                                            onChange={handleInputChange}
+                                            placeholder="Case Name"
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles1['form-group']}>
+                                        <label htmlFor="investigator">Investigator:</label>
+                                        <input
+                                            type="text"
+                                            id="investigator"
+                                            name="investigator"
+                                            value={formData.investigator}
+                                            onChange={handleInputChange}
+                                            placeholder="Investigator"
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles1['form-group']}>
+                                        <label htmlFor="violation">Violation:</label>
+                                        <input
+                                            type="text"
+                                            id="violation"
+                                            name="violation"
+                                            value={formData.violation}
+                                            onChange={handleInputChange}
+                                            placeholder="Violation"
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles1['form-group']}>
+                                        <label htmlFor="description">Description:</label>
+                                        <input
+                                            type="text"
+                                            id="description"
+                                            name="description"
+                                            value={formData.description}
+                                            onChange={handleInputChange}
+                                            placeholder="Description"
+                                            required
+                                        />
+                                    </div>
+                                    <button type="submit" className={styles1['add-student-button']}>Add Case</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+
+                {isFeedbackModalOpen && (
+                    <div className={modalStyles.overlay}>
+                        <div className={modalStyles.modal}>
+                            <button onClick={closeFeedbackModal} className={modalStyles.closeButton}>✖</button>
+                            <div className={caseStyles['feedback-container']}>
+                                <h2>Feedback</h2>
+                                <textarea
+                                    value={feedbackResult}
+                                    onChange={(e) => setFeedbackResult(e.target.value)}
+                                    placeholder="Enter feedback result..."
+                                    className={caseStyles['feedback-textarea']}
+                                />
+                                <button onClick={handleFeedbackSubmit} className={caseStyles['submit-feedback']}>Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                
+                {isFollowUpModalOpen && (
+                    <div className={modalStyles.overlay}>
+                        <div className={modalStyles.modal}>
+                            <button onClick={closeFollowUpModal} className={modalStyles.closeButton}>✖</button>
+                            <form onSubmit={handleSubmitFollowUp} className={styles1['add-student-form']}>
+                                <div className={modalStyles.space}>
+                                    <button onClick={closeFollowUpModal} className={modalStyles.closeButton}>✖</button>
+                                </div>
+                                <div className={styles1['form-container']}>
+                                    <div className={styles1['form-group']}>
+                                        <label htmlFor="date">Date:</label>
+                                        <input
+                                            type="date"
+                                            id="date"
+                                            value={followUpData.date}
+                                            min={getTodayDate()}
+                                            onChange={(e) => setFollowUpData({ ...followUpData, date: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles1['form-group']}>
+                                        <label htmlFor="time">Time:</label>
+                                        <input
+                                            type="time"
+                                            id="time"
+                                            value={followUpData.time}
+                                            onChange={(e) => setFollowUpData({ ...followUpData, time: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles1['form-group']}>
+                                        <label htmlFor="violation">Violation:</label>
+                                        <input
+                                            type="text"
+                                            id="violation"
+                                            value={followUpData.violation}
+                                            onChange={(e) => setFollowUpData({ ...followUpData, violation: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles1['form-group']}>
+                                        <label htmlFor="reasoning">Reasoning:</label>
+                                        <textarea
+                                            id="reasoning"
+                                            value={followUpData.reasoning}
+                                            onChange={(e) => setFollowUpData({ ...followUpData, reasoning: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <button type="submit" className={styles1['add-student-button']}>Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+
+                {isSanctionModalOpen && (
+                    <div className={modalStyles.overlay}>
+                        <div className={modalStyles.modal}>
+                            <button onClick={closeSanctionModal} className={modalStyles.closeButton}>✖</button>
+                            <form onSubmit={handleSanctionSubmit} className={styles1['add-student-form']}>
+                                <div className={modalStyles.space}>
+                                    <button onClick={closeSanctionModal} className={modalStyles.closeButton}>✖</button>
+                                </div>
+                                <div className={styles1['form-container']}>
+                                    <div className={styles1['form-group']}>
+                                        <label htmlFor="behaviorDetails">Behavior Details:</label>
+                                        <textarea
+                                            id="behaviorDetails"
+                                            value={sanctionData.behaviorDetails}
+                                            onChange={(e) => setSanctionData({ ...sanctionData, behaviorDetails: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles1['form-group']}>
+                                        <label htmlFor="sanctionRecommendation">Sanction Recommendation:</label>
+                                        <textarea
+                                            id="sanctionRecommendation"
+                                            value={sanctionData.sanctionRecommendation}
+                                            onChange={(e) => setSanctionData({ ...sanctionData, sanctionRecommendation: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <button type="submit" className={styles1['add-student-button']}>Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
-    );
+    </div>
+);
+
 }
 
 export default Case;

@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import axios from "axios"; // Import axios for making HTTP
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 function Class() {
@@ -55,6 +55,15 @@ function Class() {
       return;
     }
 
+    const sectionExists = classes.some(
+      (classItem) => classItem.section === newSection
+    );
+
+    if (sectionExists) {
+      alert("Section already exists");
+      return;
+    }
+
     try {
       await axios.post("http://localhost:8080/class/addClass", {
         grade: newGrade,
@@ -74,6 +83,16 @@ function Class() {
       alert("Please fill in all fields");
       return;
     }
+
+    const schoolYearExists = schoolYears.some(
+      (schoolYear) => schoolYear.schoolYear === newSchoolYear
+    );
+
+    if (schoolYearExists) {
+      alert("School year already exists");
+      return;
+    }
+
     try {
       await axios.post("http://localhost:8080/schoolYear/addSchoolYear", {
         schoolYear: newSchoolYear,
