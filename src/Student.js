@@ -33,10 +33,10 @@ const AdviserStudent = () => {
         if (loggedInUser) {
             let url;
             if (loggedInUser.userType === 3) {
-                // Use the URL for user type 3
+                // Use the URL for user type 3 (teacher)
                 url = `http://localhost:8080/student/getAllStudents/${loggedInUser.schoolYear}/${loggedInUser.section}`;
             } else {
-                // Use the default URL
+                // Use the default URL (SSO)
                 url = 'http://localhost:8080/student/getAllStudents';
             }
 
@@ -129,7 +129,7 @@ const AdviserStudent = () => {
                                 <th>Grade</th>
                                 <th>Section</th>
                                 <th>Contact Number</th>
-                                <th>Action</th>
+                                {loggedInUser.userType === 3 && <th>Action</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -146,16 +146,14 @@ const AdviserStudent = () => {
                                     <td>{student.grade}</td>
                                     <td>{student.section}</td>
                                     <td>{student.con_num}</td>
-                                    <td>
-                                        {loggedInUser.userType === 3 && (
-                                            <>
-                                                <Link to={`/update-student/${student.sid}`}>
-                                                    <EditIcon className="icon-button icon-edit" />
-                                                </Link>
-                                                <DeleteIcon className="icon-button icon-delete" onClick={() => handleDelete(student.sid)} />
-                                            </>
-                                        )}
-                                    </td>
+                                    {loggedInUser.userType === 3 && (
+                                        <td>
+                                            <Link to={`/update-student/${student.sid}`}>
+                                                <EditIcon className="icon-button icon-edit" />
+                                            </Link>
+                                            <DeleteIcon className="icon-button icon-delete" onClick={() => handleDelete(student.sid)} />
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>
