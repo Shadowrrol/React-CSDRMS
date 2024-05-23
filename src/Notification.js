@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Navigation.module.css";
 
@@ -21,6 +21,14 @@ const Notification = () => {
   const [sanctions, setSanctions] = useState([]);
   const authToken = localStorage.getItem("authToken");
   const loggedInUser = JSON.parse(authToken);
+  const [page, setPage] = useState(1);
+  const limit = 4;
+
+  const nextPage = () => setPage(page + 1);
+  const prevPage = () => setPage(page > 1 ? page - 1 : page);
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
 
   const fetchSanctions = useCallback(async () => {
     try {
@@ -37,7 +45,7 @@ const Notification = () => {
     } catch (error) {
       console.error("Error fetching sanctions:", error);
     }
-  }, [loggedInUser]);
+  }, [loggedInUser, page]);
 
   useEffect(() => {
     // Fetch sanctions data when component mounts
@@ -106,14 +114,14 @@ const Notification = () => {
             justifyContent: "center",
           }}
         >
-          {sanctions.map((sanction) => (
+          {sanctions.slice(startIndex, endIndex).map((sanction) => (
             <div
               key={sanction.sanction_id} // Move key to the container div
               style={{
                 border: "1px black solid",
                 width: "80vh",
                 borderRadius: "15px",
-                backgroundColor: "#a43737",
+                background: "linear-gradient(to right, #a43737 40%, #e8bd26 95%)",
               }}
             >
               <li style={{ listStyle: "none" }}>
@@ -161,7 +169,7 @@ const Notification = () => {
                   </div>
 
                   {/* Add acknowledge button */}
-                  <button
+                  {/* <button
                     onClick={() => handleAcknowledge(sanction.sanction_id)}
                     style={{
                       height: "64px",
@@ -178,11 +186,16 @@ const Notification = () => {
                     }}
                   >
                     Acknowledge
-                  </button>
+                  </button> */}
                 </div>
               </li>
             </div>
           ))}
+          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+            {page === 1 ? "" : <button onClick={prevPage}>Previous Page</button>}
+            <span style={{ color: "white" }}>Page {page}</span>
+            <button onClick={nextPage}>Next Page</button>
+          </div>
         </div>
       </div>
     );
@@ -203,7 +216,9 @@ const Notification = () => {
               : createSidebarLink("/case", "Case", PostAddIcon)}
           </>
         )}
-        {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
+        {loggedInUser.userType !== 1 &&
+          loggedInUser.userType !== 2 &&
+          createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
         <button className={styles["logoutbtn"]} onClick={handleLogout}>
           Logout
         </button>
@@ -216,8 +231,10 @@ const Notification = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            flexDirection: "column",
             background: "linear-gradient(to top, rgba(100,0,0,.9), rgba(100,0,0,0.3))",
             borderRadius: "12px",
+            width: "100%",
           }}
         >
           {renderSanctions()}

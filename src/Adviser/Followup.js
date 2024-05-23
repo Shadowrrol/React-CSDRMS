@@ -15,6 +15,8 @@ const Followup = () => {
   const loggedInUser = JSON.parse(authToken);
   const navigate = useNavigate();
   const [followups, setFollowups] = useState([]);
+  const [page, setPage] = useState(1);
+  const limit = 4;
 
   useEffect(() => {
     document.title = "Followup";
@@ -34,7 +36,7 @@ const Followup = () => {
     };
 
     fetchFollowups();
-  }, [loggedInUser.adviserId]);
+  }, [loggedInUser.adviserId, page]);
 
   const createSidebarLink = (to, text, IconComponent) => (
     <Link to={to} className={styles["styled-link"]}>
@@ -47,6 +49,12 @@ const Followup = () => {
     localStorage.removeItem("authToken");
     navigate("/");
   };
+
+  const nextPage = () => setPage(page + 1);
+  const prevPage = () => setPage(page > 1 ? page - 1 : page);
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
 
   return (
     <div className={styles.wrapper} style={{ backgroundImage: "url(/public/image-2-3@2x.png)" }}>
@@ -70,8 +78,15 @@ const Followup = () => {
           Logout
         </button>
       </div>
-      <div className="content">
-        <h1>Follow ups</h1>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
         <div
           style={{
             display: "flex",
@@ -100,13 +115,13 @@ const Followup = () => {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "32px",
+              gap: "16px",
               padding: "32px",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            {followups.map((followup) => (
+            {followups.slice(startIndex, endIndex).map((followup) => (
               <div
                 style={{
                   border: "1px black solid",
@@ -166,6 +181,11 @@ const Followup = () => {
                 </li>
               </div>
             ))}
+            <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+              {page === 1 ? "" : <button onClick={prevPage}>Previous Page</button>}
+              <span style={{ color: "white" }}>Page {page}</span>
+              <button onClick={nextPage}>Next Page</button>
+            </div>
           </div>
         </div>
       </div>

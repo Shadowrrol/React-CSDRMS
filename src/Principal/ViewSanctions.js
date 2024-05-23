@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import styles1 from "../GlobalDesign.module.css";
 import styles from "../Navigation.module.css"; // Import CSS module
-import styles1 from '../GlobalDesign.module.css';
 
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -141,6 +141,15 @@ const ViewSanctions = () => {
     }
   };
 
+  const [page, setPage] = useState(1);
+  const limit = 4;
+
+  const nextPage = () => setPage(page + 1);
+  const prevPage = () => setPage(page > 1 ? page - 1 : page);
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+
   return (
     <div className={styles.wrapper} style={{ backgroundImage: "url(/public/image-2-3@2x.png)" }}>
       <div className={styles.sidenav}>
@@ -193,13 +202,13 @@ const ViewSanctions = () => {
               justifyContent: "center",
             }}
           >
-            {sanctions.map((sanction) => (
+            {sanctions.slice(startIndex, endIndex).map((sanction) => (
               <div
                 style={{
                   border: "1px black solid",
                   width: "80vh",
                   borderRadius: "15px",
-                  background: "#f9f9f9",
+                  background: "linear-gradient(to right, #a43737 40%, #e8bd26 95%)",
                 }}
               >
                 <li key={sanction.sanction_id} style={{ listStyle: "none" }}>
@@ -221,23 +230,31 @@ const ViewSanctions = () => {
                         gap: "8px",
                       }}
                     >
-                      <div className={styles1.gridItem}>
-                          <span className={styles1.label}>Sanction ID:</span> 
-                          {sanction.sanction_id}
+                      <div className={styles1.gridItem} style={{ color: "white" }}>
+                        <span className={styles1.label} style={{ color: "white" }}>
+                          Sanction ID:
+                        </span>{" "}
+                        {sanction.sanction_id}
                       </div>
-                      <div className={styles1.gridItem}>
-                          <span className={styles1.label}>Student Name:</span> 
-                          {sanction.student.firstname} {sanction.student.lastname}
+                      <div className={styles1.gridItem} style={{ color: "white" }}>
+                        <span className={styles1.label} style={{ color: "white" }}>
+                          Student Name:
+                        </span>{" "}
+                        {sanction.student.firstname} {sanction.student.lastname}
                       </div>
-                      <div className={styles1.gridItem}>
-                          <span className={styles1.label}>Behavior Details:</span> 
-                          {sanction.behaviorDetails}
+                      <div className={styles1.gridItem} style={{ color: "white" }}>
+                        <span className={styles1.label} style={{ color: "white" }}>
+                          Behavior Details:
+                        </span>{" "}
+                        {sanction.behaviorDetails}
                       </div>
-                      <div className={styles1.gridItem}>
-                          <span className={styles1.label}>Sanction Recommendation:</span> 
-                          {sanction.sanctionRecommendation}
+                      <div className={styles1.gridItem} style={{ color: "white" }}>
+                        <span className={styles1.label} style={{ color: "white" }}>
+                          Sanction Recommendation:
+                        </span>{" "}
+                        {sanction.sanctionRecommendation}
                       </div>
-                    </div>   
+                    </div>
                     {/* Approve and decline buttons */}
                     <div
                       style={{
@@ -275,6 +292,18 @@ const ViewSanctions = () => {
                 </li>
               </div>
             ))}
+            <div
+              style={{
+                display: "flex",
+                gap: "12px",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {page === 1 ? "" : <button onClick={prevPage}>Previous Page</button>}
+              <span style={{ color: "white" }}>Page {page}</span>
+              <button onClick={nextPage}>Next Page</button>
+            </div>
           </div>
         </div>
       </div>
