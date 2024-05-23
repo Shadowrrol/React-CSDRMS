@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from '../Navigation.module.css'; // Import CSS module
+import navStyles from '../Navigation.module.css'; // Import CSS module for navigation
+import styles from './Feedback.module.css'; // Import CSS module for feedback content
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
@@ -73,16 +74,16 @@ const Feedback = () => {
     };
 
     const createSidebarLink = (to, text, IconComponent) => (
-        <Link to={to} className={styles['styled-link']}>
-            <IconComponent className={styles.icon} /> {/* Icon */}
-            <span className={styles['link-text']}>{text}</span> {/* Text */}
+        <Link to={to} className={navStyles['styled-link']}>
+            <IconComponent className={navStyles.icon} /> {/* Icon */}
+            <span className={navStyles['link-text']}>{text}</span> {/* Text */}
         </Link>
     );
 
     return (
-        <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
-            <div className={styles.sidenav}>
-                <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
+        <div className={navStyles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
+            <div className={navStyles.sidenav}>
+                <img src="/image-removebg-preview (1).png" alt="" className={navStyles['sidebar-logo']} />
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
                 {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
@@ -98,22 +99,30 @@ const Feedback = () => {
                 )}
                 {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
-                <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
+                <button className={navStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
-            <div className={styles.content}>
-                <h1>Feedback</h1>
-                {error && <p>Error: {error}</p>} {/* Display error message */}
-                <div>
-                    {feedbackList.map((feedback) => (
-                        <div key={feedback.fid}>
-                            <p>Student: {feedback.caseEntity.student.firstname} {feedback.caseEntity.student.lastname}</p>
-                            <p>Is Acknowledged: {feedback.isAcknowledged}</p>
-                            <p>Result: {feedback.result}</p>
-                            {loggedInUser.userType === 3 && !feedback.isAcknowledged && (
-                                <button onClick={() => handleAcknowledge(feedback.fid)}>Acknowledge</button>
-                            )}
-                        </div>
-                    ))}
+            <div className={styles.contentContainer}>
+                <div className={styles.feedbackContent}>
+                    <h1>Feedback</h1>
+                    {error && <p className={styles.error}>Error: {error}</p>} {/* Display error message */}
+                    <div className={styles.feedbackList}>
+                        {feedbackList.map((feedback) => (
+                            <div key={feedback.fid} className={styles.feedbackItem}>
+                                <div className={styles.feedbackHeader}>
+                                    Feedback for Student: {feedback.caseEntity.student.firstname} {feedback.caseEntity.student.lastname}
+                                </div>
+                                <div className={styles.feedbackDetails}>
+                                    <p><strong>Is Acknowledged:</strong> {feedback.isAcknowledged}</p>
+                                    <p><strong>Result:</strong> {feedback.result}</p>
+                                </div>
+                                {loggedInUser.userType === 3 && !feedback.isAcknowledged && (
+                                    <div className={styles.feedbackActions}>
+                                        <button onClick={() => handleAcknowledge(feedback.fid)} className={styles.acknowledgeButton}>Acknowledge</button>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Navigation.module.css';
-import './Student.css';
+import studentStyles from './Student.module.css';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -93,7 +93,7 @@ const AdviserStudent = () => {
                 <button className={styles.logoutbtn} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles.content}>
-                <div className="student-content">
+                <div className={studentStyles['student-content']}>
                     <h2>Students</h2>
                     <input
                         type="text"
@@ -106,7 +106,7 @@ const AdviserStudent = () => {
                             <button>Add Student</button>
                         </Link>
                     )}
-                    <table className="student-table">
+                    <table className={studentStyles['student-table']}>
                         <thead>
                             <tr>
                                 <th>SID</th>
@@ -124,7 +124,7 @@ const AdviserStudent = () => {
                                 <tr 
                                     key={student.sid} 
                                     onClick={() => handleSelectStudent(student)}
-                                    className={selectedStudent?.sid === student.sid ? 'selected-row' : ''}
+                                    className={selectedStudent?.sid === student.sid ? studentStyles['selected-row'] : ''}
                                 >
                                     <td>{student.sid}</td>
                                     <td>{student.firstname}</td>
@@ -136,9 +136,9 @@ const AdviserStudent = () => {
                                     {loggedInUser.userType === 3 && (
                                         <td>
                                             <Link to={`/update-student/${student.sid}`}>
-                                                <EditIcon className="icon-button icon-edit" />
+                                                <EditIcon className={`${studentStyles['icon-button']} ${studentStyles['icon-edit']}`} />
                                             </Link>
-                                            <DeleteIcon className="icon-button icon-delete" onClick={() => handleDelete(student.sid)} />
+                                            <DeleteIcon className={`${studentStyles['icon-button']} ${studentStyles['icon-delete']}`} onClick={() => handleDelete(student.sid)} />
                                         </td>
                                     )}
                                 </tr>
@@ -146,7 +146,7 @@ const AdviserStudent = () => {
                         </tbody>
                     </table>
                     {selectedStudent && (
-                        <div className="report-buttons">
+                        <div className={studentStyles['report-buttons']}>
                             <Link to={`/add-report/${selectedStudent.sid}`}>
                                 <button>Add Report</button>
                             </Link>
