@@ -22,7 +22,11 @@ const LoginPage = () => {
           const { userType, userObject } = authTokenObj;
           switch (userType) {
             case 1:
+              navigate('/report', { state: { userObject } });
+              break;
             case 2:
+              navigate('/report', { state: { userObject } });
+              break;
             case 3:
               navigate('/report', { state: { userObject } });
               break;
@@ -61,7 +65,11 @@ const LoginPage = () => {
 
       switch (userType) {
         case 1:
+          navigate('/report', { state: { userObject } });
+          break;
         case 2:
+          navigate('/report', { state: { userObject } });
+          break;
         case 3:
           navigate('/report', { state: { userObject } });
           break;
