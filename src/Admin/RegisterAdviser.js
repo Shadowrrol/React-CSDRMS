@@ -79,11 +79,11 @@ const RegisterAdviser = () => {
     try {
       const response = await axios.post('http://localhost:8080/user/registerAdviser', userData);
       console.log(response.data);
-      setMessage('Adviser is successfully registered.');
+      alert('Adviser is successfully registered.');
       setError('');
       setTimeout(() => {
         navigate('/account');
-      }, 2000);
+      }, 200);
     } catch (error) {
       console.error('Error:', error);
       if (error.response && error.response.data) {

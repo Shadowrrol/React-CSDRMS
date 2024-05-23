@@ -80,6 +80,10 @@ const UpdateAccount = () => {
             console.error('Error updating SSO:', error);
             // Handle error, e.g., show error message
           });
+          alert('Account Successfully Updated.');
+          setTimeout(() => {
+            navigate('/AdminDashboard');
+          }, 200);
         break;
       case 2:
         axios.put('http://localhost:8080/user/updatePrincipal', updatedUser)
@@ -91,6 +95,10 @@ const UpdateAccount = () => {
             console.error('Error updating Principal:', error);
             // Handle error, e.g., show error message
           });
+          alert('Account Successfully Updated.');
+          setTimeout(() => {
+            navigate('/AdminDashboard');
+          }, 200);
         break;
       case 3:
         axios.put('http://localhost:8080/user/updateAdviser', updatedUser)
@@ -102,6 +110,10 @@ const UpdateAccount = () => {
             console.error('Error updating Adviser:', error);
             // Handle error, e.g., show error message
           });
+          alert('Account Successfully Updated.');
+          setTimeout(() => {
+            navigate('/AdminDashboard');
+          }, 200);
         break;
       case 4:
           axios.put('http://localhost:8080/user/updateAdmin', updatedUser)
@@ -113,6 +125,10 @@ const UpdateAccount = () => {
               console.error('Error updating Admin:', error);
               // Handle error, e.g., show error message
             });
+            alert('Account Successfully Updated.');
+            setTimeout(() => {
+              navigate('/AdminDashboard');
+            }, 200);
           break; 
       default:
         // Handle default case

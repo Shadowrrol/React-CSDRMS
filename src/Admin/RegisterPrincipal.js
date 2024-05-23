@@ -52,11 +52,11 @@ const RegisterPrincipal = () => {
     try {
       const response = await axios.post('http://localhost:8080/user/registerPrincipal', userData);
       console.log(response.data); // Handle success response
-      setMessage('Principal is successfully registered.');
+      alert('Principal is successfully registered.');
       setError('');
       setTimeout(() => {
         navigate('/account');
-      }, 2000);
+      }, 200);
     } catch (error) {
       console.error('Error:', error); // Handle error
       setMessage('');

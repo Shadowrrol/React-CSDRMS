@@ -115,7 +115,7 @@ const AdviserStudent = () => {
                                 <th>Last Name</th>
                                 <th>Grade</th>
                                 <th>Section</th>
-                                <th>Contact Number</th>
+                                <th>Contact No.</th>
                                 {loggedInUser.userType === 3 && <th>Action</th>}
                             </tr>
                         </thead>
