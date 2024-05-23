@@ -51,7 +51,7 @@ const RegisterSSO = () => {
     try {
       const response = await axios.post('http://localhost:8080/user/registerSSO', userData);
       console.log(response.data); // Handle success response
-      alert('Admin is successfully registered.');
+      alert('SSO is successfully registered.');
       setError('');
       setTimeout(() => {
         navigate('/account');
