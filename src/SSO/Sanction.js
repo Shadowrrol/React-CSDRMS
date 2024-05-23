@@ -75,7 +75,6 @@ const Sanction = () => {
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
                 {loggedInUser.userType === 1 && createSidebarLink("/report", "Report", AssessmentIcon)}
-                {loggedInUser.userType === 1 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {loggedInUser.userType === 1 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType === 1 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType === 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}

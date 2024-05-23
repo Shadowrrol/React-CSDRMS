@@ -102,7 +102,6 @@ const Report = () => {
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
-                {loggedInUser.userType !== 2 && loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}

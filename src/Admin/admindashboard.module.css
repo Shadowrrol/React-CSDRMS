@@ -25,25 +25,25 @@
     font-size: 35px;
 }
 
-table {
+.table {
     width: 100%;
     margin-top: 20px;
     border-collapse: collapse;
 }
 
-th, td {
+.th, td {
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
 
-th {
+.th {
     background-color: #4b0000;
     color: white;
 }
 
-td {
-    color: #fff;
+.td {
+    color: #ffffff;
 }
 
 .buttons {
