@@ -54,10 +54,9 @@ const Followup = () => {
       <div className={styles.sidenav}>
         <img src="/image-removebg-preview (1).png" alt="" className={styles["sidebar-logo"]} />
         {createSidebarLink("/report", "Report", AssessmentIcon)}
-        {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
         {createSidebarLink("/student", "Student", SchoolIcon)}
         {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-        {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+        {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
         {loggedInUser.userType !== 2 && (
           <>
             {loggedInUser.userType === 3

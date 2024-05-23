@@ -307,13 +307,12 @@ const Case = () => {
             <div className={navigationStyles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={navigationStyles['sidebar-logo']} />
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
-                {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+                {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                 {createSidebarLink("/case", "Case", PostAddIcon)}
                 {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
+                {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={navigationStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className={navigationStyles.content}>

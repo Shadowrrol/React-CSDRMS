@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Navigation.module.css'; // Import CSS module
 import './Student.css';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -93,10 +92,9 @@ const AdviserStudent = () => {
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
-                {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+                {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                 {loggedInUser.userType !== 2 && (
                     <>
                         {loggedInUser.userType === 3 ? 
@@ -106,7 +104,7 @@ const AdviserStudent = () => {
                     </>
                 )}
                 {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
+                {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className='content'>
