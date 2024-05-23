@@ -2,13 +2,12 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from "./Login.module.css";
-import { AuthContext } from './AuthContext';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useContext(AuthContext);
+  
 
   useEffect(() => {
     document.title = "Login";
@@ -61,7 +60,7 @@ const LoginPage = () => {
       localStorage.setItem('authToken', authTokenString);
 
       const { userType, userObject } = response.data;
-      login(response.data); // Update context
+       
 
       switch (userType) {
         case 1:
