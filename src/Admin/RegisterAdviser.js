@@ -86,8 +86,19 @@ const RegisterAdviser = () => {
       }, 2000);
     } catch (error) {
       console.error('Error:', error);
+      if (error.response && error.response.data) {
+        const errorMessage = error.response.data.message;
+        if (errorMessage.includes("query did not return a unique result: 2")) {
+          alert("Adviser with the same school year, grade, and section already exists.");
+        } else if (errorMessage.includes("Username already exists")) {
+          alert("Username already exists. Please try again.");
+        } else {
+          alert("Username already exists. Please try again.");
+        }
+      } else {
+        setError('An unexpected error occurred.');
+      }
       setMessage('');
-      alert('Username already exist. Please try again.');
     }
   };
 
