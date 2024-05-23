@@ -14,6 +14,7 @@
     object-fit: cover;
 }
 
+
 .sidenav {
     width: 20%;
     height: 100vh;
@@ -99,3 +100,64 @@
     padding: 80px;
     background-color: #f9f9f9; /* Light gray background */
   }
+
+  /* Navigation.module.css */
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes fadeInUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeInRight {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.wrapper {
+    animation: fadeIn 1s ease-in-out;
+}
+
+.sidenav {
+    animation: slideIn 1s ease-in-out;
+}
+
+.styled-link {
+    animation: fadeInLeft 1s ease-in-out;
+}
+
+.content {
+    animation: fadeInUp 1s ease-in-out;
+}
+
+.sidebar-logo {
+    animation: zoomIn 1s ease-in-out;
+}
+
+.logoutbtn {
+    animation: fadeInRight 1s ease-in-out;
+}
