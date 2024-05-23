@@ -32,6 +32,8 @@ const RegisterAdviser = () => {
   const [grades, setGrades] = useState([]);
   const [sections, setSections] = useState([]);
   const [schoolYears, setSchoolYears] = useState([]);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     document.title = "Admin | Register Adviser";
@@ -77,26 +79,33 @@ const RegisterAdviser = () => {
     try {
       const response = await axios.post('http://localhost:8080/user/registerAdviser', userData);
       console.log(response.data);
-      alert(`Adviser is successfully registered.`);
-      navigate('/account');
+      setMessage('Adviser is successfully registered.');
+      setError('');
+      setTimeout(() => {
+        navigate('/account');
+      }, 2000);
     } catch (error) {
       console.error('Error:', error);
+      setMessage('');
+      alert('Username already exist. Please try again.');
     }
   };
 
   return (
     <div className={styles.wrapper}>
-        <div className={styles.sidenav}>
-          <img src="/image-removebg-preview (1).png" alt="Logo" className={styles['sidebar-logo']} />
-          {createSidebarLink("/AdminDashboard", "Dashboard", AssessmentIcon)}
-          {createSidebarLink("/account", "Account", AccountBoxIcon)}
-          {createSidebarLink("/class", "Class", MeetingRoomIcon)}
-          <MenuPopupState />
-        </div>
+      <div className={styles.sidenav}>
+        <img src="/image-removebg-preview (1).png" alt="Logo" className={styles['sidebar-logo']} />
+        {createSidebarLink("/AdminDashboard", "Dashboard", AssessmentIcon)}
+        {createSidebarLink("/account", "Account", AccountBoxIcon)}
+        {createSidebarLink("/class", "Class", MeetingRoomIcon)}
+        <MenuPopupState />
+      </div>
       <div className={styles1.content}>
         <div className={styles1.contentform}>
           <h2>Register as Adviser</h2>
           <form onSubmit={handleSubmit} className={styles1['addadviser-form']}>
+            {message && <p className={styles1.success}>{message}</p>}
+            {error && <p className={styles1.error}>{error}</p>}
             <div className={styles1['form-container']}>
               <div className={styles1['form-group']}>
                 <label htmlFor="username">Username:</label>
