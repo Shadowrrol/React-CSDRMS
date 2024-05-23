@@ -12,6 +12,7 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 
 const createSidebarLink = (to, text, IconComponent) => (
   <Link to={to} className={styles['styled-link']}>
@@ -124,14 +125,17 @@ const UpdateAccount = () => {
     <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
       <div className={styles.sidenav}>
           <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
-          {createSidebarLink("/report", "Report", AssessmentIcon)}
-          {loggedInUser.userType !== 2 && loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
-          {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
-          {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-          {loggedInUser.userType !== 2 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-          {loggedInUser.userType !== 2 && createSidebarLink("/case", "Case", PostAddIcon)}
-          {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-          {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
+          {loggedInUser.userType !== 4 && createSidebarLink("/report", "Report", AssessmentIcon)}
+          {loggedInUser.userType === 4 && createSidebarLink("/AdminDashboard", "Dashboard", AssessmentIcon)}
+          {loggedInUser.userType === 4 && createSidebarLink("/Account", "Account", AccountBoxIcon)}
+          {loggedInUser.userType === 4 && createSidebarLink("/class", "Class", MeetingRoomIcon)}
+          {loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/student", "Student", SchoolIcon)}
+          {loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+          {loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+          {loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/case", "Case", PostAddIcon)}
+          {loggedInUser.userType !== 3 && loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+          {loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
+          
            <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
       </div>         
       <div className={styles1.content}>

@@ -6,13 +6,11 @@ import caseStyles from './Case.module.css';
 import modalStyles from './Modal.module.css';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const createSidebarLink = (to, text, IconComponent) => (
@@ -137,11 +135,6 @@ const Case = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-    };
-
-    const handleSanctionInputChange = (e) => {
-        const { name, value } = e.target;
-        setSanctionData({ ...sanctionData, [name]: value });
     };
 
     const handleSubmit = async (e) => {
@@ -361,7 +354,6 @@ const Case = () => {
             {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
             {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
             {createSidebarLink("/case", "Case", PostAddIcon)}
-            {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
             {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
             <button className={navigationStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
         </div>
@@ -413,7 +405,7 @@ const Case = () => {
                                     ) : caseItem.status === 'Completed' && !feedbackedCases.includes(caseItem.cid) ? (
                                         <button onClick={() => openFeedbackModal(caseItem.cid)}>Feedback</button>
                                     ) : (
-                                        <button onClick={() => openSanctionModal(caseItem.cid)}>Recommend Sanction</button>
+                                        <button onClick={() => openSanctionModal(caseItem.cid)}>Sanction</button>
                                     )}
                                     
                                 </td>
@@ -598,7 +590,7 @@ const Case = () => {
                                         />
                                     </div>
                                     <div className={styles1['form-group']}>
-                                        <label htmlFor="sanctionRecommendation">Sanction Recommendation:</label>
+                                        <label htmlFor="sanctionRecommendation">Recommendation:</label>
                                         <textarea
                                             id="sanctionRecommendation"
                                             value={sanctionData.sanctionRecommendation}

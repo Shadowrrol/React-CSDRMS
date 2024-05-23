@@ -78,7 +78,8 @@ const ViewStudentReport = () => {
                 {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/case", "Case", PostAddIcon)}
-                {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType !== 1 && loggedInUser.userType !== 3 && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType !== 2 && loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
@@ -95,9 +96,11 @@ const ViewStudentReport = () => {
 
                 <h2>Student Reports</h2>
                 <div className={styles['add-report-button']}>
+                    {loggedInUser.userType !== 2 && (
                     <Link to={`/add-report/${sid}`}>
                         <button>Add Report</button>
                     </Link>
+                    )}
                 </div>
                 <table className={styles2.table}>
                     <thead>

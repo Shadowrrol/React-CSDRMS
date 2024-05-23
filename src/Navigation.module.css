@@ -93,3 +93,9 @@
     margin-bottom: 40px;
     font-size: 35px;
   }
+
+  .maincontent{
+    flex: 1; /* Take remaining space */
+    padding: 80px;
+    background-color: #f9f9f9; /* Light gray background */
+  }

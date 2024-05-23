@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import styles from '../Navigation.module.css';
+import styles from './Navigation.module.css';
 import axios from 'axios';
 
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RateReviewIcon from '@mui/icons-material/RateReview';
@@ -25,6 +24,7 @@ const createSidebarLink = (to, text, IconComponent) => (
 const Report = () => {
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
+    const { section, schoolYear, userType } = loggedInUser; // Destructure loggedInUser properties
     const navigate = useNavigate(); 
     const [studentReports, setStudentReports] = useState([]);
     const [yearFilter, setYearFilter] = useState(null);
@@ -37,8 +37,8 @@ const Report = () => {
         const fetchStudentReports = async () => {
             try {
                 let response;
-                if (loggedInUser.userType === 3) {
-                    response = await axios.get(`http://localhost:8080/student-report/getStudentReportsBySectionAndSchoolYear?section=${loggedInUser.section}&schoolYear=${loggedInUser.schoolYear}`);
+                if (userType === 3) {
+                    response = await axios.get(`http://localhost:8080/student-report/getStudentReportsBySectionAndSchoolYear?section=${section}&schoolYear=${schoolYear}`);
                 } else {
                     response = await axios.get('http://localhost:8080/student-report/getAllStudentReports');
                 }
@@ -49,7 +49,7 @@ const Report = () => {
         };
     
         fetchStudentReports();
-    }, [yearFilter]);
+    }, [section, schoolYear, userType, yearFilter]); // Include destructured properties in the dependency array
 
     const handleLogout = () => {
         localStorage.removeItem('authToken');
@@ -80,7 +80,7 @@ const Report = () => {
         return { filteredReports, monitoredRecordCounts };
     };
 
-    const { filteredReports, monitoredRecordCounts } = filterStudentReports();
+    const { monitoredRecordCounts } = filterStudentReports();
 
     const chartOptions = {
         animationEnabled: true,
@@ -114,7 +114,6 @@ const Report = () => {
                     </>
                 )}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 3 && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
-                {loggedInUser.userType !== 2 && loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>

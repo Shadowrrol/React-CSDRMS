@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../Navigation.module.css";
 
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import LocalPoliceIcon from "@mui/icons-material/LocalPolice";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
@@ -85,7 +84,7 @@ const Followup = () => {
         >
           <div
             style={{
-              width: "80vh",
+              width: "160vh",
               border: "2px solid black",
               borderRadius: "12px",
               alignItems: "center",

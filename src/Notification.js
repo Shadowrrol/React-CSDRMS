@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Navigation.module.css";
 
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import AssessmentIcon from "@mui/icons-material/Assessment";
-import LocalPoliceIcon from "@mui/icons-material/LocalPolice";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import PostAddIcon from "@mui/icons-material/PostAdd";
@@ -24,20 +22,7 @@ const Notification = () => {
   const authToken = localStorage.getItem("authToken");
   const loggedInUser = JSON.parse(authToken);
 
-  useEffect(() => {
-    // Fetch sanctions data when component mounts
-    document.title = "Notification";
-    fetchSanctions();
-  }, [loggedInUser]);
-
-  const handleLogout = () => {
-    // Clear the authentication token from localStorage
-    localStorage.removeItem("authToken");
-    // Redirect the user to the login page
-    navigate("/");
-  };
-
-  const fetchSanctions = async () => {
+  const fetchSanctions = useCallback(async () => {
     try {
       let response;
       if (loggedInUser.userType === 3) {
@@ -52,6 +37,19 @@ const Notification = () => {
     } catch (error) {
       console.error("Error fetching sanctions:", error);
     }
+  }, [loggedInUser]);
+
+  useEffect(() => {
+    // Fetch sanctions data when component mounts
+    document.title = "Notification";
+    fetchSanctions();
+  }, [fetchSanctions]);
+
+  const handleLogout = () => {
+    // Clear the authentication token from localStorage
+    localStorage.removeItem("authToken");
+    // Redirect the user to the login page
+    navigate("/");
   };
 
   const handleAcknowledge = async (sanctionId) => {
@@ -87,7 +85,7 @@ const Notification = () => {
       <div>
         <div
           style={{
-            width: "80vh",
+            width: "160vh",
             border: "2px solid black",
             borderRadius: "12px",
             alignItems: "center",
@@ -110,6 +108,7 @@ const Notification = () => {
         >
           {sanctions.map((sanction) => (
             <div
+              key={sanction.sanction_id} // Move key to the container div
               style={{
                 border: "1px black solid",
                 width: "80vh",
@@ -117,7 +116,7 @@ const Notification = () => {
                 backgroundColor: "#a43737",
               }}
             >
-              <li key={sanction.sanction_id} style={{ listStyle: "none" }}>
+              <li style={{ listStyle: "none" }}>
                 <div
                   style={{
                     display: "flex",
@@ -204,12 +203,11 @@ const Notification = () => {
               : createSidebarLink("/case", "Case", PostAddIcon)}
           </>
         )}
-        {loggedInUser.userType !== 3 &&  createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
         {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
         <button className={styles["logoutbtn"]} onClick={handleLogout}>
           Logout
         </button>
-       </div>
+      </div>
       <div className={styles.content}>
         <h1>Notifications</h1>
 

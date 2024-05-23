@@ -11,7 +11,7 @@ import RegisterAdviser from './SSO/RegisterAdviser';
 import RegisterSSO from './SSO/RegisterSSO';
 import Feedback from './SSO/Feedback';
 import Case from './SSO/Case';
-import Report from './SSO/Report';
+import Report from './Report';
 import AddStudentReport from './SSO/AddStudentReport';
 import Sanction from './SSO/Sanction';
 
