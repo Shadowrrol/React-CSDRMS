@@ -157,23 +157,23 @@ const UpdateAccount = () => {
       <div className={styles1.content}>
         <div className={styles1.contentform}>
           <h2>Update Account</h2>
-          <div>
+          <div className={styles1['form-group']}>
             <label>Username:</label>
             <input type="text" name="username" value={updatedUser.username} onChange={handleInputChange} disabled/>
           </div>
-          <div>
+          <div className={styles1['form-group']}>
             <label>Password:</label>
             <input type="password" name="password" value={updatedUser.password} onChange={handleInputChange} />
           </div>
-          <div>
+          <div className={styles1['form-group']}>
             <label>First Name:</label>
             <input type="text" name="firstname" value={updatedUser.firstname} onChange={handleInputChange} />
           </div>
-          <div>
+          <div className={styles1['form-group']}>
             <label>Last Name:</label>
             <input type="text" name="lastname" value={updatedUser.lastname} onChange={handleInputChange} />
           </div>
-          <div>
+          <div className={styles1['form-group']}>
             <label>Email:</label>
             <input type="email" name="email" value={updatedUser.email} onChange={handleInputChange} />
           </div>
