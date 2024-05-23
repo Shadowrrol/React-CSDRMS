@@ -71,6 +71,9 @@ const AdminDashboard = () => {
             <thead>
               <tr>
                 <th>Username</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>email</th>
                 <th>User Type</th>
                 <th>Action</th>
               </tr>
@@ -79,6 +82,9 @@ const AdminDashboard = () => {
               {users.map(user => (
                 <tr key={user.username}>
                   <td>{user.username}</td>
+                  <td>{user.firstname}</td>
+                  <td>{user.lastname}</td>
+                  <td>{user.email}</td>
                   <td>{user.userType}</td>
                   <td className={styles['action-buttons']}>
                     <button className={styles.button} onClick={() => handleUpdateUser(user)}>Update</button>
