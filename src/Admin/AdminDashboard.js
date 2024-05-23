@@ -25,7 +25,7 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
-    document.title = "SSO | Dashboard";
+    document.title = "Admin | Dashboard";
     fetchUsers();
   }, []);
 
@@ -73,7 +73,7 @@ const AdminDashboard = () => {
                 <th>Username</th>
                 <th>Firstname</th>
                 <th>Lastname</th>
-                <th>email</th>
+                <th>Email</th>
                 <th>User Type</th>
                 <th>Action</th>
               </tr>

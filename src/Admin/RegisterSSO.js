@@ -16,10 +16,10 @@ const createSidebarLink = (to, text, IconComponent) => (
   </Link>
 );
 
-const RegisterPrincipal = () => {
-
+const RegisterSSO = () => {
+  
   useEffect(() => {
-    document.title = "SSO | Register Principal";
+    document.title = "Admin | Register SSO";
   }, []); 
   
   const navigate = useNavigate(); 
@@ -36,7 +36,7 @@ const RegisterPrincipal = () => {
     firstname: '',
     lastname: '',
     email: '',
-    userType: 2 // Principal
+    userType: 1 // SSO
   });
 
   const handleChange = (e) => {
@@ -46,10 +46,9 @@ const RegisterPrincipal = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/user/registerPrincipal', userData);
+      const response = await axios.post('http://localhost:8080/user/registerSSO', userData);
       console.log(response.data); // Handle success response
-      alert(`Principal ${userData.username} is successfully registered.`);
-      navigate('/account');
+      alert(`Admin is successfully registered.`);
     } catch (error) {
       console.error('Error:', error); // Handle error
     }
@@ -64,36 +63,36 @@ const RegisterPrincipal = () => {
           {createSidebarLink("/class", "Class", MeetingRoomIcon)}
           <MenuPopupState />
         </div>
-      <div className={styles1.content}>
-        <div className={styles1.contentform}>
-          <h2>Register as Principal</h2>
-          <form onSubmit={handleSubmit} className={styles1['form-container']}>
-            <div className={styles1['form-group']}>
-              <label htmlFor="username">Username:</label>
-              <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
-            </div>
-            <div className={styles1['form-group']}>
-              <label htmlFor="password">Password:</label>
-              <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-            </div>
-            <div className={styles1['form-group']}>
-              <label htmlFor="firstname">First Name:</label>
-              <input type="text" name="firstname" placeholder="First Name" onChange={handleChange} required />
-            </div>
-            <div className={styles1['form-group']}>
-              <label htmlFor="lastname">Last Name:</label>
-              <input type="text" name="lastname" placeholder="Last Name" onChange={handleChange} required />
-            </div>
-            <div className={styles1['form-group']}>
-              <label htmlFor="email">Email:</label>
-              <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-            </div>
-            <button type="submit" className={styles1['global-button']}>Register</button>
-          </form>
+        <div className={styles1.content}>
+          <div className={styles1.contentform}>
+            <h2>Register as SSO</h2>
+            <form onSubmit={handleSubmit} className={styles1['form-container']}>
+              <div className={styles1['form-group']}>
+                <label htmlFor="username">Username:</label>
+                <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="password">Password:</label>
+                <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="firstname">First Name:</label>
+                <input type="text" name="firstname" placeholder="First Name" onChange={handleChange} required />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="lastname">Last Name:</label>
+                <input type="text" name="lastname" placeholder="Last Name" onChange={handleChange} required />
+              </div>
+              <div className={styles1['form-group']}>
+                <label htmlFor="email">Email:</label>
+                <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
+              </div>
+              <button type="submit" className={styles1['global-button']}>Register</button>
+            </form>
+          </div>
         </div>
-      </div>
     </div>
   );
 }
 
-export default RegisterPrincipal;
+export default RegisterSSO;

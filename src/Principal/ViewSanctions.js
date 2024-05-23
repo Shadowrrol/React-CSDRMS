@@ -170,7 +170,7 @@ const ViewSanctions = () => {
         >
           <div
             style={{
-              width: "80vh",
+              width: "160vh",
               border: "2px solid black",
               borderRadius: "12px",
               alignItems: "center",

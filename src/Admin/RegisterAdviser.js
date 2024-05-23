@@ -34,7 +34,7 @@ const RegisterAdviser = () => {
   const [schoolYears, setSchoolYears] = useState([]);
 
   useEffect(() => {
-    document.title = "SSO | Register Adviser";
+    document.title = "Admin | Register Adviser";
     // Fetch grades
     axios.get('http://localhost:8080/class/allUniqueGrades')
       .then(response => {
@@ -77,7 +77,7 @@ const RegisterAdviser = () => {
     try {
       const response = await axios.post('http://localhost:8080/user/registerAdviser', userData);
       console.log(response.data);
-      alert(`Adviser ${userData.username} is successfully registered.`);
+      alert(`Adviser is successfully registered.`);
       navigate('/account');
     } catch (error) {
       console.error('Error:', error);

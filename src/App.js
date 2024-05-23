@@ -4,14 +4,11 @@ import LoginPage from './LoginPage';
 import './App.css';
 import Student from './Student';
 import Notification from './Notification';
+import Report from './Report';
 
-import Account from './SSO/Account';
-import RegisterPrincipal from './SSO/RegisterPrincipal';
-import RegisterAdviser from './SSO/RegisterAdviser';
-import RegisterSSO from './SSO/RegisterSSO';
+import Account from './Admin/Account';
 import Feedback from './SSO/Feedback';
 import Case from './SSO/Case';
-import Report from './Report';
 import AddStudentReport from './SSO/AddStudentReport';
 import Sanction from './SSO/Sanction';
 
@@ -29,6 +26,9 @@ import UpdateAccount from './UpdateAccount';
 
 import AdminDashboard from './Admin/AdminDashboard';
 import Class from './Admin/Class'
+import RegisterPrincipal from './Admin/RegisterPrincipal';
+import RegisterAdviser from './Admin/RegisterAdviser';
+import RegisterSSO from './Admin/RegisterSSO';
 
 
 import PrivateRoute from './PrivateRoute';
