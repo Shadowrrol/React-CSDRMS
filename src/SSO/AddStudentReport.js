@@ -97,13 +97,12 @@ const AddStudentReport = () => {
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
-                {loggedInUser.userType !== 2 && loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+                {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/case", "Case", PostAddIcon)}
-                {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
+                {loggedInUser.userType !== 1 && loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>            
             <div className={styles1.content}>
