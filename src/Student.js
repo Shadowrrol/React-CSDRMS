@@ -93,7 +93,7 @@ const AdviserStudent = () => {
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
                 {createSidebarLink("/report", "Report", AssessmentIcon)}
-                {loggedInUser.userType !== 1 && loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}

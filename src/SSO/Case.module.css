@@ -161,8 +161,7 @@
 
 .add-case,
 .delete-case,
-.complete-case
-.sanction {
+.complete-case {
     background-color: #FFD700; /* Gold background for buttons */
     color: #8B0000; /* Dark red text for buttons */
     border: none;
@@ -176,8 +175,80 @@
 
 .add-case:hover,
 .delete-case:hover,
-.complete-case:hover,
-.sanction:hover {
+.complete-case:hover {
+    background-color: #FFC700; /* Lighter gold on hover */
+    transform: scale(1.1);
+}
+
+.send-to-sso {
+    background-color: #8B0000; /* Dark red background */
+    color: white; /* White text */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+    font-size: 14px;
+}
+
+.send-to-sso:hover {
+    background-color: #A30000; /* Slightly lighter dark red on hover */
+    transform: scale(1.1);
+}
+
+/* Keyframes for animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes fadeInUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: (1); }
+}
+
+@keyframes fadeInRight {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: (1); }
+}
+
+.add-case,
+.delete-case,
+.complete-case {
+    background-color: #FFD700; /* Gold background */
+    color: #8B0000; /* Dark red text */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background 0.3s, transform 0.3s;
+    font-size: 16px; /* Larger text for better readability */
+}
+
+.add-case:hover,
+.delete-case:hover,
+.complete-case:hover {
     background-color: #FFC700; /* Lighter gold on hover */
     transform: scale(1.1);
 }
