@@ -65,11 +65,12 @@ const AddStudent = () => {
                 navigate(`/student`);
             } else {
                 // Handle errors, maybe show an error message
+                alert('ID already exist. Please try again.');
             }
         })
         .catch((error) => {
             console.error('Error inserting student:', error);
-            // Handle errors, maybe show an error message
+            
         });
     };
 

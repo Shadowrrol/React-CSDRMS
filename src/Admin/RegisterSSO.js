@@ -39,6 +39,9 @@ const RegisterSSO = () => {
     userType: 1 // SSO
   });
 
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
@@ -48,9 +51,15 @@ const RegisterSSO = () => {
     try {
       const response = await axios.post('http://localhost:8080/user/registerSSO', userData);
       console.log(response.data); // Handle success response
-      alert(`Admin is successfully registered.`);
+      setMessage('Admin is successfully registered.');
+      setError('');
+      setTimeout(() => {
+        navigate('/account');
+      }, 2000);
     } catch (error) {
       console.error('Error:', error); // Handle error
+      setMessage('');
+      alert('Username already exist. Please try again.');
     }
   };
 
@@ -67,6 +76,8 @@ const RegisterSSO = () => {
           <div className={styles1.contentform}>
             <h2>Register as SSO</h2>
             <form onSubmit={handleSubmit} className={styles1['form-container']}>
+              {message && <p className={styles1.success}>{message}</p>}
+              {error && <p className={styles1.error}>{error}</p>}
               <div className={styles1['form-group']}>
                 <label htmlFor="username">Username:</label>
                 <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
