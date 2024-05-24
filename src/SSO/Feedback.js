@@ -130,8 +130,8 @@ const Feedback = () => {
                   {feedback.caseEntity.student.lastname}
                 </div>
                 <div className={styles.feedbackDetails} style={{ color: "white" }}>
-                  <p>
-                    <strong>Is Acknowledged:</strong> {feedback.isAcknowledged}
+                   <p>
+                    <strong>Case:</strong> {feedback.caseEntity.case_name}
                   </p>
                   <p>
                     <strong>Result:</strong> {feedback.result}
