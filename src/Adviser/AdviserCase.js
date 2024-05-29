@@ -63,15 +63,15 @@ const AdviserCase = () => {
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/student/getAllStudents');
+                const response = await axios.get(`http://localhost:8080/student/getAllStudents/${loggedInUser.schoolYear}/${loggedInUser.section}`);
                 setStudents(response.data);
             } catch (error) {
                 console.error('Error fetching students:', error);
             }
         };
-
+    
         fetchStudents();
-    }, []);
+    }, [loggedInUser.schoolYear, loggedInUser.section]);
 
     const handleLogout = () => {
         localStorage.removeItem('authToken');

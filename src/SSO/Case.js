@@ -114,7 +114,7 @@ const Case = () => {
     useEffect(() => {
         const fetchCases = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/cases');
+                const response = await fetch('http://localhost:8080/api/cases/handledBySSO');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -145,7 +145,7 @@ const Case = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ ...formData, sid: selectedStudent?.sid, status: 'Pending' })
+                body: JSON.stringify({ ...formData, sid: selectedStudent?.sid, status: 'Pending', handledBySSO: 1 })
             });
 
             if (response.ok) {

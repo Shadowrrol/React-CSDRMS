@@ -25,12 +25,7 @@ const Account = () => {
     document.title = "SSO | Accounts";
   }, []); 
   const navigate = useNavigate(); 
-  const handleLogout = () => {
-    // Clear the authentication token from localStorage
-    localStorage.removeItem('authToken');
-    // Redirect the user to the login page
-    navigate('/');
-  };
+  
   return (
     <div className={navigationStyles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
       <div className={navigationStyles.sidenav}>
