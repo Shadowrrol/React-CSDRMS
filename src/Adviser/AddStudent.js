@@ -65,7 +65,7 @@ const AddStudent = () => {
                 navigate(`/student`);
             } else {
                 // Handle errors, maybe show an error message
-                alert('ID already exist. Please try again.');
+                alert('Student with this ID and school year already exists.');
             }
         })
         .catch((error) => {

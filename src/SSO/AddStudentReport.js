@@ -12,6 +12,7 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
+// Function to create sidebar links
 const createSidebarLink = (to, text, IconComponent) => (
     <Link to={to} className={styles['styled-link']}>
         <IconComponent className={styles.icon} /> {/* Icon */}
@@ -25,22 +26,29 @@ const AddStudentReport = () => {
     const navigate = useNavigate();
     const { sid } = useParams();
     const [student, setStudent] = useState(null);
+
+    // Initialize report state
     const [report, setReport] = useState({
         sid: '',
-        date: '',
+        name: '',
+        section: '',
+        grade: '',
+        schoolYear: '',
+        record_date: new Date().toISOString().split('T')[0],  // Automatically set today's date
+        incident_date: '',
         time: '',
         monitored_record: '',
         remarks: '',
         sanction: ''
     });
 
+    // Logout function
     const handleLogout = () => {
-        // Clear the authentication token from localStorage
         localStorage.removeItem('authToken');
-        // Redirect the user to the login page
         navigate('/');
     };
 
+    // Fetch student data based on student ID
     useEffect(() => {
         document.title = "Add Report";
         const fetchStudent = async () => {
@@ -59,22 +67,34 @@ const AddStudentReport = () => {
         fetchStudent();
     }, [sid]);
 
+    // Automatically set student information (name, section, grade, schoolYear) once student data is fetched
     useEffect(() => {
         if (student) {
-            setReport(prevReport => ({ ...prevReport, sid: student.sid }));
+            const { firstname, middlename, lastname, section, grade, schoolYear } = student;
+            const name = `${firstname} ${middlename} ${lastname}`;
+
+            setReport(prevReport => ({
+                ...prevReport,
+                sid: student.sid,
+                name,
+                section,
+                grade,
+                schoolYear
+            }));
         }
     }, [student]);
 
+    // Handle form field changes
     const handleChange = e => {
         const { name, value } = e.target;
         setReport({ ...report, [name]: value });
     };
 
+    // Handle form submission
     const handleSubmit = async e => {
         e.preventDefault();
-        const { firstname, middlename, lastname } = student;
-        const name = `${firstname} ${middlename} ${lastname}`;
-        const newReport = { ...report, name };
+
+        const newReport = { ...report };
         const response = await fetch('http://localhost:8080/student-report/insertReport', {
             method: 'POST',
             headers: {
@@ -82,8 +102,9 @@ const AddStudentReport = () => {
             },
             body: JSON.stringify(newReport)
         });
+
         if (response.ok) {
-            navigate(`/view-student-report/${student.sid}`);
+            navigate(`/view-student-report/${student.id}`);
         }
     };
 
@@ -103,7 +124,7 @@ const AddStudentReport = () => {
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
-            </div>            
+            </div>
             <div className={styles1.content}>
                 <div className={styles1.contentform}>
                     <h1>Add Student Report</h1>
@@ -115,8 +136,8 @@ const AddStudentReport = () => {
                     <form onSubmit={handleSubmit}>
                         <input type="hidden" name="sid" value={report.sid} required />
                         <label>
-                            Date:
-                            <input type="date" name="date" value={report.date} onChange={handleChange} required />
+                            Incident Date:
+                            <input type="date" name="incident_date" value={report.incident_date} onChange={handleChange} required />
                         </label>
                         <label>
                             Time:

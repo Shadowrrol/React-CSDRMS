@@ -122,9 +122,9 @@ const AdviserStudent = () => {
                         <tbody>
                             {filteredStudents.map(student => (
                                 <tr 
-                                    key={student.sid} 
+                                    key={student.id} 
                                     onClick={() => handleSelectStudent(student)}
-                                    className={selectedStudent?.sid === student.sid ? studentStyles['selected-row'] : ''}
+                                    className={selectedStudent?.id === student.id ? studentStyles['selected-row'] : ''}
                                 >
                                     <td>{student.sid}</td>
                                     <td>{student.firstname}</td>
@@ -147,10 +147,10 @@ const AdviserStudent = () => {
                     </table>
                     {selectedStudent && (
                         <div className={studentStyles['report-buttons']}>
-                            <Link to={`/add-report/${selectedStudent.sid}`}>
+                            <Link to={`/add-report/${selectedStudent.id}`}>
                                 <button>Add Report</button>
                             </Link>
-                            <Link to={`/view-student-report/${selectedStudent.sid}`}>
+                            <Link to={`/view-student-report/${selectedStudent.id}`}>
                                 <button>View Report</button>
                             </Link>
                         </div>

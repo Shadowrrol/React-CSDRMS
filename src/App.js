@@ -47,7 +47,7 @@ function App() {
           {loggedInUser && (
             <>
              <Route path="/report" element={<Report />} />
-             <Route path="/view-student-report/:sid" element={<ViewStudentReport />} />
+             <Route path="/view-student-report/:id" element={<ViewStudentReport />} />
              <Route path="/UpdateAccount" element={<UpdateAccount />} /> 
             </>
 
