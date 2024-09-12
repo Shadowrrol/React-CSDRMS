@@ -31,7 +31,7 @@ const AdviserCase = () => {
     const [selectedCaseId, setSelectedCaseId] = useState(null);
     const [isModalOpen, setModalOpen] = useState(false);
     const [formData, setFormData] = useState({
-        sid: '',
+        id: '',
         case_name: '',
         investigator: '',
         violation: '',
@@ -45,9 +45,11 @@ const AdviserCase = () => {
 
     useEffect(() => {
         document.title = "Adviser | Cases";
+    
         const fetchCases = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/cases/handledByAdviser');
+                // Fetch cases handled by the logged-in adviser
+                const response = await fetch(`http://localhost:8080/api/cases/handledByAdviser/${loggedInUser.uid}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -57,13 +59,14 @@ const AdviserCase = () => {
                 console.error('Failed to fetch cases:', error);
             }
         };
+    
         fetchCases();
-    }, []);
+    }, [loggedInUser.uid]);
 
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/student/getAllStudents/${loggedInUser.schoolYear}/${loggedInUser.section}`);
+                const response = await axios.get(`http://localhost:8080/student/getAllStudentsByAdviser/${loggedInUser.uid}`);
                 setStudents(response.data);
             } catch (error) {
                 console.error('Error fetching students:', error);
@@ -89,7 +92,7 @@ const AdviserCase = () => {
             const formDataWithDefaultStatus = {
                 ...formData,
                 status: 'Pending', // Set default status to "Pending"
-                sid: selectedStudent ? selectedStudent.sid : '' // Include selected student ID in form data
+                id: selectedStudent ? selectedStudent.id : '' // Include selected student ID in form data
             };
     
             const response = await fetch('http://localhost:8080/api/cases', {
@@ -104,7 +107,7 @@ const AdviserCase = () => {
                 const newCase = await response.json();
                 setCases((prevCases) => [...prevCases, newCase]);
                 setFormData({
-                    sid: '',
+                    id: '',
                     case_name: '',
                     investigator: '',
                     violation: '',

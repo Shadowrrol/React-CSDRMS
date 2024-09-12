@@ -30,6 +30,7 @@ const AddStudentReport = () => {
     // Initialize report state
     const [report, setReport] = useState({
         sid: '',
+        id: '',  // Add `id` field for the student's unique ID
         name: '',
         section: '',
         grade: '',
@@ -53,7 +54,7 @@ const AddStudentReport = () => {
         document.title = "Add Report";
         const fetchStudent = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/student/getStudent/${sid}`);
+                const response = await fetch(`http://localhost:8080/student/getCurrentStudent/${sid}`);
                 if (response.ok) {
                     const data = await response.json();
                     setStudent(data);
@@ -67,15 +68,16 @@ const AddStudentReport = () => {
         fetchStudent();
     }, [sid]);
 
-    // Automatically set student information (name, section, grade, schoolYear) once student data is fetched
+    // Automatically set student information (name, section, grade, schoolYear, and id) once student data is fetched
     useEffect(() => {
         if (student) {
-            const { firstname, middlename, lastname, section, grade, schoolYear } = student;
+            const { id, firstname, middlename, lastname, section, grade, schoolYear } = student;
             const name = `${firstname} ${middlename} ${lastname}`;
 
             setReport(prevReport => ({
                 ...prevReport,
                 sid: student.sid,
+                id: student.id,  // Automatically add student's unique `id`
                 name,
                 section,
                 grade,
@@ -94,7 +96,7 @@ const AddStudentReport = () => {
     const handleSubmit = async e => {
         e.preventDefault();
 
-        const newReport = { ...report };
+        const newReport = { ...report };  // `id` is already included in the `report` state
         const response = await fetch('http://localhost:8080/student-report/insertReport', {
             method: 'POST',
             headers: {
@@ -135,6 +137,7 @@ const AddStudentReport = () => {
                     <p>Contact Number: {student.con_num}</p>
                     <form onSubmit={handleSubmit}>
                         <input type="hidden" name="sid" value={report.sid} required />
+                        <input type="hidden" name="id" value={report.id} required /> {/* Hidden input for `id` */}
                         <label>
                             Incident Date:
                             <input type="date" name="incident_date" value={report.incident_date} onChange={handleChange} required />
@@ -154,17 +157,17 @@ const AddStudentReport = () => {
                                 <option value="Cutting Classes">Cutting Classes</option>
                                 <option value="Offense">Offense</option>
                                 <option value="Misbehavior">Misbehavior</option>
-                                <option value="Sanction">Sanction</option>
+                                {/* <option value="Sanction">Sanction</option> */}
                             </select>
                         </label>
                         <label>
                             Remarks:
                             <input type="text" name="remarks" value={report.remarks} onChange={handleChange} required />
                         </label>
-                        <label>
+                        {/* <label>
                             Sanction:
                             <input type="text" name="sanction" value={report.sanction} onChange={handleChange} required />
-                        </label>
+                        </label> */}
                         <button type="submit">Submit</button>
                     </form>
                 </div>

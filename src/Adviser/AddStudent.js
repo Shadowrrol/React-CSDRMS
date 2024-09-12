@@ -28,8 +28,9 @@ const AddStudent = () => {
         grade: loggedInUser.grade,
         section: loggedInUser.section,
         schoolYear: loggedInUser.schoolYear,
-        adviser_id:  loggedInUser.uid,
-        con_num: ''
+        adviserId:  loggedInUser.uid,
+        con_num: '',
+        current: 1
     });
     
     const createSidebarLink = (to, text, IconComponent) => (

@@ -13,6 +13,7 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
+// Helper function to create sidebar links
 const createSidebarLink = (to, text, IconComponent) => (
     <Link to={to} className={styles['styled-link']}>
         <IconComponent className={styles.icon} /> {/* Icon */}
@@ -31,48 +32,60 @@ const ViewStudentReport = () => {
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
     const navigate = useNavigate();
-    const { id } = useParams();
-    const [student, setStudent] = useState(null);
-    const [reports, setReports] = useState([]);
+    const { id } = useParams();  // Get student ID from the URL parameters
+    const [student, setStudent] = useState(null);  // Student details state
+    const [reports, setReports] = useState([]);    // Reports state
 
+    // Handle user logout
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         navigate('/');
     };
 
+    // Fetch student data based on userType
     useEffect(() => {
         const fetchStudent = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/student/getStudent/${id}`);
+                let response;
+                if (loggedInUser.userType === 3) {
+                    // If userType is 3, use the getStudentById endpoint
+                    response = await fetch(`http://localhost:8080/student/getStudentById/${id}`);
+                } else {
+                    // Otherwise, use the getCurrentStudent endpoint
+                    response = await fetch(`http://localhost:8080/student/getCurrentStudent/${id}`);
+                }
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                setStudent(data);
+                setStudent(data);  // Set the fetched student data
             } catch (error) {
                 console.error('Error fetching student:', error);
             }
         };
 
         fetchStudent();
-    }, [id]);
+    }, [id, loggedInUser.userType]);  // Dependencies on id and userType
 
+    // Fetch reports based on student information and userType
     useEffect(() => {
-        if (student && student.sid) { 
+        if (student && student.sid) {
             const fetchReports = async () => {
                 try {
                     let response;
                     if (loggedInUser.userType === 3) {
-                        // Use section and schoolYear from student (you may need to adjust this based on available fields)
-                        const section = student.section; // Assuming student has a 'section' field
-                        const schoolYear = student.schoolYear; // Assuming student has a 'schoolYear' field
-                        
+                        // Fetch reports by section and schoolYear if userType is 3
+                        const section = student.section;
+                        const schoolYear = student.schoolYear;
                         response = await fetch(`http://localhost:8080/student-report/getStudentReportsBySectionAndSchoolYear?section=${section}&schoolYear=${schoolYear}`);
                     } else {
+                        // Fetch reports by sid if userType is not 3
                         response = await fetch(`http://localhost:8080/student-report/getStudentReports/${student.sid}`);
                     }
+
                     const data = await response.json();
-                    setReports(data);
+                    setReports(data);  // Set the fetched reports
                 } catch (error) {
                     console.error('Error fetching reports:', error);
                 }
@@ -80,7 +93,7 @@ const ViewStudentReport = () => {
 
             fetchReports();
         }
-    }, [student, loggedInUser.userType]);
+    }, [student, loggedInUser.userType]);  // Dependencies on student and userType
 
     return (
         <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
@@ -102,7 +115,9 @@ const ViewStudentReport = () => {
                 {student ? (
                     <div className={styles['student-details']}>
                         <p><strong>Name:</strong> {student.firstname} {student.middlename} {student.lastname}</p>
-                        <p><strong>Contact Number:</strong> {student.con_num}</p>
+                        <p><strong>Grade:</strong> {student.grade}</p>
+                        <p><strong>Section:</strong> {student.section}</p>
+                        <p><strong>School Year:</strong> {student.schoolYear}</p>
                     </div>
                 ) : (
                     <p>Loading student details...</p>
@@ -125,19 +140,17 @@ const ViewStudentReport = () => {
                             <th>Incident Date</th>
                             <th>Monitored Record</th>
                             <th>Remarks</th>
-                            <th>Sanction</th>
                         </tr>
                     </thead>
                     <tbody>
                         {reports.map(report => (
                             <tr key={report.rid}>
-                                 <td>{report.schoolYear}</td>
-                                <td>{report.grade}</td>
-                                <td>{report.section}</td>
+                                <td>{report.student.schoolYear}</td>
+                                <td>{report.student.grade}</td>
+                                <td>{report.student.section}</td>
                                 <td>{report.incident_date}</td>
                                 <td>{report.monitored_record}</td>
                                 <td>{report.remarks}</td>
-                                <td>{report.sanction}</td>
                             </tr>
                         ))}
                     </tbody>

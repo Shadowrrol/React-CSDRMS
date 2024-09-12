@@ -32,8 +32,8 @@ const AdviserStudent = () => {
 
         if (loggedInUser) {
             const url = loggedInUser.userType === 3
-                ? `http://localhost:8080/student/getAllStudents/${loggedInUser.schoolYear}/${loggedInUser.section}`
-                : 'http://localhost:8080/student/getAllStudents';
+                ? `http://localhost:8080/student/getAllStudentsByAdviser/${loggedInUser.uid}`
+                : 'http://localhost:8080/student/getAllCurrentStudents';
 
             fetch(url)
                 .then(response => response.json())
@@ -63,10 +63,21 @@ const AdviserStudent = () => {
             .catch(error => console.error('Error deleting student:', error));
     };
 
+    // Handle selecting a student
     const handleSelectStudent = (student) => {
         setSelectedStudent(student);
     };
 
+    // Handle adding a report, with a check for student.current
+    const handleAddReport = () => {
+        if (selectedStudent.current === 0) {
+            alert('You cannot add a report to this student.');
+        } else {
+            navigate(`/add-report/${selectedStudent.id}`);
+        }
+    };
+
+    // Filter students based on search query
     const filteredStudents = useMemo(() => students.filter(student =>
         student.sid.toLowerCase().includes(searchQuery.toLowerCase()) ||
         student.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -83,7 +94,7 @@ const AdviserStudent = () => {
                 {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                 {loggedInUser.userType !== 2 && (
                     <>
-                        {loggedInUser.userType === 3 
+                        {loggedInUser.userType === 3
                             ? createSidebarLink("/adviserCase", "Case", PostAddIcon)
                             : createSidebarLink("/case", "Case", PostAddIcon)
                         }
@@ -121,8 +132,8 @@ const AdviserStudent = () => {
                         </thead>
                         <tbody>
                             {filteredStudents.map(student => (
-                                <tr 
-                                    key={student.id} 
+                                <tr
+                                    key={student.id}
                                     onClick={() => handleSelectStudent(student)}
                                     className={selectedStudent?.id === student.id ? studentStyles['selected-row'] : ''}
                                 >
@@ -147,9 +158,7 @@ const AdviserStudent = () => {
                     </table>
                     {selectedStudent && (
                         <div className={studentStyles['report-buttons']}>
-                            <Link to={`/add-report/${selectedStudent.id}`}>
-                                <button>Add Report</button>
-                            </Link>
+                            <button onClick={handleAddReport}>Add Report</button> {/* Replaced the Link with a button */}
                             <Link to={`/view-student-report/${selectedStudent.id}`}>
                                 <button>View Report</button>
                             </Link>

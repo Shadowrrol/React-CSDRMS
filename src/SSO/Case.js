@@ -95,7 +95,7 @@ const Case = () => {
 
         const fetchStudents = async () => {
             try {
-                const response = await fetch('http://localhost:8080/student/getAllStudents');
+                const response = await fetch('http://localhost:8080/student/getAllCurrentStudents');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -223,7 +223,7 @@ const Case = () => {
                 },
                 body: JSON.stringify({
                     cid: selectedCaseId,
-                    sid: cases.find(caseItem => caseItem.cid === selectedCaseId)?.sid,
+                    id: cases.find(caseItem => caseItem.cid === selectedCaseId)?.id,
                     behaviorDetails: sanctionData.behaviorDetails,
                     sanctionRecommendation: sanctionData.sanctionRecommendation
                 })
@@ -265,7 +265,7 @@ const Case = () => {
                     'Content-Type': 'application/json'
                 },  
                 body: JSON.stringify({
-                    uid: cases.find(caseItem => caseItem.cid === selectedCaseId)?.student.adviser_id,
+                    uid: cases.find(caseItem => caseItem.cid === selectedCaseId)?.student.adviserId,
                     cid: selectedCaseId,
                     isAcknowledged: 0,
                     result: feedbackResult
