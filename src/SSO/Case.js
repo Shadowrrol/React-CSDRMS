@@ -140,19 +140,34 @@ const Case = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const formDataWithDefaultStatus = {
+                ...formData,
+                status: 'Pending', // Set default status to "Pending"
+                id: selectedStudent ? selectedStudent.id : '', // Include selected student ID in form data
+                handledBySSO: 1
+            };
+    
             const response = await fetch('http://localhost:8080/api/cases', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ ...formData, sid: selectedStudent?.sid, status: 'Pending', handledBySSO: 1 })
+                body: JSON.stringify(formDataWithDefaultStatus) // Send formData with default status and selected student ID
             });
-
+    
             if (response.ok) {
                 const newCase = await response.json();
                 setCases((prevCases) => [...prevCases, newCase]);
-                setFormData({ sid: '', case_name: '', investigator: '', violation: '', description: '' });
-                setModalOpen(false);
+                setFormData({
+                    id: '',
+                    case_name: '',
+                    investigator: '',
+                    violation: '',
+                    description: '',
+                    status: '' // Reset status in the form data
+                });
+                setSelectedStudent(null); // Reset selected student after submitting the form
+                setModalOpen(false); // Close the modal
             } else {
                 console.error('Failed to add case');
             }
