@@ -2,9 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Navigation.module.css';
 import studentStyles from './Student.module.css';
-
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import axios from 'axios';
+
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RateReviewIcon from '@mui/icons-material/RateReview';
@@ -25,14 +26,16 @@ const AdviserStudent = () => {
     const [students, setStudents] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedStudent, setSelectedStudent] = useState(null);
+    const [file, setFile] = useState(null);  // State to store the uploaded file
     const navigate = useNavigate();
 
     useEffect(() => {
         document.title = "Student";
+        
 
         if (loggedInUser) {
             const url = loggedInUser.userType === 3
-                ? `http://localhost:8080/student/getAllStudentsByAdviser/${loggedInUser.uid}`
+                ? `http://localhost:8080/student/getAllStudentsByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`
                 : 'http://localhost:8080/student/getAllCurrentStudents';
 
             fetch(url)
@@ -63,12 +66,10 @@ const AdviserStudent = () => {
             .catch(error => console.error('Error deleting student:', error));
     };
 
-    // Handle selecting a student
     const handleSelectStudent = (student) => {
         setSelectedStudent(student);
     };
 
-    // Handle adding a report, with a check for student.current
     const handleAddReport = () => {
         if (selectedStudent.current === 0) {
             alert('You cannot add a report to this student.');
@@ -77,7 +78,35 @@ const AdviserStudent = () => {
         }
     };
 
-    // Filter students based on search query
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+
+    const handleFileUpload = async () => {
+        if (!file) {
+            alert('Please select a file first.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await axios.post('http://localhost:8080/student/import', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            if (response.status === 200) {
+                alert('File uploaded successfully!');
+                // Optionally, refetch the student data after upload
+                setStudents(prevStudents => [...prevStudents, ...response.data]);
+            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
+    };
+
     const filteredStudents = useMemo(() => students.filter(student =>
         student.sid.toLowerCase().includes(searchQuery.toLowerCase()) ||
         student.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -87,20 +116,21 @@ const AdviserStudent = () => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.sidenav}>
-                <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
-                {createSidebarLink("/report", "Report", AssessmentIcon)}
-                {createSidebarLink("/student", "Student", SchoolIcon)}
-                {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-                {loggedInUser.userType !== 2 && (
-                    <>
-                        {loggedInUser.userType === 3
-                            ? createSidebarLink("/adviserCase", "Case", PostAddIcon)
-                            : createSidebarLink("/case", "Case", PostAddIcon)
-                        }
-                    </>
-                )}
-                {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
+            <img src="/image-removebg-preview (1).png" alt="" className={styles["sidebar-logo"]} />
+        {createSidebarLink("/report", "Report", AssessmentIcon)}
+        {createSidebarLink("/student", "Student", SchoolIcon)}
+        {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+        {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+        {loggedInUser.userType !== 2 && (
+          <>
+            {loggedInUser.userType === 3
+              ? createSidebarLink("/adviserCase", "Case", PostAddIcon)
+              : createSidebarLink("/case", "Case", PostAddIcon)}
+          </>
+        )}
+        {loggedInUser.userType !== 1 &&
+          loggedInUser.userType !== 2 &&
+          createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={styles.logoutbtn} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles.content}>
@@ -117,6 +147,10 @@ const AdviserStudent = () => {
                             <button>Add Student</button>
                         </Link>
                     )}
+                    <div>
+                        <input type="file" onChange={handleFileChange} accept=".xls,.xlsx" />
+                        <button onClick={handleFileUpload}>Import Student Data</button>
+                    </div>
                     <table className={studentStyles['student-table']}>
                         <thead>
                             <tr>
@@ -156,14 +190,6 @@ const AdviserStudent = () => {
                             ))}
                         </tbody>
                     </table>
-                    {selectedStudent && (
-                        <div className={studentStyles['report-buttons']}>
-                            <button onClick={handleAddReport}>Add Report</button> {/* Replaced the Link with a button */}
-                            <Link to={`/view-student-report/${selectedStudent.id}`}>
-                                <button>View Report</button>
-                            </Link>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>
