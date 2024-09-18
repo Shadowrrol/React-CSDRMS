@@ -280,9 +280,7 @@ const Case = () => {
                     'Content-Type': 'application/json'
                 },  
                 body: JSON.stringify({
-                    uid: cases.find(caseItem => caseItem.cid === selectedCaseId)?.student.adviserId,
                     cid: selectedCaseId,
-                    isAcknowledged: 0,
                     result: feedbackResult
                 })
             });
@@ -335,8 +333,7 @@ const Case = () => {
                     cid: selectedCaseId,
                     date: followUpData.date,
                     time: followUpData.time,
-                    violation: followUpData.violation,
-                    name: followUpData.name,
+                    action: followUpData.action,
                     reasoning: followUpData.reasoning
                 })
             });
@@ -561,12 +558,12 @@ const Case = () => {
                                         />
                                     </div>
                                     <div className={styles1['form-group']}>
-                                        <label htmlFor="violation">Violation:</label>
+                                        <label htmlFor="action">Action:</label>
                                         <input
                                             type="text"
-                                            id="violation"
-                                            value={followUpData.violation}
-                                            onChange={(e) => setFollowUpData({ ...followUpData, violation: e.target.value })}
+                                            id="action"
+                                            value={followUpData.action}
+                                            onChange={(e) => setFollowUpData({ ...followUpData, action: e.target.value })}
                                             required
                                         />
                                     </div>

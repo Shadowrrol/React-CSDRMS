@@ -49,7 +49,7 @@ const AdviserCase = () => {
         const fetchCases = async () => {
             try {
                 // Fetch cases handled by the logged-in adviser
-                const response = await fetch(`http://localhost:8080/api/cases/handledByAdviser/${loggedInUser.uid}`);
+                const response = await fetch(`http://localhost:8080/api/cases/handledByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -66,7 +66,7 @@ const AdviserCase = () => {
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/student/getAllStudentsByAdviser/${loggedInUser.uid}`);
+                const response = await axios.get(`http://localhost:8080/student/getAllStudentsByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`);
                 setStudents(response.data);
             } catch (error) {
                 console.error('Error fetching students:', error);

@@ -30,26 +30,31 @@ const Feedback = () => {
 
   useEffect(() => {
     document.title = "Feedback";
+    
     const fetchFeedback = async () => {
       try {
         let feedbackEndpoint = "http://localhost:8080/feedback/getFeedbacks";
+        
         if (loggedInUser.userType === 3) {
-          feedbackEndpoint =
-            "http://localhost:8080/feedback/getFeedbacksForAdviser?uid=" + loggedInUser.uid;
+          feedbackEndpoint = `http://localhost:8080/feedback/getFeedbacksForAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`;
         }
+        
         const response = await fetch(feedbackEndpoint);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
+        
         const data = await response.json();
         setFeedbackList(data);
+        
       } catch (error) {
         console.error("Failed to fetch feedback:", error);
         setError(error.message); // Set error message state
       }
     };
+    
     fetchFeedback();
-  }, []); // Include loggedInUser in the dependencies array
+  }, [loggedInUser.section, loggedInUser.schoolYear]);
 
   const handleLogout = () => {
     // Clear the authentication token from localStorage
