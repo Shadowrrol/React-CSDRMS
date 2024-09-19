@@ -34,7 +34,6 @@ h1 {
     margin-bottom: 20px;
     color: #fff; /* White text color */
     font-family: 'Arial', sans-serif; /* Modern font */
-    animation: fadeInDown 1s ease-in-out;
 }
 
 .error {

@@ -116,7 +116,7 @@ function Class() {
   );
 
   useEffect(() => {
-    document.title = "SSO | Class";
+    document.title = "Admin | Class";
     fetchClasses();
     fetchSchoolYears();
   }, []);
