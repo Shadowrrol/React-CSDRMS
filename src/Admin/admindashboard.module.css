@@ -45,7 +45,7 @@ h2 {
 }
 
 .searchRec {
-    width: 370px;
+    width: 380px;
     padding: 15px;
     border-radius: 8px;
     border: 1px solid #ddd;
@@ -76,7 +76,7 @@ h2 {
 .user-table th, .user-table td {
     padding: 12px 15px;
     text-align: left;
-    font-size: 0.95rem;
+    font-size: 16px;
 }
 
 .user-table th {
@@ -88,7 +88,7 @@ h2 {
 
 .user-table td {
     cursor: pointer;
-    border: 1px solid #ddd; /* Border for body cells */
+    border: 1px solid #ccc; /* Border for body cells */
 }
 
 .user-table tr:hover {
@@ -97,6 +97,8 @@ h2 {
 
 .selected-row {
     background-color: #e0e0e0 !important;
+    color: #81343a; /* Dark red text color for selected row */
+    font-weight: bold;
 }
 
 /* Center User Type column */

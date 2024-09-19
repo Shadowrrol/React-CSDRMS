@@ -5,7 +5,6 @@ import studentStyles from './Student.module.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
-
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RateReviewIcon from '@mui/icons-material/RateReview';
@@ -26,11 +25,11 @@ const AdviserStudent = () => {
     const [students, setStudents] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedStudent, setSelectedStudent] = useState(null);
-    const [file, setFile] = useState(null);  // State to store the uploaded file
+    const [file, setFile] = useState(null); // State to store the uploaded file
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = "Student";
+        document.title = "SSO | Student";
         
         if (loggedInUser) {
             const url = loggedInUser.userType === 3
@@ -52,17 +51,19 @@ const AdviserStudent = () => {
     };
 
     const handleDelete = (sid) => {
-        fetch(`http://localhost:8080/student/deleteStudent/${sid}`, {
-            method: 'DELETE'
-        })
-            .then(response => {
-                if (response.ok) {
-                    setStudents(prevStudents => prevStudents.filter(student => student.sid !== sid));
-                } else {
-                    console.error('Failed to delete student');
-                }
+        if (window.confirm(`Type 'delete' to confirm deletion of student SID ${sid}`)) {
+            fetch(`http://localhost:8080/student/deleteStudent/${sid}`, {
+                method: 'DELETE'
             })
-            .catch(error => console.error('Error deleting student:', error));
+                .then(response => {
+                    if (response.ok) {
+                        setStudents(prevStudents => prevStudents.filter(student => student.sid !== sid));
+                    } else {
+                        console.error('Failed to delete student');
+                    }
+                })
+                .catch(error => console.error('Error deleting student:', error));
+        }
     };
 
     const handleSelectStudent = (student) => {
@@ -100,98 +101,98 @@ const AdviserStudent = () => {
                 alert('File uploaded successfully!');
                 // Optionally, refetch the student data after upload
                 setStudents(prevStudents => [...prevStudents, ...response.data]);
-               
             }
         } catch (error) {
             console.error('Error uploading file:', error);
         }
     };
 
+    // Updated filtering logic
     const filteredStudents = useMemo(() => students.filter(student => {
+        const query = searchQuery.toLowerCase();
+        const name = `${student.firstname} ${student.middlename ? student.middlename + ' ' : ''}${student.lastname}`.toLowerCase();
+        const gradeSection = `${student.grade} - ${student.section}`.toLowerCase();
         return (
-            (student.sid && student.sid.toLowerCase().includes(searchQuery.toLowerCase())) ||
-            (student.firstname && student.firstname.toLowerCase().includes(searchQuery.toLowerCase())) ||
-            (student.lastname && student.lastname.toLowerCase().includes(searchQuery.toLowerCase()))
+            (student.sid && student.sid.toLowerCase().includes(query)) ||
+            name.includes(query) ||
+            gradeSection.includes(query) ||
+            (student.con_num && student.con_num.toLowerCase().includes(query))
         );
     }), [students, searchQuery]);
 
     return (
         <div className={styles.wrapper}>
             <div className={styles.sidenav}>
-            <img src="/image-removebg-preview (1).png" alt="" className={styles["sidebar-logo"]} />
-        {createSidebarLink("/report", "Report", AssessmentIcon)}
-        {createSidebarLink("/student", "Student", SchoolIcon)}
-        {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-        {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-        {loggedInUser.userType !== 2 && (
-          <>
-            {loggedInUser.userType === 3
-              ? createSidebarLink("/adviserCase", "Case", PostAddIcon)
-              : createSidebarLink("/case", "Case", PostAddIcon)}
-          </>
-        )}
-        {loggedInUser.userType !== 1 &&
-          loggedInUser.userType !== 2 &&
-          createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
+                <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
+                {createSidebarLink("/report", "Report", AssessmentIcon)}
+                {createSidebarLink("/student", "Student", SchoolIcon)}
+                {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+                {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
+                {loggedInUser.userType !== 2 && (
+                    <>
+                        {loggedInUser.userType === 3
+                            ? createSidebarLink("/adviserCase", "Case", PostAddIcon)
+                            : createSidebarLink("/case", "Case", PostAddIcon)}
+                    </>
+                )}
+                {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={styles.logoutbtn} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles.content}>
                 <div className={studentStyles['student-content']}>
-                    <h2>Students</h2>
+                    <h2>Student Records</h2>
                     <input
-                        type="text"
+                        type="search"
+                        placeholder="Search by SID, Name, Grade - Section or Contact No."      
+                        className={studentStyles.searchStud}                 
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search by SID, First Name, or Last Name"
                     />
                     {loggedInUser.userType === 3 && (
                         <Link to="/add-student">
-                            <button>Add Student</button>
+                            <button className={studentStyles['add-student-button']}>Add Student</button>
                         </Link>
                     )}
-                    <div>
+                    <div className={studentStyles['import-section']}>
                         <input type="file" onChange={handleFileChange} accept=".xls,.xlsx" />
-                        <button onClick={handleFileUpload}>Import Student Data</button>
+                        <button onClick={handleFileUpload} className={studentStyles['import-button']}>Import Student Data</button>
                     </div>
-                    <table className={studentStyles['student-table']}>
-                        <thead>
-                            <tr>
-                                <th>SID</th>
-                                <th>First Name</th>
-                                <th>Middle Name</th>
-                                <th>Last Name</th>
-                                <th>Grade</th>
-                                <th>Section</th>
-                                <th>Contact No.</th>
-                                {loggedInUser.userType === 3 && <th>Action</th>}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredStudents.map(student => (
-                                <tr
-                                    key={student.id}
-                                    onClick={() => handleSelectStudent(student)}
-                                    className={selectedStudent?.id === student.id ? studentStyles['selected-row'] : ''}
-                                >
-                                    <td>{student.sid}</td>
-                                    <td>{student.firstname}</td>
-                                    <td>{student.middlename}</td>
-                                    <td>{student.lastname}</td>
-                                    <td>{student.grade}</td>
-                                    <td>{student.section}</td>
-                                    <td>{student.con_num}</td>
-                                    {loggedInUser.userType === 3 && (
-                                        <td>
-                                            <Link to={`/update-student/${student.sid}`}>
-                                                <EditIcon className={`${studentStyles['icon-button']} ${studentStyles['icon-edit']}`} />
-                                            </Link>
-                                            <DeleteIcon className={`${studentStyles['icon-button']} ${studentStyles['icon-delete']}`} onClick={() => handleDelete(student.sid)} />
-                                        </td>
-                                    )}
+
+                    <div className={studentStyles['student-container']}>
+                        <table className={studentStyles['student-table']}>
+                            <thead>
+                                <tr>
+                                    <th>SID</th>
+                                    <th>Name</th>
+                                    <th>Grade - Section</th>
+                                    <th>Contact No.</th>
+                                    {loggedInUser.userType === 3 && <th>Action</th>}
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {filteredStudents.map(student => (
+                                    <tr
+                                        key={student.id}
+                                        onClick={() => handleSelectStudent(student)}
+                                        className={selectedStudent?.id === student.id ? studentStyles['selected-row'] : ''}
+                                    >
+                                        <td>{student.sid}</td>
+                                        <td>{`${student.firstname} ${student.middlename ? student.middlename + ' ' : ''}${student.lastname}`}</td>
+                                        <td>{`${student.grade} - ${student.section}`}</td>
+                                        <td>{student.con_num}</td>
+                                        {loggedInUser.userType === 3 && (
+                                            <td>
+                                                <Link to={`/update-student/${student.sid}`}>
+                                                    <EditIcon className={`${studentStyles['icon-button']} ${studentStyles['icon-edit']}`} />
+                                                </Link>
+                                                <DeleteIcon className={`${studentStyles['icon-button']} ${studentStyles['icon-delete']}`} onClick={() => handleDelete(student.sid)} />
+                                            </td>
+                                        )}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
 
                     {/* Add Report Button */}
                     {selectedStudent && (
