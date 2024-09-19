@@ -1,0 +1,176 @@
+.maincontent {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f9f9f9;
+    animation: fadeInUp 0.8s ease-in-out;
+    height: calc(100vh - 40px); /* Adjust if necessary...No Scrollbar when opening the Page*/
+}
+
+.tableContainer {
+  max-width: 50%;
+  max-height: 400px; /* Adjust height as needed */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 2px solid #81343a;  
+}
+
+.divide {
+  display: flex;  
+  gap: 20px;
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse; /* Ensures borders are not doubled */
+  background-color: #fff;
+  table-layout: fixed; /* Ensures consistent cell width */
+}
+
+.tableInner {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Ensures consistent cell width */
+}
+
+.tableInner thead {
+  position: sticky; /* Standard syntax */
+  top: 0; /* Fixed to the top */
+  z-index: 1; /* Ensure header stays on top of scrolling body */
+}
+
+.tableInner tr:hover {
+  background-color: #f4f6f9;
+}
+
+.selected-row {
+  background-color: #e0e0e0 !important;
+}
+
+.tableInner th, .tableInner td {
+  padding: 10px;
+  text-align: center;
+}
+
+.tableInner th {
+  background-color: #81343a;
+  color: white;
+  font-weight: bold;
+  border: 1px solid #81343a;  
+}
+
+.tableInner td{
+  cursor: pointer;
+  border: 1px solid #ddd;
+}
+
+.addButtonContainer {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  padding: 10px;
+}
+
+.modalContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 380px;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the input fields horizontally */
+  justify-content: center;
+}
+
+.modalHeader {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.inputField {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  width: 250px;
+  flex: 1 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.button:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+.buttonCancel {
+  background-color: #e53935;
+}
+
+.buttonCancel:hover {
+  background-color: #e53935;
+}
+
+.classtitle {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 32px;
+  color: #81343a;
+  font-weight: bold;
+}
+
+/* Fade In Animation */
+@keyframes fadeInUp {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+
+/* Search bar container */
+.searchContainer {
+  margin: 20px 0;
+}
+
+/* Search input field styling */
+.searchInput {
+  width: 400px;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  font-size: 15px;
+}
+

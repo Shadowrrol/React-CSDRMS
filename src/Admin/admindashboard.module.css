@@ -1,75 +1,168 @@
-.contentContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f9fc;
+    color: #333;
+    scroll-behavior: smooth;
+    height: 100%;
+    font-size: 14px;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #81343a;
+    margin: 20px 0 25px 0;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 16px;
+}
+
+/* Content Wrapper */
+.content {
     flex-grow: 1;
     padding: 20px;
+    background-color: #f9f9f9;
+    animation: fadeInUp 0.8s ease-in-out;
+    height: calc(100vh - 40px); /* Adjust if necessary...No Scrollbar when opening the Page*/
 }
 
-.content {
-    background: linear-gradient(180deg, #863537, #200d0d);
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    color: #fff;
-    width: 80%; /* Adjust width as needed */
-    max-width: 800px;
-    margin: auto;
-}
-
-.h2 {
-    color: #fff;
-    margin-top: -20px;
-    margin-bottom: 40px;
-    font-size: 35px;
-}
-
-table {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
-}
-
-.th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-.th {
-    background-color: #4b0000;
-    color: white;
-}
-
-.td {
-    color: #fff;
-}
-
-.buttons {
+/* Search Bar */
+.filter-search-bar {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
-.button {
-    padding: 10px 20px;
-    font-size: 16px;
+.search-input {
+    width: 400px;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-size: 15px;
+}
+
+/* Table Container */
+.table-container {
+    max-height: 400px; /* Adjust height as needed */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 2px solid #81343a;
+}
+
+/* Table Styling */
+.user-table {
+    width: 100%;
+    border-collapse: collapse; /* Ensures borders are not doubled */
+    table-layout: fixed; /* Ensures consistent cell width */
+}
+
+.user-table thead {
+    position: sticky; /* Standard syntax */
+    top: 0; /* Fixed to the top */
+    z-index: 1; /* Ensure header stays on top of scrolling body */
+}
+
+.user-table th, .user-table td {
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.user-table th {
+    background-color: #81343a;
     color: #fff;
-    background-color: #4b0000;
-    border: none;
-    border-radius: 5px;
+    font-weight: 600;
+    border: 0.5px solid #81343a;  
+}
+
+.user-table td {
     cursor: pointer;
-    transition: background-color 0.3s;
-    margin-right: 10px;
+    border: 1px solid #ddd; /* Border for body cells */
 }
 
-.button:hover {
-    background-color: #d2691e;
+.user-table tr:hover {
+    background-color: #f4f6f9;
 }
 
+.selected-row {
+    background-color: #e0e0e0 !important;
+}
+
+/* Center User Type column */
+.user-table th:nth-child(4),
+.user-table td:nth-child(4) {
+    text-align: center;
+}
+
+/* Action Buttons */
 .action-buttons {
     display: flex;
     gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.action-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: none;
+    color: #fff;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.admin-add-btn {
+    background-color: #4caf50;
+}
+
+.admin-add-btn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+.edit-btn {
+    background-color: #2196f3;
+}
+
+.edit-btn:hover {
+    background-color: #1e88e5;
+    transform: scale(1.05);
+}
+
+.delete-btn {
+    background-color: #f44336;
+}
+
+.delete-btn:hover {
+    background-color: #e53935;
+    transform: scale(1.05);
+}
+
+.action-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Fade In Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
