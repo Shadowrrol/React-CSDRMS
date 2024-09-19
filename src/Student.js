@@ -32,7 +32,6 @@ const AdviserStudent = () => {
     useEffect(() => {
         document.title = "Student";
         
-
         if (loggedInUser) {
             const url = loggedInUser.userType === 3
                 ? `http://localhost:8080/student/getAllStudentsByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`
@@ -101,17 +100,20 @@ const AdviserStudent = () => {
                 alert('File uploaded successfully!');
                 // Optionally, refetch the student data after upload
                 setStudents(prevStudents => [...prevStudents, ...response.data]);
+               
             }
         } catch (error) {
             console.error('Error uploading file:', error);
         }
     };
 
-    const filteredStudents = useMemo(() => students.filter(student =>
-        student.sid.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        student.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        student.lastname.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [students, searchQuery]);
+    const filteredStudents = useMemo(() => students.filter(student => {
+        return (
+            (student.sid && student.sid.toLowerCase().includes(searchQuery.toLowerCase())) ||
+            (student.firstname && student.firstname.toLowerCase().includes(searchQuery.toLowerCase())) ||
+            (student.lastname && student.lastname.toLowerCase().includes(searchQuery.toLowerCase()))
+        );
+    }), [students, searchQuery]);
 
     return (
         <div className={styles.wrapper}>
@@ -190,6 +192,13 @@ const AdviserStudent = () => {
                             ))}
                         </tbody>
                     </table>
+
+                    {/* Add Report Button */}
+                    {selectedStudent && (
+                        <button onClick={handleAddReport} className={studentStyles['add-report-button']}>
+                            Add Report for {selectedStudent.firstname} {selectedStudent.lastname}
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

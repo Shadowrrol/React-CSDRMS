@@ -82,7 +82,7 @@ const ViewSanctions = () => {
   useEffect(() => {
     const fetchSanctions = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/sanction/getAllPendingSanctions");
+        const response = await axios.get("http://localhost:8080/sanction/getAllSanctions");
         console.log("Fetched sanctions:", response.data);
         setSanctions(response.data);
       } catch (error) {
@@ -240,13 +240,25 @@ const ViewSanctions = () => {
                         <span className={styles1.label} style={{ color: "white" }}>
                           Student Name:
                         </span>{" "}
-                        {sanction.student.firstname} {sanction.student.lastname}
+                        {sanction.caseEntity.student.case_name} {sanction.caseEntity.student.lastname}
                       </div>
                       <div className={styles1.gridItem} style={{ color: "white" }}>
                         <span className={styles1.label} style={{ color: "white" }}>
-                          Behavior Details:
+                          Case:
                         </span>{" "}
-                        {sanction.behaviorDetails}
+                        {sanction.caseEntity.case_name}
+                      </div>
+                      <div className={styles1.gridItem} style={{ color: "white" }}>
+                        <span className={styles1.label} style={{ color: "white" }}>
+                          Description:
+                        </span>{" "}
+                        {sanction.caseEntity.description}
+                      </div>
+                      <div className={styles1.gridItem} style={{ color: "white" }}>
+                        <span className={styles1.label} style={{ color: "white" }}>
+                          Violation:
+                        </span>{" "}
+                        {sanction.caseEntity.violation}
                       </div>
                       <div className={styles1.gridItem} style={{ color: "white" }}>
                         <span className={styles1.label} style={{ color: "white" }}>

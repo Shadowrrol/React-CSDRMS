@@ -11,14 +11,19 @@ import SchoolIcon from "@mui/icons-material/School";
 
 const createSidebarLink = (to, text, IconComponent) => (
   <Link to={to} className={styles["styled-link"]}>
-    <IconComponent className={styles.icon} /> {/* Icon */}
-    <span className={styles["link-text"]}>{text}</span> {/* Text */}
+    <IconComponent className={styles.icon} />
+    <span className={styles["link-text"]}>{text}</span>
   </Link>
 );
 
 const Notification = () => {
   const navigate = useNavigate();
   const [sanctions, setSanctions] = useState([]);
+  const [feedbacks, setFeedbacks] = useState([]); // New state for feedbacks
+  const [followups, setFollowups] = useState([]); // New state for follow-ups
+  const [sanctionError, setSanctionError] = useState(null); // Separate sanction error
+  const [feedbackError, setFeedbackError] = useState(null); // Separate feedback error
+  const [followupError, setFollowupError] = useState(null); // Separate follow-up error
   const authToken = localStorage.getItem("authToken");
   const loggedInUser = JSON.parse(authToken);
   const [page, setPage] = useState(1);
@@ -30,179 +35,166 @@ const Notification = () => {
   const startIndex = (page - 1) * limit;
   const endIndex = startIndex + limit;
 
-  const fetchSanctions = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     try {
-      let response;
-      if (loggedInUser.userType === 3) {
-        response = await fetch(
-          `http://localhost:8080/sanction/getSanctionsBySectionAndSchoolYear?section=${loggedInUser.section}&schoolYear=${loggedInUser.schoolYear}`
-        );
-      } else {
-        response = await fetch("http://localhost:8080/sanction/getApprovedAndDeclinedSanctions");
-      }
-      const data = await response.json();
-      setSanctions(data);
+      const fetchSanctions = async () => {
+        let response;
+        if (loggedInUser.userType === 3) {
+          response = await fetch(
+            `http://localhost:8080/sanction/getSanctionsBySectionAndSchoolYear?section=${loggedInUser.section}&schoolYear=${loggedInUser.schoolYear}`,
+            {
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          );
+        } else {
+          response = await fetch(
+            "http://localhost:8080/sanction/getApprovedAndDeclinedSanctions",
+            {
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          );
+        }
+
+        if (!response.ok) {
+          throw new Error(`Sanction fetch failed with status ${response.status}`);
+        }
+
+        return response.json();
+      };
+
+      const fetchFeedbacks = async () => {
+        if (loggedInUser.userType === 3) {
+          const response = await fetch(
+            `http://localhost:8080/feedback/getFeedbacksForAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`,
+            {
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          );
+          if (!response.ok) {
+            throw new Error(`Feedback fetch failed with status ${response.status}`);
+          }
+
+          return response.json();
+        }
+        return []; // If not userType 3, return empty feedbacks array
+      };
+
+      const fetchFollowups = async () => {
+        if (loggedInUser.userType === 3) {
+          const response = await fetch(
+            `http://localhost:8080/followup/getAllFollowUpsByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`,
+            {
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          );
+          if (!response.ok) {
+            throw new Error(`Follow-up fetch failed with status ${response.status}`);
+          }
+
+          return response.json();
+        }
+        return []; // If not userType 3, return empty follow-ups array
+      };
+
+      const [sanctionsData, feedbacksData, followupsData] = await Promise.all([
+        fetchSanctions(),
+        fetchFeedbacks(),
+        fetchFollowups(),
+      ]);
+
+      console.log("Sanctions Data:", sanctionsData);
+      console.log("Feedbacks Data:", feedbacksData);
+      console.log("Follow-ups Data:", followupsData);
+
+      setSanctions(sanctionsData);
+      setFeedbacks(feedbacksData);
+      setFollowups(followupsData);
     } catch (error) {
-      console.error("Error fetching sanctions:", error);
+      console.error("Error fetching data:", error);
+      setSanctionError("Failed to fetch sanctions.");
+      setFeedbackError("Failed to fetch feedbacks.");
+      setFollowupError("Failed to fetch follow-ups.");
     }
-  }, [loggedInUser, page]);
+  }, [loggedInUser, authToken]);
 
   useEffect(() => {
-    // Fetch sanctions data when component mounts
     document.title = "Notification";
-    fetchSanctions();
-  }, [fetchSanctions]);
+    fetchData(); // Fetch all data
+  }, [fetchData]);
 
   const handleLogout = () => {
-    // Clear the authentication token from localStorage
     localStorage.removeItem("authToken");
-    // Redirect the user to the login page
     navigate("/");
-  };
-
-  const handleAcknowledge = async (sanctionId) => {
-    try {
-      const response = await fetch("http://localhost:8080/feedback/insertFeedback", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          uid: loggedInUser.uid, // Assuming uid is the current user's ID
-          sanction_id: sanctionId,
-          isAcknowledged: 1, // Set to 1 for acknowledged
-        }),
-      });
-      if (response.ok) {
-        // If feedback insertion is successful, fetch sanctions again to update the UI
-        fetchSanctions();
-      } else {
-        console.error("Failed to insert feedback");
-      }
-    } catch (error) {
-      console.error("Error inserting feedback:", error);
-    }
   };
 
   const getSanctionStatus = (isApproved) => {
     return isApproved === 1 ? "Accepted" : isApproved === 2 ? "Declined" : "Pending";
   };
 
-  const renderSanctions = () => {
-    return (
-      <div>
-        <div
-          style={{
-            width: "85vh",
-            border: "2px solid black",
-            borderRadius: "12px",
-            alignItems: "center",
-            display: "flex",
-            justifyContent: "center",
-            backgroundColor: "#a02727",
-          }}
-        >
-          <h2 style={{ color: "white" }}>Approved and Declined Sanctions</h2>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "32px",
-            padding: "32px",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {sanctions.slice(startIndex, endIndex).map((sanction) => (
-            <div
-              key={sanction.sanction_id} // Move key to the container div
-              style={{
-                border: "1px black solid",
-                width: "80vh",
-                borderRadius: "15px",
-                background: "linear-gradient(to right, #a43737 40%, #e8bd26 95%)",
-              }}
-            >
-              <li style={{ listStyle: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    color: "white",
-                    padding: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      width: "50%",
-                      gap: "8px",
-                      fontSize: "18px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        padding: "8px",
-                      }}
-                    >
-                      <div>
-                        <b>
-                          Student Name:
-                          {sanction.student.firstname} {sanction.student.lastname}
-                        </b>
-                      </div>
-                      <div>
-                        <b>Behavior Details: {sanction.behaviorDetails}</b>
-                      </div>
-                      <div>
-                        <b>Sanction Recommendation: {sanction.sanctionRecommendation}</b>
-                      </div>
-                      <div>
-                        <b>Status: {getSanctionStatus(sanction.isApproved)}</b>
-                      </div>
-                    </div>
-                  </div>
+  const renderSanctionsAndFeedbacks = () => {
+    // Combine sanctions, feedbacks, and follow-ups, sort by date or other fields, and paginate
+    const allNotifications = [...sanctions, ...feedbacks, ...followups]
+      .sort((a, b) => {
+        const dateA = new Date(a.timestamp || a.created_at); // Replace with actual date fields
+        const dateB = new Date(b.timestamp || b.created_at);
+        return dateB - dateA; // Sort newest first
+      })
+      .slice(startIndex, endIndex);
 
-                  {/* Add acknowledge button */}
-                  {/* <button
-                    onClick={() => handleAcknowledge(sanction.sanction_id)}
-                    style={{
-                      height: "64px",
-                      alignSelf: "center",
-                      backgroundColor: "#e8bd26",
-                      color: "black",
-                      transition: "background-color 0.5s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.color = "white";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.color = "black";
-                    }}
-                  >
-                    Acknowledge
-                  </button> */}
-                </div>
-              </li>
-            </div>
-          ))}
-          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-            {page === 1 ? "" : <button onClick={prevPage}>Previous Page</button>}
-            <span style={{ color: "white" }}>Page {page}</span>
-            <button onClick={nextPage}>Next Page</button>
-          </div>
-        </div>
-      </div>
+    if (allNotifications.length === 0) {
+      return <p>No notifications available.</p>;
+    }
+
+    return (
+      <ul style={{ listStyleType: "none", padding: 0 }}>
+        {allNotifications.map((item) => (
+          <li
+            key={item.sanction_id || item.feedback_id || item.followup_id}
+            style={{ marginBottom: "16px", border: "1px solid #ccc", padding: "8px" }}
+          >
+            {item.sanction_id ? (
+              <div>
+                <b>Type:</b> Sanction <br />
+                <b>Case # and Name:</b> {item.caseEntity.cid} - {item.caseEntity.case_name} <br />
+                <b>Student Name:</b> {item.sanction_id} {item.caseEntity.student.lastname} <br />
+                <b>Behavior Details:</b> {item.behaviorDetails} <br />
+                <b>Sanction Recommendation:</b> {item.sanctionRecommendation} <br />
+                <b>Status:</b> {getSanctionStatus(item.isApproved)}
+              </div>
+            ) : item.fid ? (
+              <div>
+                <b>Type:</b> Feedback <br />
+                <b>Case # and Name:</b> {item.caseEntity.cid} - {item.caseEntity.case_name} <br />
+                <b>Feedback From SSO:</b> {item.result} <br />
+                
+              </div>
+            ) : (
+              <div>
+                <b>Type:</b> Follow-up <br />
+                <b>Case # and Name:</b> {item.caseEntity.cid} - {item.caseEntity.case_name} <br />
+                <b>Student: </b> {item.caseEntity.student.firstname} {item.caseEntity.student.lastname} <br />
+                <b>Action:</b> {item.reasoning} <br />
+                <b>Reasoning:</b> {item.reasoning} <br />
+                <b>Date:</b> {item.date} <br />
+                <b>Time:</b> {item.time} <br />
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
     );
   };
 
   return (
-    <div className={styles.wrapper} style={{ backgroundImage: "url(/public/image-2-3@2x.png)" }}>
+    <div className={styles.wrapper}>
       <div className={styles.sidenav}>
         <img src="/image-removebg-preview (1).png" alt="" className={styles["sidebar-logo"]} />
         {createSidebarLink("/report", "Report", AssessmentIcon)}
@@ -223,21 +215,20 @@ const Notification = () => {
           Logout
         </button>
       </div>
+
       <div className={styles.content}>
         <h1>Notifications</h1>
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-            background: "linear-gradient(to top, rgba(100,0,0,.9), rgba(100,0,0,0.3))",
-            borderRadius: "12px",
-            width: "100%",
-          }}
-        >
-          {renderSanctions()}
+        {sanctionError && <p style={{ color: "red" }}>{sanctionError}</p>}
+        {feedbackError && <p style={{ color: "red" }}>{feedbackError}</p>}
+        {followupError && <p style={{ color: "red" }}>{followupError}</p>}
+        {!sanctionError && !feedbackError && !followupError && renderSanctionsAndFeedbacks()}{" "}
+        {/* Only render if no errors */}
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <button onClick={prevPage} disabled={page === 1}>
+            Previous Page
+          </button>
+          <span>Page {page}</span>
+          <button onClick={nextPage}>Next Page</button>
         </div>
       </div>
     </div>

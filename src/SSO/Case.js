@@ -238,15 +238,13 @@ const Case = () => {
                 },
                 body: JSON.stringify({
                     cid: selectedCaseId,
-                    id: cases.find(caseItem => caseItem.cid === selectedCaseId)?.id,
-                    behaviorDetails: sanctionData.behaviorDetails,
                     sanctionRecommendation: sanctionData.sanctionRecommendation
                 })
             });
 
             if (response.ok) {
                 setSanctionModalOpen(false);
-                setSanctionData({ behaviorDetails: '', sanctionRecommendation: '' });
+                setSanctionData({ sanctionRecommendation: '' });
             } else {
                 console.error('Failed to recommend sanction');
             }
@@ -592,15 +590,6 @@ const Case = () => {
                                     <button onClick={closeSanctionModal} className={modalStyles.closeButton}>✖</button>
                                 </div>
                                 <div className={styles1['form-container']}>
-                                    <div className={styles1['form-group']}>
-                                        <label htmlFor="behaviorDetails">Behavior Details:</label>
-                                        <textarea
-                                            id="behaviorDetails"
-                                            value={sanctionData.behaviorDetails}
-                                            onChange={(e) => setSanctionData({ ...sanctionData, behaviorDetails: e.target.value })}
-                                            required
-                                        />
-                                    </div>
                                     <div className={styles1['form-group']}>
                                         <label htmlFor="sanctionRecommendation">Recommendation:</label>
                                         <textarea
