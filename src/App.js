@@ -6,7 +6,6 @@ import Student from './Student';
 import Notification from './Notification';
 import Report from './Report';
 
-import Account from './Admin/Account';
 import Feedback from './SSO/Feedback';
 import Case from './SSO/Case';
 import AddStudentReport from './SSO/AddStudentReport';
@@ -26,10 +25,6 @@ import UpdateAccount from './UpdateAccount';
 
 import AdminDashboard from './Admin/AdminDashboard';
 import Class from './Admin/Class'
-import RegisterPrincipal from './Admin/RegisterPrincipal';
-import RegisterAdviser from './Admin/RegisterAdviser';
-import RegisterSSO from './Admin/RegisterSSO';
-
 
 import PrivateRoute from './PrivateRoute';
 import { AuthContext, AuthProvider } from './AuthContext';
@@ -82,10 +77,6 @@ function App() {
 
           {loggedInUser && loggedInUser.userType === 4 && (
             <>
-              <Route path="/account" element={<Account  />} />
-              <Route path="/register/principal" element={<RegisterPrincipal />} />
-              <Route path="/register/adviser" element={<RegisterAdviser />} />
-               <Route path="/register/sso" element={<RegisterSSO />} />
               <Route path="/AdminDashboard" element={<PrivateRoute element={<AdminDashboard />} />} />
               <Route path="/Class" element={<PrivateRoute element={<Class />} />} />
             </>
