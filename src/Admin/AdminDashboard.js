@@ -108,11 +108,11 @@ const AdminDashboard = () => {
         <h1>User Management</h1>
         <div className={styles['filter-search-bar']}>
           <input
-            type="text"
-            className={styles['search-input']}
+            type="search"
+            className={styles['searchRec']}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search/Filter by Username, Name, Email or User Type"
+            placeholder="Search by Username, Name, Email or User Type"
           />
         </div>
 
