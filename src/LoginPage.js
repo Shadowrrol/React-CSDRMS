@@ -56,8 +56,19 @@ const LoginPage = () => {
       const authTokenString = JSON.stringify(response.data);
       localStorage.setItem('authToken', authTokenString);
 
+      
+
+     
+
       const { userType, userObject } = response.data;
       login(response.data); // Update context
+
+      console.log("User id: ",response.data.uid)
+      const loginTime = new Date().toISOString(); // Get current time in ISO format
+      await axios.post('http://localhost:8080/time-log/login', {
+        userId: response.data.uid, // Assuming `userObject` contains `uid`
+        loginTime: loginTime,
+      });
 
       switch (userType) {
         case 1:

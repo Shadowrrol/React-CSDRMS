@@ -214,7 +214,6 @@ const AdviserCase = () => {
                 {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                 {loggedInUser.userType !== 2 && (
                     <>
                         {loggedInUser.userType === 3 ?
@@ -223,8 +222,6 @@ const AdviserCase = () => {
                         }
                     </>
                 )}
-                {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={navigationStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             {/* Main content */}
@@ -234,7 +231,7 @@ const AdviserCase = () => {
                     <table className={caseStyles['case-table']}>
                         <thead>
                             <tr>
-                                <th>ID</th>
+                               
                                 <th>Case#</th>
                                 <th>Case Name</th>
                                 <th>Investigator</th>
@@ -251,8 +248,8 @@ const AdviserCase = () => {
                                     onClick={() => selectCase(caseItem.cid)}
                                     className={selectedCaseId === caseItem.cid ? caseStyles['selected-row'] : ''}
                                 >
+                                   
                                     <td>{caseItem.cid}</td>
-                                    <td>{caseItem.sid}</td>
                                     <td>{caseItem.case_name}</td>
                                     <td>{caseItem.investigator}</td>
                                     <td>{caseItem.violation}</td>

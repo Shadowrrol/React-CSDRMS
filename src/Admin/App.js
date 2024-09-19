@@ -10,6 +10,7 @@ import Feedback from './SSO/Feedback';
 import Case from './SSO/Case';
 import AddStudentReport from './SSO/AddStudentReport';
 import Sanction from './SSO/Sanction';
+import TimeLog from './SSO/TimeLog'
 
 
 import ViewStudentCases from './ViewStudentCases';
@@ -52,6 +53,7 @@ function App() {
             <>
            <Route path="/case" element={<Case />} />
            <Route path="/sanctions" element={<Sanction />} />
+           <Route path="/timelog" element={<TimeLog />} />
             </>
 
           )}

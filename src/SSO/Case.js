@@ -12,6 +12,7 @@ import RateReviewIcon from '@mui/icons-material/RateReview';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 
 const createSidebarLink = (to, text, IconComponent) => (
     <Link to={to} className={navigationStyles['styled-link']}>
@@ -362,9 +363,8 @@ const Case = () => {
             {createSidebarLink("/report", "Report", AssessmentIcon)}
             {createSidebarLink("/student", "Student", SchoolIcon)}
             {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-            {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
             {createSidebarLink("/case", "Case", PostAddIcon)}
-            {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
+            {loggedInUser.userType === 1 && createSidebarLink("/timelog", "Time Log", AccessTimeFilledIcon)}
             <button className={navigationStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
         </div>
         <div className={navigationStyles.content}>
@@ -399,7 +399,7 @@ const Case = () => {
                                 className={selectedCaseId === caseItem.cid ? caseStyles['selected-row'] : ''}
                             >
                                 <td>{caseItem.cid}</td>
-                                <td>{caseItem.sid}</td>
+                                <td>{caseItem.student.sid}</td>
                                 <td>{caseItem.case_name}</td>
                                 <td>{caseItem.investigator}</td>
                                 <td>{caseItem.violation}</td>

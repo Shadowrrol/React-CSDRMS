@@ -1,5 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { useNavigate, } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -25,12 +26,26 @@ const MenuPopupState = () => {
         userTypeLabel = 'Dashboard';
     }
 
-    const handleLogout = () => {
-        // Implement logout functionality, e.g., clear tokens
-        localStorage.removeItem('authToken');
-        // Then navigate to the login page
-        navigate('/');
-      };
+    const handleLogout = async () => {
+        const logoutTime = new Date().toISOString();
+        try {
+            // Fetch timeLogId using userId
+            const response = await axios.get(`http://localhost:8080/time-log/getLatestLog/${user.userId}`);
+            const timeLogId = response.data.timelog_id;
+
+            // Send logout time to backend
+            await axios.post('http://localhost:8080/time-log/logout', {
+                timelogId: timeLogId,
+                logoutTime,
+            });
+
+            // Clear tokens and navigate to login
+            localStorage.removeItem('authToken');
+            navigate('/');
+        } catch (error) {
+            console.error('Error logging out', error);
+        }
+    };
 
     const handleProfileClick = () => {
         // Navigate to '/UpdateAccount' when profile is clicked

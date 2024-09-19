@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import navStyles from '../Navigation.module.css';
-import styles from './AdminDashboard.module.css';
+import styles from './admindashboard.module.css';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import AddUserModal from './AddUserModal';  

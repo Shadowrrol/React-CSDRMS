@@ -8,6 +8,7 @@ import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 
 const createSidebarLink = (to, text, IconComponent) => (
   <Link to={to} className={styles["styled-link"]}>
@@ -164,8 +165,7 @@ const Notification = () => {
               <div>
                 <b>Type:</b> Sanction <br />
                 <b>Case # and Name:</b> {item.caseEntity.cid} - {item.caseEntity.case_name} <br />
-                <b>Student Name:</b> {item.sanction_id} {item.caseEntity.student.lastname} <br />
-                <b>Behavior Details:</b> {item.behaviorDetails} <br />
+                <b>Student Name:</b> {item.caseEntity.student.firstname} {item.caseEntity.student.lastname} <br />
                 <b>Sanction Recommendation:</b> {item.sanctionRecommendation} <br />
                 <b>Status:</b> {getSanctionStatus(item.isApproved)}
               </div>
@@ -181,7 +181,7 @@ const Notification = () => {
                 <b>Type:</b> Follow-up <br />
                 <b>Case # and Name:</b> {item.caseEntity.cid} - {item.caseEntity.case_name} <br />
                 <b>Student: </b> {item.caseEntity.student.firstname} {item.caseEntity.student.lastname} <br />
-                <b>Action:</b> {item.reasoning} <br />
+                <b>Action:</b> {item.action} <br />
                 <b>Reasoning:</b> {item.reasoning} <br />
                 <b>Date:</b> {item.date} <br />
                 <b>Time:</b> {item.time} <br />
@@ -197,10 +197,9 @@ const Notification = () => {
     <div className={styles.wrapper}>
       <div className={styles.sidenav}>
         <img src="/image-removebg-preview (1).png" alt="" className={styles["sidebar-logo"]} />
-        {createSidebarLink("/report", "Report", AssessmentIcon)}
+        {createSidebarLink("/report", "Record", AssessmentIcon)}
         {createSidebarLink("/student", "Student", SchoolIcon)}
         {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-        {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
         {loggedInUser.userType !== 2 && (
           <>
             {loggedInUser.userType === 3
@@ -208,9 +207,7 @@ const Notification = () => {
               : createSidebarLink("/case", "Case", PostAddIcon)}
           </>
         )}
-        {loggedInUser.userType !== 1 &&
-          loggedInUser.userType !== 2 &&
-          createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
+         {loggedInUser.userType === 1 && createSidebarLink("/timelog", "Time Log", AccessTimeFilledIcon)}
         <button className={styles["logoutbtn"]} onClick={handleLogout}>
           Logout
         </button>

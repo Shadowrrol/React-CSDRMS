@@ -11,6 +11,7 @@ import RateReviewIcon from '@mui/icons-material/RateReview';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 
 const createSidebarLink = (to, text, IconComponent) => (
     <Link to={to} className={styles['styled-link']}>
@@ -124,10 +125,9 @@ const AdviserStudent = () => {
         <div className={styles.wrapper}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
-                {createSidebarLink("/report", "Report", AssessmentIcon)}
+                {createSidebarLink("/report", "Record", AssessmentIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {loggedInUser.userType !== 1 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                 {loggedInUser.userType !== 2 && (
                     <>
                         {loggedInUser.userType === 3
@@ -135,7 +135,7 @@ const AdviserStudent = () => {
                             : createSidebarLink("/case", "Case", PostAddIcon)}
                     </>
                 )}
-                {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
+                 {loggedInUser.userType === 1 && createSidebarLink("/timelog", "Time Log", AccessTimeFilledIcon)}
                 <button className={styles.logoutbtn} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles.content}>

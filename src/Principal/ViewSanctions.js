@@ -234,13 +234,13 @@ const ViewSanctions = () => {
                         <span className={styles1.label} style={{ color: "white" }}>
                           Sanction ID:
                         </span>{" "}
-                        {sanction.sanction_id}
+                        {sanction.caseEntity.student.sid}
                       </div>
                       <div className={styles1.gridItem} style={{ color: "white" }}>
                         <span className={styles1.label} style={{ color: "white" }}>
                           Student Name:
                         </span>{" "}
-                        {sanction.caseEntity.student.case_name} {sanction.caseEntity.student.lastname}
+                        {sanction.caseEntity.student.firstname} {sanction.caseEntity.student.lastname}
                       </div>
                       <div className={styles1.gridItem} style={{ color: "white" }}>
                         <span className={styles1.label} style={{ color: "white" }}>
