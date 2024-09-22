@@ -78,7 +78,7 @@
 .content {
     flex-grow: 1;
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: #f7f7f7;
     animation: fadeInUp 0.8s ease-in-out;
 }
 

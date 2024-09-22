@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import navStyles from '../Navigation.module.css';
-import styles from './admindashboard.module.css';
+import styles from './AdminDashboard.module.css';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import AddUserModal from './AddUserModal';  
@@ -104,18 +104,8 @@ const AdminDashboard = () => {
         <button className={navStyles.logoutbtn} onClick={handleLogout}>Logout</button>
       </div>
 
-      <div className={styles.content}>
+      <div className={navStyles.content}>
         <h1>User Management</h1>
-        <div className={styles['filter-search-bar']}>
-          <input
-            type="search"
-            className={styles['searchRec']}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by Username, Name, Email or User Type"
-          />
-        </div>
-
         <div className={styles['table-container']}>
           <table className={styles['user-table']}>
               <thead>
@@ -143,7 +133,10 @@ const AdminDashboard = () => {
           </table>
         </div>
 
+        
+
         <div className={styles['action-buttons']}>
+
           <button
             className={`${styles['action-btn']} ${styles['admin-add-btn']}`}
             onClick={handleAddUser}
@@ -164,6 +157,16 @@ const AdminDashboard = () => {
           >
             Delete
           </button>
+
+          <div className={styles['filter-search-bar']}>
+            <input
+              type="search"
+              className={styles['searchRec']}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by Username, Name, Email or User Type"
+            />
+          </div>
         </div>
       </div>
 

@@ -1,11 +1,3 @@
-.maincontent {
-    flex-grow: 1;
-    padding: 20px;
-    background-color: #f9f9f9;
-    animation: fadeInUp 0.8s ease-in-out;
-    height: calc(100vh - 40px); /* Adjust if necessary...No Scrollbar when opening the Page*/
-}
-
 .tableContainer {
   max-width: 50%;
   max-height: 400px; /* Adjust height as needed */
@@ -61,7 +53,7 @@
 .tableInner td{
   cursor: pointer;
   border: 1px solid #ccc;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .addButtonContainer {

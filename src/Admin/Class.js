@@ -103,13 +103,13 @@ function Class() {
 
   // Filter classes and school years based on search term
   const filteredClasses = classes
-  .filter((classItem) => {
-    return (
-      classItem.grade.toString().includes(searchTerm) ||
-      classItem.section.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  })
-  .sort((a, b) => a.grade - b.grade); // Sort by grade in ascending order
+    .filter((classItem) => {
+      return (
+        classItem.grade.toString().includes(searchTerm) ||
+        classItem.section.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    })
+    .sort((a, b) => a.grade - b.grade); // Sort by grade in ascending order
 
   const filteredSchoolYears = schoolYears.filter((schoolYear) =>
     schoolYear.schoolYear.includes(searchTerm)
@@ -136,7 +136,7 @@ function Class() {
         <MenuPopupState />
       </div>
 
-      <div className={classStyles.maincontent}>
+      <div className={navStyles.content}>
         <h1 className={classStyles.classtitle}>Class Management</h1>
         <div className={classStyles.searchContainer}>
           <input
@@ -154,15 +154,13 @@ function Class() {
               <table className={classStyles.tableInner}>
                 <thead>
                   <tr>
-                    <th>Grade</th>
-                    <th>Section</th>
+                    <th>Grade & Section</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredClasses.map((classItem) => (
                     <tr key={classItem.class_id}>
-                      <td>{classItem.grade}</td>
-                      <td>{classItem.section}</td>
+                      <td>{`${classItem.grade} - ${classItem.section}`}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -195,13 +193,18 @@ function Class() {
           <Modal open={showAddGrade} onClose={handleClose}>
             <Box className={classStyles.modalContainer}>
               <h2 className={classStyles.modalHeader}>Add New Grade and Section</h2>
-              <input
-                type="number"
+              <select
+                type="number"              
                 className={classStyles.inputField}
-                placeholder="Enter Grade"
                 value={newGrade}
                 onChange={(e) => setNewGrade(e.target.value)}
-              />
+              >
+                <option placeholder="">Select Grade</option>
+                <option value="7">Grade 7</option>
+                <option value="8">Grade 8</option>
+                <option value="9">Grade 9</option>
+                <option value="10">Grade 10</option>
+              </select>
               <input
                 type="text"
                 className={classStyles.inputField}

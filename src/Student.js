@@ -7,9 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import RateReviewIcon from '@mui/icons-material/RateReview';
 import PostAddIcon from '@mui/icons-material/PostAdd';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 
@@ -30,13 +28,13 @@ const AdviserStudent = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = "SSO | Student";
-        
         if (loggedInUser) {
+            document.title = loggedInUser.userType === 3 ? "Adviser | Student" : loggedInUser.userType === 1 ? "SSO | Student" : "Student";
+            
             const url = loggedInUser.userType === 3
                 ? `http://localhost:8080/student/getAllStudentsByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`
                 : 'http://localhost:8080/student/getAllCurrentStudents';
-
+    
             fetch(url)
                 .then(response => response.json())
                 .then(data => setStudents(data))
@@ -45,10 +43,10 @@ const AdviserStudent = () => {
             console.error('Logged-in user details are missing.');
         }
     }, [loggedInUser]);
-
+    
     const handleLogout = () => {
         localStorage.removeItem('authToken');
-        navigate('/');
+        navigate('/');      
     };
 
     const handleDelete = (sid) => {
@@ -148,15 +146,18 @@ const AdviserStudent = () => {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
-                    {loggedInUser.userType === 3 && (
+                    {(loggedInUser.userType === 3) &&  (
                         <Link to="/add-student">
                             <button className={studentStyles['add-student-button']}>Add Student</button>
                         </Link>
                     )}
+                
+                    {loggedInUser.userType === 1 && (                    
                     <div className={studentStyles['import-section']}>
                         <input type="file" onChange={handleFileChange} accept=".xls,.xlsx" />
                         <button onClick={handleFileUpload} className={studentStyles['import-button']}>Import Student Data</button>
                     </div>
+                    )}
 
                     <div className={studentStyles['student-container']}>
                         <table className={studentStyles['student-table']}>

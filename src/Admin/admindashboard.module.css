@@ -28,20 +28,10 @@ h2 {
     margin-bottom: 16px;
 }
 
-/* Content Wrapper */
-.content {
-    flex-grow: 1;
-    padding: 20px;
-    background-color: #f9f9f9;
-    animation: fadeInUp 0.8s ease-in-out;
-    height: calc(100vh - 40px); /* Adjust if necessary...No Scrollbar when opening the Page*/
-}
-
 /* Search Bar */
 .filter-search-bar {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
 }
 
 .searchRec {
@@ -76,7 +66,7 @@ h2 {
 .user-table th, .user-table td {
     padding: 12px 15px;
     text-align: left;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .user-table th {
@@ -90,6 +80,11 @@ h2 {
     cursor: pointer;
     border: 1px solid #ccc; /* Border for body cells */
 }
+
+.user-table tr {
+    background-color:#fff;
+}
+
 
 .user-table tr:hover {
     background-color: #f4f6f9;
