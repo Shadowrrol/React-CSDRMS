@@ -86,9 +86,9 @@ const LoginPage = () => {
 
   return (
     <div className={styles.loginbg}>
-      <p className={styles.titleImage}></p>
+      <div className={styles.titleImage}></div>
+      <div className={styles.ssoImage}></div>
       <div className={styles.container}>
-        <p className={styles.ssoImage}></p>
         <div className={styles.form_area}>
           <p className={styles.title}>User Authentication</p>
           <form onSubmit={handleLogin}>

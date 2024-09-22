@@ -1,0 +1,25 @@
+/* Report.module.css */
+
+.filters {
+    margin-bottom: 20px; /* Space between filters and the chart */
+    display: flex;
+    gap: 10px; /* Space between individual filter elements */
+    flex-wrap: wrap; /* Allows filters to wrap to the next line if necessary */
+    text-align: center;
+}
+
+.filters select {
+    padding: 5px; /* Reduced padding for smaller buttons */
+    font-size: 14px; /* Adjust font size for smaller appearance */
+    border: 1px solid #ccc; /* Border styling */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #fff; /* Background color */
+}
+
+.chart {
+    margin-top: 30px; /* Space above the chart */
+    padding: 20px; /* Padding around the chart for better spacing */
+    border: 1px solid #ddd; /* Optional: border around the chart */
+    border-radius: 8px; /* Rounded corners for the chart */
+    background-color: #f9f9f9; /* Light background for contrast */
+}

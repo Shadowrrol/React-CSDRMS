@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import styles from './Navigation.module.css';
+import navStyles from './Navigation.module.css';
+import styles from './Report.module.css';
 import axios from 'axios';
 
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import RateReviewIcon from '@mui/icons-material/RateReview';
 import PostAddIcon from '@mui/icons-material/PostAdd';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -16,9 +15,9 @@ import CanvasJSReact from '@canvasjs/react-charts';
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const createSidebarLink = (to, text, IconComponent) => (
-    <Link to={to} className={styles['styled-link']}>
-        <IconComponent className={styles.icon} />
-        <span className={styles['link-text']}>{text}</span>
+    <Link to={to} className={navStyles['styled-link']}>
+        <IconComponent className={navStyles.icon} />
+        <span className={navStyles['link-text']}>{text}</span>
     </Link>
 );
 
@@ -34,20 +33,27 @@ const Report = () => {
     const [chartType, setChartType] = useState("column");
 
     useEffect(() => {
-        document.title = "Report";
-        const fetchStudentReports = async () => {
-            try {
-                const response = userType === 3
-                    ? await axios.get(`http://localhost:8080/student-report/getStudentReportsBySectionAndSchoolYear?section=${section}&schoolYear=${schoolYear}`)
-                    : await axios.get('http://localhost:8080/student-report/getAllStudentReports');
-                setStudentReports(response.data);
-            } catch (error) {
-                console.error('Error fetching student reports:', error);
-            }
-        };
+        if (loggedInUser){
+            document.title = loggedInUser.userType === 1 ? "SSO | Dashboard" :
+                            loggedInUser.userType === 2 ? "Principal | Dashboard" :
+                            loggedInUser.userType === 3 ? "Adviser | Dashboard" :
+                            "Dashboard";
+        
+            const fetchStudentReports = async () => {
+                try {
+                    const response = userType === 3
+                        ? await axios.get(`http://localhost:8080/student-report/getStudentReportsBySectionAndSchoolYear?section=${section}&schoolYear=${schoolYear}`)
+                        : await axios.get('http://localhost:8080/student-report/getAllStudentReports');
+                    setStudentReports(response.data);
+                } catch (error) {
+                    console.error('Error fetching student reports:', error);
+                }
+            };
 
         fetchStudentReports();
-    }, [section, schoolYear, userType, yearFilter]);
+        }
+    }, [section, schoolYear, userType, yearFilter, loggedInUser]);
+    
 
     const handleLogout = async () => {
         console.log("userId:",uid)
@@ -107,9 +113,9 @@ const Report = () => {
     };
 
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.sidenav}>
-                <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
+        <div className={navStyles.wrapper}>
+            <div className={navStyles.sidenav}>
+                <img src="/image-removebg-preview (1).png" alt="" className={navStyles['sidebar-logo']} />
                 {createSidebarLink("/report", "Record", AssessmentIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
@@ -122,53 +128,52 @@ const Report = () => {
                 )}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 3 && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType === 1 && createSidebarLink("/timeLog", "Time Log", AccessTimeFilledIcon)}
-                <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
+                <button className={navStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
-            <div className={styles.content}>
-                <h1>Records</h1>
-                <div>
+            <div className={navStyles.content}>
+                <h1>Report Analytics</h1>
+                    <div className={styles.filters}>
                     <h2>Filters:</h2>
-                    {loggedInUser.userType !== 3 && (
-                        <select onChange={e => setYearFilter(e.target.value)} value={yearFilter}>
-                            <option value="">All Years</option>
-                            <option value="2022-2023">2022-2023</option>
-                            <option value="2023-2024">2023-2024</option>
-                            <option value="2024-2025">2024-2025</option>
+                        {loggedInUser.userType !== 3 && (
+                            <select onChange={e => setYearFilter(e.target.value)} value={yearFilter}>
+                                <option value="">All Years</option>
+                                <option value="2022-2023">2022-2023</option>
+                                <option value="2023-2024">2023-2024</option>
+                                <option value="2024-2025">2024-2025</option>
+                            </select>
+                        )}
+                        <select onChange={e => setMonthFilter(e.target.value)} value={monthFilter}>
+                            <option value="">All Months</option>
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
                         </select>
-                    )}
-                    <select onChange={e => setMonthFilter(e.target.value)} value={monthFilter}>
-                        <option value="">All Months</option>
-                        <option value="01">January</option>
-                        <option value="02">February</option>
-                        <option value="03">March</option>
-                        <option value="04">April</option>
-                        <option value="05">May</option>
-                        <option value="06">June</option>
-                        <option value="07">July</option>
-                        <option value="08">August</option>
-                        <option value="09">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
-                    </select>
-                    {loggedInUser.userType !== 3 && (
-                        <select onChange={e => setGradeFilter(parseInt(e.target.value, 10))} value={gradeFilter}>
-                            <option value="">All Grades</option>
-                            <option value="13">Grade 7</option>
-                            <option value="14">Grade 8</option>
-                            <option value="15">Grade 9</option>
-                            <option value="16">Grade 10</option>
+                        {loggedInUser.userType !== 3 && (
+                            <select onChange={e => setGradeFilter(parseInt(e.target.value, 10))} value={gradeFilter}>
+                                <option value="">All Grades</option>
+                                <option value="13">Grade 7</option>
+                                <option value="14">Grade 8</option>
+                                <option value="15">Grade 9</option>
+                                <option value="16">Grade 10</option>
+                            </select>
+                        )}
+                        <select onChange={e => setChartType(e.target.value)} value={chartType}>
+                            <option value="column">Bar Graph</option>
+                            <option value="line">Line Graph</option>
+                            <option value="pie">Pie Chart</option>
+                            <option value="area">Area Chart</option>
                         </select>
-                    )}
-                    <select onChange={e => setChartType(e.target.value)} value={chartType}>
-                        <option value="column">Bar Graph</option>
-                        <option value="line">Line Graph</option>
-                        <option value="pie">Pie Chart</option>
-                        <option value="area">Area Chart</option>
-                    </select>
                 </div>
-                <div>
-                    <h2>Monitored Record Counts:</h2>
+                <div className={styles.chart}>
                     <CanvasJSChart options={chartOptions} />
                 </div>
             </div>
