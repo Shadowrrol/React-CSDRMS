@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import './AddStudentReport.css'; // Import CSS file for styling
+import './AddStudentRecord.css'; // Import CSS file for styling
 import styles from '../Navigation.module.css';
 import styles1 from '../GlobalForm.module.css';
 
@@ -20,7 +20,7 @@ const createSidebarLink = (to, text, IconComponent) => (
     </Link>
 );
 
-const AddStudentReport = () => {
+const AddStudentRecord = () => {
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
     const navigate = useNavigate();
@@ -28,7 +28,7 @@ const AddStudentReport = () => {
     const [student, setStudent] = useState(null);
 
     // Initialize report state
-    const [report, setReport] = useState({
+    const [record, setRecord] = useState({
         sid: '',
         id: '',  // Add `id` field for the student's unique ID
         name: '',
@@ -51,7 +51,7 @@ const AddStudentReport = () => {
 
     // Fetch student data based on student ID
     useEffect(() => {
-        document.title = "Add Report";
+        document.title = "Add Record";
         const fetchStudent = async () => {
             try {
                 const response = await fetch(`http://localhost:8080/student/getCurrentStudent/${sid}`);
@@ -74,8 +74,8 @@ const AddStudentReport = () => {
             const { id, firstname, middlename, lastname, section, grade, schoolYear } = student;
             const name = `${firstname} ${middlename} ${lastname}`;
 
-            setReport(prevReport => ({
-                ...prevReport,
+            setRecord(prevRecord => ({
+                ...prevRecord,
                 sid: student.sid,
                 id: student.id,  // Automatically add student's unique `id`
                 name,
@@ -89,24 +89,24 @@ const AddStudentReport = () => {
     // Handle form field changes
     const handleChange = e => {
         const { name, value } = e.target;
-        setReport({ ...report, [name]: value });
+        setRecord({ ...record, [name]: value });
     };
 
     // Handle form submission
     const handleSubmit = async e => {
         e.preventDefault();
 
-        const newReport = { ...report };  // `id` is already included in the `report` state
-        const response = await fetch('http://localhost:8080/student-report/insertReport', {
+        const newRecord = { ...record };  // `id` is already included in the `report` state
+        const response = await fetch('http://localhost:8080/student-record/insertRecord', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(newReport)
+            body: JSON.stringify(newRecord)
         });
 
         if (response.ok) {
-            navigate(`/view-student-report/${student.id}`);
+            navigate(`/view-student-record/${student.id}`);
         }
     };
 
@@ -118,7 +118,7 @@ const AddStudentReport = () => {
         <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
-                {createSidebarLink("/report", "Report", AssessmentIcon)}
+                {createSidebarLink("/record", "Record", AssessmentIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
@@ -129,26 +129,26 @@ const AddStudentReport = () => {
             </div>
             <div className={styles1.content}>
                 <div className={styles1.contentform}>
-                    <h1>Add Student Report</h1>
+                    <h1>Add Student Record</h1>
                     <h2>Student Details</h2>
                     <p>Name: {student.firstname} {student.middlename} {student.lastname}</p>
                     <p>Grade: {student.grade}</p>
                     <p>Section: {student.section}</p>
                     <p>Contact Number: {student.con_num}</p>
                     <form onSubmit={handleSubmit}>
-                        <input type="hidden" name="sid" value={report.sid} required />
-                        <input type="hidden" name="id" value={report.id} required /> {/* Hidden input for `id` */}
+                        <input type="hidden" name="sid" value={record.sid} required />
+                        <input type="hidden" name="id" value={record.id} required /> {/* Hidden input for `id` */}
                         <label>
                             Incident Date:
-                            <input type="date" name="incident_date" value={report.incident_date} onChange={handleChange} required />
+                            <input type="date" name="incident_date" value={record.incident_date} onChange={handleChange} required />
                         </label>
                         <label>
                             Time:
-                            <input type="time" name="time" value={report.time} onChange={handleChange} required />
+                            <input type="time" name="time" value={record.time} onChange={handleChange} required />
                         </label>
                         <label>
                             Monitored Record:
-                            <select name="monitored_record" value={report.monitored_record} onChange={handleChange} required>
+                            <select name="monitored_record" value={record.monitored_record} onChange={handleChange} required>
                                 <option value="">Select Monitored Record</option>
                                 <option value="Clinic">Clinic</option>
                                 <option value="Tardy">Tardy</option>
@@ -162,7 +162,7 @@ const AddStudentReport = () => {
                         </label>
                         <label>
                             Remarks:
-                            <input type="text" name="remarks" value={report.remarks} onChange={handleChange} required />
+                            <input type="text" name="remarks" value={record.remarks} onChange={handleChange} required />
                         </label>
                         {/* <label>
                             Sanction:
@@ -176,4 +176,4 @@ const AddStudentReport = () => {
     );
 };
 
-export default AddStudentReport;
+export default AddStudentRecord;

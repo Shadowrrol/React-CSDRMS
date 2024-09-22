@@ -24,7 +24,7 @@ const LoginPage = () => {
             case 1:
             case 2:
             case 3:
-              navigate('/report', { state: { userObject } });
+              navigate('/record', { state: { userObject } });
               break;
             case 4:
               navigate('/AdminDashboard', { state: { userObject } });
@@ -70,7 +70,7 @@ const LoginPage = () => {
         case 1:
         case 2:
         case 3:
-          navigate('/report', { state: { userObject } });
+          navigate('/record', { state: { userObject } });
           break;
         case 4:
           navigate('/AdminDashboard', { state: { userObject } });

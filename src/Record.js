@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import navStyles from './Navigation.module.css';
-import styles from './Report.module.css';
+import styles from './Record.module.css';
 import axios from 'axios';
 
 import SchoolIcon from '@mui/icons-material/School';
@@ -21,12 +21,12 @@ const createSidebarLink = (to, text, IconComponent) => (
     </Link>
 );
 
-const Report = () => {
+const Record = () => {
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
     const { section, schoolYear, userType, uid } = loggedInUser;
     const navigate = useNavigate();
-    const [studentReports, setStudentReports] = useState([]);
+    const [studentRecords, setStudentRecords] = useState([]);
     const [yearFilter, setYearFilter] = useState('');
     const [monthFilter, setMonthFilter] = useState('');
     const [gradeFilter, setGradeFilter] = useState('');
@@ -39,18 +39,18 @@ const Report = () => {
                             loggedInUser.userType === 3 ? "Adviser | Dashboard" :
                             "Dashboard";
         
-            const fetchStudentReports = async () => {
+            const fetchStudentRecords = async () => {
                 try {
                     const response = userType === 3
-                        ? await axios.get(`http://localhost:8080/student-report/getStudentReportsBySectionAndSchoolYear?section=${section}&schoolYear=${schoolYear}`)
-                        : await axios.get('http://localhost:8080/student-report/getAllStudentReports');
-                    setStudentReports(response.data);
+                        ? await axios.get(`http://localhost:8080/student-record/getStudentRecordsBySectionAndSchoolYear?section=${section}&schoolYear=${schoolYear}`)
+                        : await axios.get('http://localhost:8080/student-record/getAllStudentRecords');
+                    setStudentRecords(response.data);
                 } catch (error) {
-                    console.error('Error fetching student reports:', error);
+                    console.error('Error fetching student records:', error);
                 }
             };
 
-        fetchStudentReports();
+        fetchStudentRecords();
         }
     }, [section, schoolYear, userType, yearFilter, loggedInUser]);
     
@@ -79,20 +79,20 @@ const Report = () => {
         }
     };
 
-    const filterStudentReports = () => {
-        return studentReports.filter(report => {
-            const matchesYear = yearFilter ? report.student.schoolYear === yearFilter : true;
-            const matchesMonth = monthFilter ? report.date.includes(`-${monthFilter}-`) : true;
-            const matchesGrade = gradeFilter ? report.student.grade === gradeFilter : true;
+    const filterStudentRecords = () => {
+        return studentRecords.filter(record => {
+            const matchesYear = yearFilter ? record.student.schoolYear === yearFilter : true;
+            const matchesMonth = monthFilter ? record.date.includes(`-${monthFilter}-`) : true;
+            const matchesGrade = gradeFilter ? record.student.grade === gradeFilter : true;
 
             return matchesYear && matchesMonth && matchesGrade;
         });
     };
 
-    const filteredReports = filterStudentReports();
+    const filteredRecords = filterStudentRecords();
 
-    const monitoredRecordCounts = filteredReports.reduce((acc, report) => {
-        const monitoredRecord = report.monitored_record;
+    const monitoredRecordCounts = filteredRecords.reduce((acc, record) => {
+        const monitoredRecord = record.monitored_record;
         acc[monitoredRecord] = (acc[monitoredRecord] || 0) + 1;
         return acc;
     }, {});
@@ -116,7 +116,7 @@ const Report = () => {
         <div className={navStyles.wrapper}>
             <div className={navStyles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={navStyles['sidebar-logo']} />
-                {createSidebarLink("/report", "Record", AssessmentIcon)}
+                {createSidebarLink("/record", "Record", AssessmentIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType !== 2 && (
@@ -131,7 +131,7 @@ const Report = () => {
                 <button className={navStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className={navStyles.content}>
-                <h1>Report Analytics</h1>
+                <h1>Record Analytics</h1>
                     <div className={styles.filters}>
                     <h2>Filters:</h2>
                         {loggedInUser.userType !== 3 && (
@@ -181,4 +181,4 @@ const Report = () => {
     );
 };
 
-export default Report;
+export default Record;

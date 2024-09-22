@@ -4,11 +4,11 @@ import LoginPage from './LoginPage';
 import './App.css';
 import Student from './Student';
 import Notification from './Notification';
-import Report from './Report';
+import Record from './Record';
 
 import Feedback from './SSO/Feedback';
 import Case from './SSO/Case';
-import AddStudentReport from './SSO/AddStudentReport';
+import AddStudentRecord from './SSO/AddStudentRecord';
 import Sanction from './SSO/Sanction';
 import TimeLog from './SSO/TimeLog'
 
@@ -20,7 +20,7 @@ import ViewSanctions from './Principal/ViewSanctions';
 import Followup from './Adviser/Followup';
 import AddStudent from './Adviser/AddStudent';
 import UpdateStudent from './Adviser/UpdateStudent';
-import ViewStudentReport from './Adviser/ViewStudentReport';
+import ViewStudentRecord from './Adviser/ViewStudentRecord';
 import AdvivserCase from './Adviser/AdviserCase';
 import UpdateAccount from './UpdateAccount';
 
@@ -42,8 +42,8 @@ function App() {
 
           {loggedInUser && (
             <>
-             <Route path="/report" element={<Report />} />
-             <Route path="/view-student-report/:id" element={<ViewStudentReport />} />
+             <Route path="/record" element={<Record />} />
+             <Route path="/view-student-record/:id" element={<ViewStudentRecord />} />
              <Route path="/UpdateAccount" element={<UpdateAccount />} /> 
             </>
 
@@ -88,7 +88,7 @@ function App() {
             <>
             <Route path="/notification" element={<Notification />} />
             <Route path="/student" element={<PrivateRoute element={<Student />} />}  />
-            <Route path="/add-report/:sid" element={<AddStudentReport />} /> 
+            <Route path="/add-record/:sid" element={<AddStudentRecord />} /> 
             </>
 
           )}

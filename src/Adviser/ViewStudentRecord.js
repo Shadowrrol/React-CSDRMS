@@ -19,13 +19,13 @@ const createSidebarLink = (to, text, IconComponent) => (
     </Link>
 );
 
-const ViewStudentReport = () => {
+const ViewStudentRecord = () => {
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
     const navigate = useNavigate();
     const { id } = useParams();  
     const [student, setStudent] = useState(null);
-    const [reports, setReports] = useState([]);
+    const [records, setRecords] = useState([]);
 
     // Handle user logout
     const handleLogout = () => {
@@ -60,25 +60,25 @@ const ViewStudentReport = () => {
     // Fetch reports based on student information and userType
     useEffect(() => {
         if (student && student.sid) {
-            const fetchReports = async () => {
+            const fetchRecords = async () => {
                 try {
                     let response;
                     if (loggedInUser.userType === 3) {
                         const section = student.section;
                         const schoolYear = student.schoolYear;
-                        response = await fetch(`http://localhost:8080/student-report/getStudentReportsBySectionAndSchoolYear?section=${section}&schoolYear=${schoolYear}`);
+                        response = await fetch(`http://localhost:8080/student-record/getStudentRecordsBySectionAndSchoolYear?section=${section}&schoolYear=${schoolYear}`);
                     } else {
-                        response = await fetch(`http://localhost:8080/student-report/getStudentReports/${student.sid}`);
+                        response = await fetch(`http://localhost:8080/student-record/getStudentRecords/${student.sid}`);
                     }
 
                     const data = await response.json();
-                    setReports(data);
+                    setRecords(data);
                 } catch (error) {
                     console.error('Error fetching reports:', error);
                 }
             };
 
-            fetchReports();
+            fetchRecords();
         }
     }, [student, loggedInUser.userType]);
 
@@ -86,7 +86,7 @@ const ViewStudentReport = () => {
         <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
-                {createSidebarLink("/report", "Report", AssessmentIcon)}
+                {createSidebarLink("/record", "Record", AssessmentIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
@@ -111,13 +111,13 @@ const ViewStudentReport = () => {
 
                 <div className={styles['add-report-button']}>
                     {loggedInUser.userType !== 2 && student && (
-                        <Link to={`/add-report/${student.id}`}>
-                            <button>Add Report</button>
+                        <Link to={`/add-record/${student.id}`}>
+                            <button>Add Record</button>
                         </Link>
                     )}
                 </div>
                 <div className={styles2['table-container']}>
-                    <h2>Student Reports</h2>
+                    <h2>Student Records</h2>
                     <table className={styles2['global-table']}>
                         <thead>
                             <tr>
@@ -130,14 +130,14 @@ const ViewStudentReport = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {reports.map(report => (
-                                <tr key={report.rid}>
-                                    <td>{report.student.schoolYear}</td>
-                                    <td>{report.student.grade}</td>
-                                    <td>{report.student.section}</td>
-                                    <td>{report.incident_date}</td>
-                                    <td>{report.monitored_record}</td>
-                                    <td>{report.remarks}</td>
+                            {records.map(record => (
+                                <tr key={record.rid}>
+                                    <td>{record.student.schoolYear}</td>
+                                    <td>{record.student.grade}</td>
+                                    <td>{record.student.section}</td>
+                                    <td>{record.incident_date}</td>
+                                    <td>{record.monitored_record}</td>
+                                    <td>{record.remarks}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -148,4 +148,4 @@ const ViewStudentReport = () => {
     );
 };
 
-export default ViewStudentReport;
+export default ViewStudentRecord;

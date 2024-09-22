@@ -77,11 +77,11 @@ const Student = () => {
         setSelectedStudent(student);
     };
 
-    const handleAddReport = () => {
+    const handleAddRecord = () => {
         if (!selectedStudent || selectedStudent.current === 0) {
-            alert('You cannot add a report to this student.');
+            alert('You cannot add a record to this student.');
         } else {
-            navigate(`/add-report/${selectedStudent.id}`);
+            navigate(`/add-record/${selectedStudent.id}`);
         }
     };
 
@@ -134,7 +134,7 @@ const Student = () => {
         <div className={styles.wrapper}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
-                {createSidebarLink("/report", "Record", AssessmentIcon)}
+                {createSidebarLink("/record", "Record", AssessmentIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType !== 2 && (
@@ -215,8 +215,8 @@ const Student = () => {
 
                     {/* Add Report Button */}
                     {selectedStudent && (
-                        <button onClick={handleAddReport} className={studentStyles['add-report-button']} disabled={!selectedStudent}>
-                            Add Report for {selectedStudent.firstname} {selectedStudent.lastname}
+                        <button onClick={handleAddRecord} className={studentStyles['add-report-button']} disabled={!selectedStudent}>
+                            Add Record for {selectedStudent.firstname} {selectedStudent.lastname}
                         </button>
                     )}
                 </div>
