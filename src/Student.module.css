@@ -7,38 +7,6 @@
     font-family: 'Arial', sans-serif; /* Modern, clean font */
 }
 
-.styled-link {
-    text-decoration: none;
-    color: white;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
-    transition: background 0.3s, transform 0.3s;
-    background-color: #FFD700; /* Gold background for links */
-    color: #81343a; /* Dark red text for links */
-}
-
-.styled-link:hover {
-    background-color: #FFC700; /* Lighter gold on hover */
-    transform: translateX(10px);
-}
-
-.icon {
-    margin-right: 10px;
-    transition: transform 0.3s;
-}
-
-.styled-link:hover .icon {
-    transform: rotate(360deg);
-}
-
-.link-text {
-    font-size: 18px;
-}
-
 /* Content styles */
 .content {
     flex-grow: 1;
@@ -75,19 +43,9 @@
 .student-content h2 {
     margin-bottom: 20px;
     color: #81343a; /* Dark red text color */
-    animation: fadeInDown 1s ease-in-out;
     font-family: 'Arial', sans-serif; /* Modern font */
-}
-
-.student-content input[type="text"] {
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto 20px auto;
-    padding: 10px;
-    border: 1px solid #bdc3c7;
-    border-radius: 5px;
-    animation: fadeInLeft 1s ease-in-out;
-    font-size: 16px; /* Larger text for better readability */
+    font-size: 28px;
+    text-shadow: 1px 1px 3px #808080;  /* Slight shadow for all text */
 }
 
 .student-content button {
@@ -125,31 +83,37 @@
 }
 
 .student-table thead {
-    position: sticky; /* Standard syntax */
+    position: sticky; /* Sticky header */
     top: 0; /* Fixed to the top */
     z-index: 1; /* Ensure header stays on top of scrolling body */
 }
 
-.student-table th,
-.student-table td {
-    padding: 10px;
-    border: 1px solid #81343a;  
+.student-table th, .student-table td {
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 14px;
 }
 
 .student-table th {
-    background-color: #81343a; /* Dark red background for header */
-    color: white; /* White text for contrast */
-    text-align: left;
-    font-size: 18px;
-    position: sticky;
-    margin-top: 50px;
+    background-color: #81343a;
+    color: #fff;
+    font-weight: 600;
+    text-shadow: 3px 3px 5px #000;  /* Slight shadow for all text */
+    border: 0.5px solid #81343a;  
 }
 
-
 .student-table td {
-    text-align: left;
-    font-size: 16px;
-    background: #fff;
+    cursor: pointer;
+    border: 1px solid #ccc;  
+}
+
+.user-table td {
+    cursor: pointer;
+    border: 1px solid #ccc; /* Border for body cells */
+}
+
+.student-table tr:hover {
+    background: #f4f6f9;
 }
 
 .student-table tr {
@@ -159,48 +123,13 @@
     background: #fff; /* Ensure each row has a white background */
 }
 
-.student-table tr:hover {
-    background-color: #f7f9fc; /* Light hover color */
-    cursor: pointer;
-}
-
 .student-table tr.selected-row {
     color: #81343a; /* Dark red text color for selected row */
     font-weight: bold; /* Bold text for selected row */
+    background-color: #e0e0e0 !important; /* Light gray background for the selected row */
 }
 
-/* Icon button styles */
-.icon-button {
-    cursor: pointer;
-    color: #e74c3c;
-    transition: color 0.3s, transform 0.3s;
-    border: none;
-    background: none;
-}
-
-.icon-button:hover {
-    color: #c0392b;
-    transform: rotate(20deg);
-}
-
-.icon-edit {
-    fill: #8B0000; /* Dark red for edit icon */
-    width: 24px;
-    height: 24px;
-}
-
-.icon-delete {
-    fill: #e74c3c; /* Red for delete icon */
-    width: 24px;
-    height: 24px;
-    margin-left: 10px;
-}
-
-.icon-button:hover .icon-edit,
-.icon-button:hover .icon-delete {
-    fill: #c0392b; /* Darker color on hover */
-}
-
+/* Report buttons */
 .report-buttons {
     display: flex;
     justify-content: center;
@@ -222,6 +151,12 @@
 .report-buttons button:hover {
     background-color: #FFC700; /* Lighter gold on hover */
     transform: scale(1.1);
+}
+
+.nonestudent{
+    margin-top: 50px;
+    font-size: 25px;
+    font-style: italic;
 }
 
 /* Keyframes for animations */

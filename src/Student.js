@@ -18,23 +18,24 @@ const createSidebarLink = (to, text, IconComponent) => (
     </Link>
 );
 
-const AdviserStudent = () => {
+const Student = () => {
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
     const [students, setStudents] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedStudent, setSelectedStudent] = useState(null);
-    const [file, setFile] = useState(null); // State to store the uploaded file
+    const [file, setFile] = useState(null);
+    const [isUploading, setIsUploading] = useState(false); // State for upload loader
     const navigate = useNavigate();
 
     useEffect(() => {
         if (loggedInUser) {
             document.title = loggedInUser.userType === 3 ? "Adviser | Student" : loggedInUser.userType === 1 ? "SSO | Student" : "Student";
-            
+
             const url = loggedInUser.userType === 3
                 ? `http://localhost:8080/student/getAllStudentsByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`
                 : 'http://localhost:8080/student/getAllCurrentStudents';
-    
+
             fetch(url)
                 .then(response => response.json())
                 .then(data => setStudents(data))
@@ -43,10 +44,17 @@ const AdviserStudent = () => {
             console.error('Logged-in user details are missing.');
         }
     }, [loggedInUser]);
-    
+
+    useEffect(() => {
+        // Reset selectedStudent if it's not in the filtered list
+        if (students.length === 0 || !students.some(s => s.id === selectedStudent?.id)) {
+            setSelectedStudent(null);
+        }
+    }, [students, selectedStudent]);
+
     const handleLogout = () => {
         localStorage.removeItem('authToken');
-        navigate('/');      
+        navigate('/');
     };
 
     const handleDelete = (sid) => {
@@ -70,7 +78,7 @@ const AdviserStudent = () => {
     };
 
     const handleAddReport = () => {
-        if (selectedStudent.current === 0) {
+        if (!selectedStudent || selectedStudent.current === 0) {
             alert('You cannot add a report to this student.');
         } else {
             navigate(`/add-report/${selectedStudent.id}`);
@@ -87,6 +95,8 @@ const AdviserStudent = () => {
             return;
         }
 
+        setIsUploading(true);
+
         const formData = new FormData();
         formData.append('file', file);
 
@@ -98,11 +108,12 @@ const AdviserStudent = () => {
             });
             if (response.status === 200) {
                 alert('File uploaded successfully!');
-                // Optionally, refetch the student data after upload
                 setStudents(prevStudents => [...prevStudents, ...response.data]);
             }
         } catch (error) {
             console.error('Error uploading file:', error);
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -133,7 +144,7 @@ const AdviserStudent = () => {
                             : createSidebarLink("/case", "Case", PostAddIcon)}
                     </>
                 )}
-                 {loggedInUser.userType === 1 && createSidebarLink("/timelog", "Time Log", AccessTimeFilledIcon)}
+                {loggedInUser.userType === 1 && createSidebarLink("/timelog", "Time Log", AccessTimeFilledIcon)}
                 <button className={styles.logoutbtn} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles.content}>
@@ -141,63 +152,70 @@ const AdviserStudent = () => {
                     <h2>Student Records</h2>
                     <input
                         type="search"
-                        placeholder="Search by SID, Name, Grade - Section or Contact No."      
-                        className={studentStyles.searchStud}                 
+                        placeholder="Search by SID, Name, Grade - Section or Contact No."
+                        className={studentStyles.searchStud}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
-                    {(loggedInUser.userType === 3) &&  (
+                    {(loggedInUser.userType === 3) && (
                         <Link to="/add-student">
                             <button className={studentStyles['add-student-button']}>Add Student</button>
                         </Link>
                     )}
-                
-                    {loggedInUser.userType === 1 && (                    
-                    <div className={studentStyles['import-section']}>
-                        <input type="file" onChange={handleFileChange} accept=".xls,.xlsx" />
-                        <button onClick={handleFileUpload} className={studentStyles['import-button']}>Import Student Data</button>
-                    </div>
+
+                    {loggedInUser.userType === 1 && (
+                        <div className={studentStyles['import-section']}>
+                            <input type="file" onChange={handleFileChange} accept=".xls,.xlsx" />
+                            <button onClick={handleFileUpload} disabled={isUploading} className={studentStyles['import-button']}>
+                                {isUploading ? 'Uploading...' : 'Import Student Data'}
+                            </button>
+                        </div>
                     )}
 
                     <div className={studentStyles['student-container']}>
-                        <table className={studentStyles['student-table']}>
-                            <thead>
-                                <tr>
-                                    <th>SID</th>
-                                    <th>Name</th>
-                                    <th>Grade - Section</th>
-                                    <th>Contact No.</th>
-                                    {loggedInUser.userType === 3 && <th>Action</th>}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredStudents.map(student => (
-                                    <tr
-                                        key={student.id}
-                                        onClick={() => handleSelectStudent(student)}
-                                        className={selectedStudent?.id === student.id ? studentStyles['selected-row'] : ''}
-                                    >
-                                        <td>{student.sid}</td>
-                                        <td>{`${student.firstname} ${student.middlename ? student.middlename + ' ' : ''}${student.lastname}`}</td>
-                                        <td>{`${student.grade} - ${student.section}`}</td>
-                                        <td>{student.con_num}</td>
-                                        {loggedInUser.userType === 3 && (
-                                            <td>
-                                                <Link to={`/update-student/${student.sid}`}>
-                                                    <EditIcon className={`${studentStyles['icon-button']} ${studentStyles['icon-edit']}`} />
-                                                </Link>
-                                                <DeleteIcon className={`${studentStyles['icon-button']} ${studentStyles['icon-delete']}`} onClick={() => handleDelete(student.sid)} />
-                                            </td>
-                                        )}
+                        {filteredStudents.length > 0 ? (
+                            <table className={studentStyles['student-table']}>
+                                <thead>
+                                    <tr>
+                                        <th>SID</th>
+                                        <th>Name</th>
+                                        <th>Grade - Section</th>
+                                        <th>Contact No.</th>
+                                        {loggedInUser.userType === 3 && <th>Action</th>}
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {filteredStudents.map(student => (
+                                        <tr
+                                            key={student.id}
+                                            onClick={() => handleSelectStudent(student)}
+                                            onDoubleClick={() => navigate(`/view-student-report/${student.id}`)}
+                                            className={selectedStudent?.id === student.id ? studentStyles['selected-row'] : ''}
+                                        >
+                                            <td>{student.sid}</td>
+                                            <td>{`${student.firstname} ${student.middlename ? student.middlename + ' ' : ''}${student.lastname}`}</td>
+                                            <td>{`${student.grade} - ${student.section}`}</td>
+                                            <td>{student.con_num}</td>
+                                            {loggedInUser.userType === 3 && (
+                                                <td>
+                                                    <Link to={`/update-student/${student.sid}`}>
+                                                        <EditIcon className={`${studentStyles['icon-button']} ${studentStyles['icon-edit']}`} />
+                                                    </Link>
+                                                    <DeleteIcon className={`${studentStyles['icon-button']} ${studentStyles['icon-delete']}`} onClick={() => handleDelete(student.sid)} />
+                                                </td>
+                                            )}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <p className={studentStyles['nonestudent']}>No students found matching your search criteria...</p>
+                        )}
                     </div>
 
                     {/* Add Report Button */}
                     {selectedStudent && (
-                        <button onClick={handleAddReport} className={studentStyles['add-report-button']}>
+                        <button onClick={handleAddReport} className={studentStyles['add-report-button']} disabled={!selectedStudent}>
                             Add Report for {selectedStudent.firstname} {selectedStudent.lastname}
                         </button>
                     )}
@@ -207,4 +225,4 @@ const AdviserStudent = () => {
     );
 };
 
-export default AdviserStudent;
+export default Student;

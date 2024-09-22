@@ -61,12 +61,13 @@
 
 .title {
   color: #81343a;
-  font-weight: 900;
+  font-weight: 1000;
   font-size: 1.5em;
   margin-top: 30px;
   margin-bottom: 10px;
   position: relative; /* Set position to relative for the pseudo-element */
   padding-bottom: 5px; /* Optional: adds space between text and border */
+  text-shadow: 1px 1px 3px #c2c2c2;  /* Slight shadow for all text */
 }
 
 .title::after {
@@ -83,6 +84,7 @@
 .sub_title {
   font-weight: 600;
   margin: 5px 0;
+  text-shadow: 1px 1px 3px #c2c2c2;  /* Slight shadow for all text */
 }
 
 .form_group {
@@ -119,6 +121,7 @@
   border-radius: 10px;
   font-weight: 800;
   box-shadow: 3px 3px 0px 0px #e8bd26;
+  text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transition */
 }
 

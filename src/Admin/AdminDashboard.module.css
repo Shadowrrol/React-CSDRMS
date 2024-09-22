@@ -18,7 +18,8 @@ h1 {
     font-size: 28px;
     font-weight: bold;
     color: #81343a;
-    margin: 20px 0 25px 0;
+    margin: 0px 0 25px 0;
+    text-shadow: 1px 1px 3px #808080;  /* Slight shadow for all text */
 }
 
 h2 {
@@ -72,6 +73,7 @@ h2 {
 .user-table th {
     background-color: #81343a;
     color: #fff;
+    text-shadow: 3px 3px 5px #000;  /* Slight shadow for all text */
     font-weight: 600;
     border: 0.5px solid #81343a;  
 }
@@ -122,6 +124,7 @@ h2 {
 
 .admin-add-btn {
     background-color: #4caf50;
+    text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
 }
 
 .admin-add-btn:hover {
@@ -131,6 +134,7 @@ h2 {
 
 .edit-btn {
     background-color: #2196f3;
+    text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
 }
 
 .edit-btn:hover {
@@ -139,7 +143,8 @@ h2 {
 }
 
 .delete-btn {
-    background-color: #f44336;
+    background-color: #f44336;    
+    text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
 }
 
 .delete-btn:hover {
@@ -150,6 +155,7 @@ h2 {
 .action-btn:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+    text-shadow: 1px 1px 3px #ccc;  /* Slight shadow for all text */
 }
 
 /* Fade In Animation */

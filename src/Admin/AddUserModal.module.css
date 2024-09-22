@@ -56,6 +56,7 @@
   transition: transform 0.3s ease, background-color 0.3s ease-in-out;
   animation: fadeInLeft 0.8s ease-in-out;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a shadow for better visibility */
+  text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
 }
 
 .add-user-modal-button:hover {

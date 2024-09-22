@@ -42,8 +42,8 @@
 }
 
 .styled-link {
-    width: 90%; /* Increase width */
-    height: 55px; /* Increased height */
+    width: 80%; /* Increase width */
+    height: 50px; /* Increased height */
     background-color: #e8bd26;
     border-radius: 15px; /* More rounded edges */
     display: flex;
@@ -77,9 +77,8 @@
 /* Main Content Area */
 .content {
     flex-grow: 1;
-    padding: 20px;
+    padding: 50px;
     background-color: #f7f7f7;
-    animation: fadeInUp 0.8s ease-in-out;
 }
 
 /* Logout Button Styling */

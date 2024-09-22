@@ -1,0 +1,44 @@
+/* Table Container */
+.table-container {
+    max-height: 400px; /* Adjust height as needed */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 2px solid #81343a;
+}
+
+/* Table Styling */
+.time-table {
+    width: 100%;
+    border-collapse: collapse; /* Ensures borders are not doubled */
+    table-layout: fixed; /* Ensures consistent cell width */
+}
+
+.time-table thead {
+    position: sticky; /* Fixed to the top */
+    top: 0; 
+    z-index: 1; 
+}
+
+.time-table th, .time-table td {
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.time-table th {
+    background-color: #81343a; /* Header color */
+    color: #fff;
+    font-weight: 600;
+}
+
+.time-table td {
+    cursor: pointer;
+    border: 1px solid #ccc; /* Border for body cells */
+}
+
+.time-table tr {
+    background-color: #fff;
+}
+
+.time-table tr:hover {
+    background-color: #f4f6f9; /* Hover effect */
+}

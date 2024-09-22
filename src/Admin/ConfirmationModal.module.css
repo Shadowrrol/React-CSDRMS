@@ -31,6 +31,7 @@
     margin: 22px 20px 0px 0px;
     transition: transform 0.3s ease, background-color 0.3s ease-in-out;
     animation: fadeInLeft 0.8s ease-in-out;
+    text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
   }
 
   .confirmBtn:hover {
@@ -46,6 +47,7 @@
     border-radius: 5px;
     padding: 7px;
     margin: 22px 0px 0px 20px;
+    text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
   }
 
   .cancelBtn:hover {

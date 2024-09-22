@@ -1,29 +1,39 @@
-.table {
+.table-container {
     width: 100%;
-    border-collapse: collapse;
+    overflow-x: auto; /* Ensure horizontal scrolling for smaller screens */
     margin-top: 20px;
 }
 
-.table th, .table td {
+.global-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
     border: 1px solid #ddd;
-    padding: 8px;
+}
+
+.global-table th, .global-table td {
+    padding: 15px; /* Increased padding for better touch targets */
     text-align: center;
+    font-size: 16px; /* Larger font size for readability */
+    border-bottom: 1px solid #ddd;
 }
 
-.table th {
-    background-color: #f2f2f2;
-    color: black;
-    font-weight: bold;
+.global-table th {
+    background-color: #81343a; /* Admin dashboard header color */
+    color: white; /* White text for headers */
+    text-shadow: 3px 3px 5px #000;  /* Slight shadow for all text */
+    font-weight: 600;
 }
 
-.table tr:nth-child(even) {
-    background-color: #f9f9f9;
+.global-table td {
+    border: 1px solid #ddd;
 }
 
-.table tr:hover {
-    background-color: #ddd;
+.global-table tr:hover {
+    background-color: #f4f6f9; /* Highlighted row color on hover */
 }
 
-.table td {
+.global-table td {
     text-align: center; /* Center align table data */
+    cursor: pointer; /* Pointer cursor for rows */
 }
