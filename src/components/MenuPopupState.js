@@ -1,30 +1,42 @@
-import React from 'react';
-import axios from "axios";
+import React, { useContext } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import { AuthContext } from '../AuthContext'; // Adjust the path as needed
 
 const MenuPopupState = () => {
     const navigate = useNavigate();
-    const authToken = localStorage.getItem('authToken');
-    const loggedInUser = authToken ? JSON.parse(authToken) : null;
+    const { loggedInUser } = useContext(AuthContext);
 
     if (!loggedInUser) {
         console.error('User is not logged in');
-        return; // You might want to redirect to login page or show a message
+        navigate('/login'); // Navigate to login page if not logged in
+        return null;
     }
 
     const user = loggedInUser;
-    console.log('User object:', user);
+
+    console.log('Current user:', user); // Log the current user object
+    if (!user.userId) {
+        console.error('User ID is undefined', user); // Log if userId is missing
+    }
+
+    // Set the label based on user type, and include the user's last name
+    const userTypeLabel = `${user.lastName} ${user.userType === 1 ? " | SSO Officer" : 
+                                           user.userType === 2 ? " | Principal" : 
+                                           user.userType === 3 ? " | Adviser" : 
+                                           user.userType === 4 ? " | Admin" : ""}`;
+
     const handleLogout = async (popupState) => {
         console.log("Logout button clicked");
         const logoutTime = new Date().toISOString();
 
         if (!user.userId) {
             console.error('User ID is undefined');
-            return; // Handle the error accordingly
+            return;
         }
 
         try {
