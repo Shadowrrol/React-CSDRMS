@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
-import styles from './RegisterModal.module.css';
+import styles from './RegisterUserModal.module.css';
 import styles1 from '../GlobalForm.module.css';
 
 const UpdateAccountModal = ({ isOpen, onClose, user }) => {

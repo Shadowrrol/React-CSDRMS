@@ -4,7 +4,6 @@ import axios from 'axios';
 import styles from './Navigation.module.css';
 import styles1 from './GlobalForm.module.css';
 
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RateReviewIcon from '@mui/icons-material/RateReview';
@@ -143,7 +142,6 @@ const UpdateAccount = () => {
           <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
           {loggedInUser.userType !== 4 && createSidebarLink("/report", "Report", AssessmentIcon)}
           {loggedInUser.userType === 4 && createSidebarLink("/AdminDashboard", "Dashboard", AssessmentIcon)}
-          {loggedInUser.userType === 4 && createSidebarLink("/Account", "Account", AccountBoxIcon)}
           {loggedInUser.userType === 4 && createSidebarLink("/class", "Class", MeetingRoomIcon)}
           {loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/student", "Student", SchoolIcon)}
           {loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
@@ -187,7 +185,7 @@ const UpdateAccount = () => {
               <input type="text" name="section" value={updatedUser.section} onChange={handleInputChange} />
             </div>
           )}
-          <button onClick={handleUpdate}>Update Account</button>
+          <button onClick={handleUpdate} className={styles1['global-button']}>Update Account</button>
         </div>
       </div>
     </div>

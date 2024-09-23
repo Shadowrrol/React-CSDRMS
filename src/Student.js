@@ -209,7 +209,7 @@ const Student = () => {
                                 </tbody>
                             </table>
                         ) : (
-                            <p className={studentStyles['nonestudent']}>No students found matching your search criteria...</p>
+                            <p className={studentStyles['nonestudent']}>No Students found...</p>
                         )}
                     </div>
 

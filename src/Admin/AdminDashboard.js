@@ -19,6 +19,10 @@ const createSidebarLink = (to, text, IconComponent) => (
 
 const AdminDashboard = () => {
   // State variables
+  const navigate = useNavigate(); // Hook to programmatically navigate
+  const authToken = localStorage.getItem('authToken'); // Get auth token from localStorage
+  const loggedInUser = authToken ? JSON.parse(authToken) : null; // Parse logged in user from token
+
   const [users, setUsers] = useState([]); // State to store user data
   const [selectedUser, setSelectedUser] = useState(null); // State to store the currently selected user
   const [searchQuery, setSearchQuery] = useState(''); // State to manage search input
@@ -26,13 +30,18 @@ const AdminDashboard = () => {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false); // State to control visibility of the confirmation modal
   const [confirmationMessage, setConfirmationMessage] = useState(''); // State to hold confirmation message
   const [isUpdateAccountModalOpen, setIsUpdateAccountModalOpen] = useState(false); // State to control visibility of the update account modal
-  const navigate = useNavigate(); // Hook to programmatically navigate
 
-  // Effect to set the document title and fetch users on component mount
+  // Effect to set the document title, validate token, and fetch users on component mount
   useEffect(() => {
+    // If no authToken is found, redirect to login page
+    if (!authToken || !loggedInUser) {
+      navigate('/login');
+      return;
+    }
+
     document.title = "Admin | Dashboard";
     fetchUsers(); // Fetch the user list
-  }, []);
+  }, [authToken, loggedInUser, navigate]);
 
   // Function to fetch users from the server
   const fetchUsers = async () => {
@@ -47,7 +56,7 @@ const AdminDashboard = () => {
   // Function to handle user logout
   const handleLogout = () => {
     localStorage.removeItem('authToken'); // Remove auth token
-    navigate('/'); // Redirect to the home page
+    navigate('/'); // Redirect to the login page
   };
 
   // Function to handle user deletion
@@ -117,26 +126,31 @@ const AdminDashboard = () => {
                   </tr>
               </thead>
               <tbody>
-                  {filteredUsers.map(user => (
-                      <tr
-                          key={user.username}
-                          onClick={() => setSelectedUser(user)}
-                          className={selectedUser?.username === user.username ? styles['selected-row'] : ''}
-                      >
-                          <td>{user.username}</td>
-                          <td>{`${user.firstname} ${user.lastname}`}</td>
-                          <td>{user.email}</td>
-                          <td>{user.userType}</td>
-                      </tr>
-                  ))}
+                {filteredUsers.length > 0 ? (
+                  filteredUsers.map(user => (
+                    <tr
+                      key={user.username}
+                      onClick={() => setSelectedUser(user)}
+                      className={selectedUser?.username === user.username ? styles['selected-row'] : ''}
+                    >
+                      <td>{user.username}</td>
+                      <td>{`${user.firstname} ${user.lastname}`}</td>
+                      <td>{user.email}</td>
+                      <td>{user.userType}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className={styles['no-results']} style={{ textAlign: 'center', fontSize: '1.5rem' }}>
+                      No Results Found
+                    </td>
+                  </tr>                
+                )}
               </tbody>
           </table>
         </div>
 
-        
-
         <div className={styles['action-buttons']}>
-
           <button
             className={`${styles['action-btn']} ${styles['admin-add-btn']}`}
             onClick={handleAddUser}

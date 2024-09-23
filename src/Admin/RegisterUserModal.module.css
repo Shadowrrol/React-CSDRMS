@@ -33,7 +33,6 @@
     cursor: pointer;
     color: #81343a;
     transition: color 0.3s, transform 0.3s;
-    text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
 }
 
 .modal-close-button:hover {

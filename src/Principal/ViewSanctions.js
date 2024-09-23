@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles1 from "../GlobalDesign.module.css";
-import styles from "../Navigation.module.css"; // Import CSS module
+import navStyles from "../Navigation.module.css"; // Import CSS module
 
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -10,6 +10,14 @@ import LocalPoliceIcon from "@mui/icons-material/LocalPolice";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+
+
+const createSidebarLink = (to, text, IconComponent) => (
+  <Link to={to} className={navStyles['styled-link']}>
+      <IconComponent className={navStyles.icon} />
+      <span className={navStyles['link-text']}>{text}</span>
+  </Link>
+);
 
 function ButtonMenu({ sanctionId, index }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -151,18 +159,12 @@ const ViewSanctions = () => {
   const endIndex = startIndex + limit;
 
   return (
-    <div className={styles.wrapper} style={{ backgroundImage: "url(/public/image-2-3@2x.png)" }}>
-      <div className={styles.sidenav}>
-        <img src="/image-removebg-preview (1).png" alt="" className={styles["sidebar-logo"]} />
-        <Link to="/report" className={styles["styled-link"]}>
-          <AssessmentIcon className={styles.icon} />
-          <span className={styles["link-text"]}>Report</span>
-        </Link>
-        <Link to="/viewSanctions" className={styles["styled-link"]}>
-          <LocalPoliceIcon className={styles.icon} />
-          <span className={styles["link-text"]}>Sanctions</span>
-        </Link>
-        <button className={styles["logoutbtn"]} onClick={handleLogout}>
+    <div className={navStyles.wrapper} >
+      <div className={navStyles.sidenav}>
+        <img src="/image-removebg-preview (1).png" alt="" className={navStyles["sidebar-logo"]} />
+        {createSidebarLink("/record", "Record", AssessmentIcon)}
+        {createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
+        <button className={navStyles["logoutbtn"]} onClick={handleLogout}>
           Logout
         </button>
       </div>

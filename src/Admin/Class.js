@@ -9,6 +9,14 @@ import MenuPopupState from '../components/MenuPopupState';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
+// Function to create a sidebar link with an icon
+const createSidebarLink = (to, text, IconComponent) => (
+  <Link to={to} className={navStyles['styled-link']} key={to}>
+    <IconComponent className={navStyles.icon} />
+    <span>{text}</span>
+  </Link>
+);
+
 function Class() {
   const [classes, setClasses] = useState([]);
   const [schoolYears, setSchoolYears] = useState([]);
@@ -18,6 +26,9 @@ function Class() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddGrade, setShowAddGrade] = useState(false);
   const [showAddSchoolYear, setShowAddSchoolYear] = useState(false);
+
+  const authToken = localStorage.getItem('authToken'); // Get auth token from localStorage
+  const loggedInUser = authToken ? JSON.parse(authToken) : null; // Parse logged in user from token
 
   const handleOpen = () => setShowAddGrade(true);
   const handleClose = () => setShowAddGrade(false);
@@ -63,7 +74,7 @@ function Class() {
         section: newSection,
       });
       fetchClasses();
-      setShowAddGrade(false);
+      handleClose();
     } catch (error) {
       console.error("Error adding grade:", error);
       alert("Failed to add grade and section");
@@ -90,7 +101,7 @@ function Class() {
         schoolYear: newSchoolYear,
       });
       fetchSchoolYears();
-      setShowAddSchoolYear(false);
+      handleCloseSchoolYear();
     } catch (error) {
       console.error("Error adding school year:", error);
       alert("Failed to add school year");
@@ -103,12 +114,10 @@ function Class() {
 
   // Filter classes and school years based on search term
   const filteredClasses = classes
-    .filter((classItem) => {
-      return (
-        classItem.grade.toString().includes(searchTerm) ||
-        classItem.section.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    })
+    .filter((classItem) =>
+      classItem.grade.toString().includes(searchTerm) ||
+      classItem.section.toLowerCase().includes(searchTerm.toLowerCase())
+    )
     .sort((a, b) => a.grade - b.grade); // Sort by grade in ascending order
 
   const filteredSchoolYears = schoolYears.filter((schoolYear) =>
@@ -119,34 +128,25 @@ function Class() {
     document.title = "Admin | Class";
     fetchClasses();
     fetchSchoolYears();
-  }, []);
+    if (loggedInUser) {
+      // You can use loggedInUser to determine access or other logic here
+      console.log("Logged in user:", loggedInUser);
+    } else {
+      console.log("No user logged in");
+    }
+  }, [loggedInUser]); // Adding loggedInUser to dependency array
 
   return (
     <div className={navStyles.wrapper}>
       <div className={navStyles.sidenav}>
         <img src="/image-removebg-preview (1).png" alt="logo" className={navStyles['sidebar-logo']} />
-        <Link to="/AdminDashboard" className={navStyles['styled-link']}>
-          <AssessmentIcon className={navStyles.icon} />
-          <span className={navStyles['link-text']}>Dashboard</span>
-        </Link>
-        <Link to="/class" className={navStyles['styled-link']}>
-          <MeetingRoomIcon className={navStyles.icon} />
-          <span className={navStyles['link-text']}>Class</span>
-        </Link>
+        {createSidebarLink("/AdminDashboard", "Dashboard", AssessmentIcon)}
+        {createSidebarLink("/class", "Class", MeetingRoomIcon)}
         <MenuPopupState />
       </div>
 
       <div className={navStyles.content}>
         <h1 className={classStyles.classtitle}>Class Management</h1>
-        <div className={classStyles.searchContainer}>
-          <input
-            type="search"
-            placeholder="Search by Grade, Section or School Year..."
-            className={classStyles.searchInput}
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </div>
 
         <div className={classStyles.divide}>
           <div className={classStyles.tableContainer}>
@@ -158,11 +158,17 @@ function Class() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredClasses.map((classItem) => (
-                    <tr key={classItem.class_id}>
-                      <td>{`${classItem.grade} - ${classItem.section}`}</td>
+                  {filteredClasses.length > 0 ? (
+                    filteredClasses.map((classItem) => (
+                      <tr key={classItem.class_id}>
+                        <td>{`${classItem.grade} - ${classItem.section}`}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td className={classStyles.noresult}>No Results Found</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
@@ -177,72 +183,82 @@ function Class() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredSchoolYears.map((schoolYear) => (
-                    <tr key={schoolYear.schoolYear_ID}>
-                      <td>{schoolYear.schoolYear}</td>
+                  {filteredSchoolYears.length > 0 ? (
+                    filteredSchoolYears.map((schoolYear) => (
+                      <tr key={schoolYear.schoolYear_ID}>
+                        <td>{schoolYear.schoolYear}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td className={classStyles.noresult}>No Results Found</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
-          </div>              
-        </div>        
+          </div>
+        </div>
 
         {/* Add Grade Modal */}
-        {showAddGrade && (
-          <Modal open={showAddGrade} onClose={handleClose}>
-            <Box className={classStyles.modalContainer}>
-              <h2 className={classStyles.modalHeader}>Add New Grade and Section</h2>
-              <select
-                type="number"              
-                className={classStyles.inputField}
-                value={newGrade}
-                onChange={(e) => setNewGrade(e.target.value)}
-              >
-                <option placeholder="">Select Grade</option>
-                <option value="7">Grade 7</option>
-                <option value="8">Grade 8</option>
-                <option value="9">Grade 9</option>
-                <option value="10">Grade 10</option>
-              </select>
-              <input
-                type="text"
-                className={classStyles.inputField}
-                placeholder="Enter Section"
-                value={newSection}
-                onChange={(e) => setNewSection(e.target.value)}
-              />
-              <div className={classStyles.buttonGroup}>
-                <button onClick={addGrade} className={classStyles.button}>Add</button>
-                <button onClick={handleClose} className={`${classStyles.button} ${classStyles.buttonCancel}`}>Cancel</button>
-              </div>
-            </Box>
-          </Modal>
-        )}
+        <Modal open={showAddGrade} onClose={handleClose}>
+          <Box className={classStyles.modalContainer}>
+            <h2 className={classStyles.modalHeader}>Add New Grade and Section</h2>
+            <select
+              className={classStyles.inputField}
+              value={newGrade}
+              onChange={(e) => setNewGrade(e.target.value)}
+            >
+              <option value="">Select Grade</option>
+              <option value="7">Grade 7</option>
+              <option value="8">Grade 8</option>
+              <option value="9">Grade 9</option>
+              <option value="10">Grade 10</option>
+            </select>
+            <input
+              type="text"
+              className={classStyles.inputField}
+              placeholder="Enter Section"
+              value={newSection}
+              onChange={(e) => setNewSection(e.target.value)}
+            />
+            <div className={classStyles.buttonGroup}>
+              <button onClick={addGrade} className={classStyles.button}>Add</button>
+              <button onClick={handleClose} className={`${classStyles.button} ${classStyles.buttonCancel}`}>Cancel</button>
+            </div>
+          </Box>
+        </Modal>
 
         {/* Add School Year Modal */}
-        {showAddSchoolYear && (
-          <Modal open={showAddSchoolYear} onClose={handleCloseSchoolYear}>
-            <Box className={classStyles.modalContainer}>
-              <h2 className={classStyles.modalHeader}>Add New School Year</h2>
-              <input
-                type="text"
-                className={classStyles.inputField}
-                placeholder="Enter School Year"
-                value={newSchoolYear}
-                onChange={(e) => setNewSchoolYear(e.target.value)}
-              />
-              <div className={classStyles.buttonGroup}>
-                <button onClick={addSchoolYear} className={classStyles.button}>Add</button>
-                <button onClick={handleCloseSchoolYear} className={`${classStyles.button} ${classStyles.buttonCancel}`}>Cancel</button>
-              </div>
-            </Box>
-          </Modal>
-        )}
+        <Modal open={showAddSchoolYear} onClose={handleCloseSchoolYear}>
+          <Box className={classStyles.modalContainer}>
+            <h2 className={classStyles.modalHeader}>Add New School Year</h2>
+            <input
+              type="text"
+              className={classStyles.inputField}
+              placeholder="Enter School Year"
+              value={newSchoolYear}
+              onChange={(e) => setNewSchoolYear(e.target.value)}
+            />
+            <div className={classStyles.buttonGroup}>
+              <button onClick={addSchoolYear} className={classStyles.button}>Add</button>
+              <button onClick={handleCloseSchoolYear} className={`${classStyles.button} ${classStyles.buttonCancel}`}>Cancel</button>
+            </div>
+          </Box>
+        </Modal>
 
         <div className={classStyles.addButtonContainer}>
           <button onClick={handleOpen} className={classStyles.button}>Add Grade</button>
           <button onClick={handleOpenSchoolYear} className={classStyles.button}>Add School Year</button>
+          <div className={classStyles.searchContainer}>
+            <input
+              type="search"
+              placeholder="Search by Grade, Section or School Year..."
+              className={classStyles.searchInput}
+              value={searchTerm}
+              onChange={handleSearch}
+            />
+          </div>
         </div>
       </div>
     </div>

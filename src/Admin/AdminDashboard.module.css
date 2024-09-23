@@ -27,6 +27,7 @@ h2 {
     font-weight: bold;
     color: #000;
     margin-bottom: 16px;
+    text-shadow: 1px 1px 3px #ccc;  /* Slight shadow for all text */
 }
 
 /* Search Bar */
@@ -169,3 +170,10 @@ h2 {
         transform: translateY(0);
     }
 }
+
+.no-results {
+    color: #888; /* Optional: Change color to gray for better visibility */
+    background-color: #fff;
+    padding: 10px; /* Optional: Add some padding for spacing */
+  }
+  

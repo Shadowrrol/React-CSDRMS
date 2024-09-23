@@ -80,6 +80,7 @@
     width: 100%;
     border-collapse: collapse; /* Ensures borders are not doubled */
     table-layout: fixed; /* Ensures consistent cell width */
+    border: 2px solid #81343a;  
 }
 
 .student-table thead {
@@ -157,6 +158,7 @@
     margin-top: 50px;
     font-size: 25px;
     font-style: italic;
+    color: #888;
 }
 
 /* Keyframes for animations */

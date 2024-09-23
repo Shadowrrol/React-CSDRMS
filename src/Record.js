@@ -116,7 +116,7 @@ const Record = () => {
         <div className={navStyles.wrapper}>
             <div className={navStyles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={navStyles['sidebar-logo']} />
-                {createSidebarLink("/record", "Record", AssessmentIcon)}
+                {createSidebarLink("/record", "Dashboard", AssessmentIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType !== 2 && (
@@ -126,7 +126,7 @@ const Record = () => {
                             : createSidebarLink("/case", "Case", PostAddIcon)}
                     </>
                 )}
-                {loggedInUser.userType !== 1 && loggedInUser.userType !== 3 && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType !== 3 && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType === 1 && createSidebarLink("/timeLog", "Time Log", AccessTimeFilledIcon)}
                 <button className={navStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>

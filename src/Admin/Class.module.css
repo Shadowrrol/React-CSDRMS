@@ -59,9 +59,9 @@
 
 .addButtonContainer {
   display: flex;
-  gap: 12px;
-  justify-content: center;
-  padding: 10px;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
 }
 
 .modalContainer {
@@ -117,6 +117,7 @@
   color: white;
   font-size: 14px;
   transition: background-color 0.3s, transform 0.3s;
+  text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
 }
 
 .button:hover {
@@ -126,6 +127,7 @@
 
 .buttonCancel {
   background-color: #e53935;
+  text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
 }
 
 .buttonCancel:hover {
@@ -155,7 +157,8 @@
 
 /* Search bar container */
 .searchContainer {
-  margin: 20px 0;
+  display: flex;
+  justify-content: center;
 }
 
 /* Search input field styling */
@@ -168,3 +171,9 @@
   font-size: 15px;
 }
 
+.noresult{
+  color: #888; /* Optional: Change color to gray for better visibility */
+  background-color: #fff;
+  text-shadow: 1px 1px 3px #fff;  /* Slight shadow for all text */
+  padding: 10px; /* Optional: Add some padding for spacing */
+}

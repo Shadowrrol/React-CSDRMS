@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from "axios";
-import { useNavigate, } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -9,25 +9,24 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 const MenuPopupState = () => {
     const navigate = useNavigate();
     const authToken = localStorage.getItem('authToken');
-    const loggedInUser = JSON.parse(authToken);
+    const loggedInUser = authToken ? JSON.parse(authToken) : null;
 
-    const user = loggedInUser
-
-    let userTypeLabel;
-    if (user && user.userType === 1) {
-        userTypeLabel = `${user.firstname} - SSO`;
-    } else if (user && user.userType === 2) {
-        userTypeLabel = `${user.firstname} - Principal`;
-    } else if (user && user.userType === 3) {
-        userTypeLabel = `${user.firstname} - Adviser`;
-    } else if (user && user.userType === 4) {
-        userTypeLabel = `${user.firstname} - Admin`;
-    } else {
-        userTypeLabel = 'Dashboard';
+    if (!loggedInUser) {
+        console.error('User is not logged in');
+        return; // You might want to redirect to login page or show a message
     }
 
-    const handleLogout = async () => {
+    const user = loggedInUser;
+    console.log('User object:', user);
+    const handleLogout = async (popupState) => {
+        console.log("Logout button clicked");
         const logoutTime = new Date().toISOString();
+
+        if (!user.userId) {
+            console.error('User ID is undefined');
+            return; // Handle the error accordingly
+        }
+
         try {
             // Fetch timeLogId using userId
             const response = await axios.get(`http://localhost:8080/time-log/getLatestLog/${user.userId}`);
@@ -41,14 +40,14 @@ const MenuPopupState = () => {
 
             // Clear tokens and navigate to login
             localStorage.removeItem('authToken');
+            popupState.close(); // Close the popup menu
             navigate('/');
         } catch (error) {
-            console.error('Error logging out', error);
+            console.error('Error logging out', error.response ? error.response.data : error.message);
         }
     };
 
     const handleProfileClick = () => {
-        // Navigate to '/UpdateAccount' when profile is clicked
         navigate(`/UpdateAccount`, { state: { user } });
     };
 
@@ -65,13 +64,12 @@ const MenuPopupState = () => {
                     </Button>
                     <Menu {...bindMenu(popupState)}>
                         <MenuItem onClick={handleProfileClick}>Update Account</MenuItem>
-                        {/* <MenuItem onClick={popupState.close}>My account</MenuItem> */}
-                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                        <MenuItem onClick={() => handleLogout(popupState)}>Logout</MenuItem>
                     </Menu>
                 </React.Fragment>
             )}
         </PopupState>
     );
-}
+};
 
 export default MenuPopupState;

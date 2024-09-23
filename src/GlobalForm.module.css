@@ -5,7 +5,7 @@
 }
 
 .contentform {
-    max-width: 800px; /* Limit form container width */
+    max-width: 500px; /* Limit form container width */
     margin: 1px auto; /* Center the form container horizontally */
     padding: 20px; /* Add padding to the form container */
     border: 1px solid #ddd; /* Add border to the form container */
@@ -69,6 +69,7 @@
     display: block;
     transition: transform 0.3s ease, background-color 0.3s ease-in-out;
     animation: fadeInLeft 0.8s ease-in-out;
+    text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
 }
 
 .global-button:hover {
