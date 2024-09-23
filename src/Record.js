@@ -126,7 +126,7 @@ const Record = () => {
                             : createSidebarLink("/case", "Case", PostAddIcon)}
                     </>
                 )}
-                {loggedInUser.userType !== 3 && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType === 2     && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType === 1 && createSidebarLink("/timeLog", "Time Log", AccessTimeFilledIcon)}
                 <button className={navStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>

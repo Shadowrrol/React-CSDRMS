@@ -11,6 +11,7 @@ const MenuPopupState = () => {
     const navigate = useNavigate();
     const { loggedInUser } = useContext(AuthContext);
 
+    // Check if the user is logged in
     if (!loggedInUser) {
         console.error('User is not logged in');
         navigate('/login'); // Navigate to login page if not logged in
@@ -20,12 +21,13 @@ const MenuPopupState = () => {
     const user = loggedInUser;
 
     console.log('Current user:', user); // Log the current user object
-    if (!user.userId) {
-        console.error('User ID is undefined', user); // Log if userId is missing
+    if (!user.uid) {  // Check for uid instead of userId
+        console.error('User ID is undefined', user); // Log if uid is missing
+        return null; // Prevent further execution if uid is not defined
     }
 
-    // Set the label based on user type, and include the user's last name
-    const userTypeLabel = `${user.lastName} ${user.userType === 1 ? " | SSO Officer" : 
+    // Safely set userTypeLabel, falling back for lastName if undefined
+    const userTypeLabel = `${user.lastname || 'User'} ${user.userType === 1 ? " | SSO Officer" : 
                                            user.userType === 2 ? " | Principal" : 
                                            user.userType === 3 ? " | Adviser" : 
                                            user.userType === 4 ? " | Admin" : ""}`;
@@ -34,14 +36,14 @@ const MenuPopupState = () => {
         console.log("Logout button clicked");
         const logoutTime = new Date().toISOString();
 
-        if (!user.userId) {
+        if (!user.uid) {  // Check for uid instead of userId
             console.error('User ID is undefined');
             return;
         }
 
         try {
-            // Fetch timeLogId using userId
-            const response = await axios.get(`http://localhost:8080/time-log/getLatestLog/${user.userId}`);
+            // Fetch timeLogId using uid
+            const response = await axios.get(`http://localhost:8080/time-log/getLatestLog/${user.uid}`);
             const timeLogId = response.data.timelog_id;
 
             // Send logout time to backend

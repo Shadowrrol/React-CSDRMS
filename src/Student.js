@@ -134,7 +134,7 @@ const Student = () => {
         <div className={styles.wrapper}>
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
-                {createSidebarLink("/record", "Record", AssessmentIcon)}
+                {createSidebarLink("/record", "Dashboard", AssessmentIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType !== 2 && (
@@ -189,7 +189,7 @@ const Student = () => {
                                         <tr
                                             key={student.id}
                                             onClick={() => handleSelectStudent(student)}
-                                            onDoubleClick={() => navigate(`/view-student-report/${student.id}`)}
+                                            onDoubleClick={() => navigate(`/view-student-record/${student.id}`)}
                                             className={selectedStudent?.id === student.id ? studentStyles['selected-row'] : ''}
                                         >
                                             <td>{student.sid}</td>

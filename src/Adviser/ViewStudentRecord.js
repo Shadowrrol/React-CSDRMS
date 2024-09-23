@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import styles from '../Navigation.module.css';
+import navStyles from '../Navigation.module.css';
 import styles2 from '../GlobalTable.module.css';
+import viewStyles from './ViewStudentRecord.module.css';
 
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
@@ -13,9 +14,9 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 
 // Helper function to create sidebar links
 const createSidebarLink = (to, text, IconComponent) => (
-    <Link to={to} className={styles['styled-link']}>
-        <IconComponent className={styles.icon} />
-        <span className={styles['link-text']}>{text}</span>
+    <Link to={to} className={navStyles['styled-link']}>
+        <IconComponent className={navStyles.icon} />
+        <span className={navStyles['link-text']}>{text}</span>
     </Link>
 );
 
@@ -26,6 +27,15 @@ const ViewStudentRecord = () => {
     const { id } = useParams();  
     const [student, setStudent] = useState(null);
     const [records, setRecords] = useState([]);
+
+    // Set document title based on user type
+    useEffect(() => {
+        if (loggedInUser.userType === 3) {
+            document.title = "Adviser | View Student Record";
+        } else if (loggedInUser.userType === 4) {
+            document.title = "SSO | View Student Record";
+        }
+    }, [loggedInUser.userType]);
 
     // Handle user logout
     const handleLogout = () => {
@@ -83,10 +93,10 @@ const ViewStudentRecord = () => {
     }, [student, loggedInUser.userType]);
 
     return (
-        <div className={styles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
-            <div className={styles.sidenav}>
-                <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
-                {createSidebarLink("/record", "Record", AssessmentIcon)}
+        <div className={navStyles.wrapper} style={{ backgroundImage: 'url(/public/image-2-3@2x.png)' }}>
+            <div className={navStyles.sidenav}>
+                <img src="/image-removebg-preview (1).png" alt="" className={navStyles['sidebar-logo']} />
+                {createSidebarLink("/record", "Dashboard", AssessmentIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
@@ -94,12 +104,12 @@ const ViewStudentRecord = () => {
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
-                <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
+                <button className={navStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
-            <div className={styles.content}>
+            <div className={navStyles.content}>
                 <h2>Student Details</h2>
                 {student ? (
-                    <div className={styles['student-details']}>
+                    <div className={navStyles['student-details']}>
                         <p><strong>Name:</strong> {student.firstname} {student.middlename} {student.lastname}</p>
                         <p><strong>Grade:</strong> {student.grade}</p>
                         <p><strong>Section:</strong> {student.section}</p>
@@ -109,7 +119,7 @@ const ViewStudentRecord = () => {
                     <p>Loading student details...</p>
                 )}
 
-                <div className={styles['add-report-button']}>
+                <div className={navStyles['add-report-button']}>
                     {loggedInUser.userType !== 2 && student && (
                         <Link to={`/add-record/${student.id}`}>
                             <button>Add Record</button>
@@ -130,16 +140,24 @@ const ViewStudentRecord = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {records.map(record => (
-                                <tr key={record.rid}>
-                                    <td>{record.student.schoolYear}</td>
-                                    <td>{record.student.grade}</td>
-                                    <td>{record.student.section}</td>
-                                    <td>{record.incident_date}</td>
-                                    <td>{record.monitored_record}</td>
-                                    <td>{record.remarks}</td>
+                            {records.length > 0 ? (
+                                records.map(record => (
+                                    <tr key={record.rid}>
+                                        <td>{record.student.schoolYear}</td>
+                                        <td>{record.student.grade}</td>
+                                        <td>{record.student.section}</td>
+                                        <td>{record.incident_date}</td>
+                                        <td>{record.monitored_record}</td>
+                                        <td>{record.remarks}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan= "6" className={viewStyles.nonerecord} style={{ textAlign: 'center', fontSize: '1.5rem' }}>
+                                        No Student Records found...
+                                    </td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>

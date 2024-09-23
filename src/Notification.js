@@ -4,9 +4,7 @@ import styles from "./Navigation.module.css";
 
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import PostAddIcon from "@mui/icons-material/PostAdd";
-import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 
@@ -197,7 +195,7 @@ const Notification = () => {
     <div className={styles.wrapper}>
       <div className={styles.sidenav}>
         <img src="/image-removebg-preview (1).png" alt="" className={styles["sidebar-logo"]} />
-        {createSidebarLink("/report", "Record", AssessmentIcon)}
+        {createSidebarLink("/record", "Dashboard", AssessmentIcon)}
         {createSidebarLink("/student", "Student", SchoolIcon)}
         {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
         {loggedInUser.userType !== 2 && (
