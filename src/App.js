@@ -5,6 +5,7 @@ import './App.css';
 import Student from './Student';
 import Notification from './Notification';
 import Record from './Record';
+import Report from './Report';
 
 import Feedback from './SSO/Feedback';
 import Case from './SSO/Case';
@@ -26,6 +27,7 @@ import UpdateAccount from './UpdateAccount';
 
 import AdminDashboard from './Admin/AdminDashboard';
 import Class from './Admin/Class'
+
 
 import PrivateRoute from './PrivateRoute';
 import { AuthContext, AuthProvider } from './AuthContext';
@@ -73,7 +75,7 @@ function App() {
             <Route path="/add-student" element={<AddStudent />} />
             <Route path="/update-student/:sid" element={<UpdateStudent />} />
             <Route path="/feedback" element={<Feedback />} />
-            <Route path="/adviserCase" element={<AdvivserCase />} /> 
+            
             </>
           )}
 
@@ -89,6 +91,13 @@ function App() {
             <Route path="/notification" element={<Notification />} />
             <Route path="/student" element={<PrivateRoute element={<Student />} />}  />
             <Route path="/add-record/:sid" element={<AddStudentRecord />} /> 
+            </>
+
+          )}
+
+          {(loggedInUser && (loggedInUser.userType === 1 || loggedInUser.userType === 3 || loggedInUser.userType === 5 || loggedInUser.userType === 6)) && (
+            <>
+            <Route path="/report" element={<Report />} /> 
             </>
 
           )}

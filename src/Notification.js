@@ -195,7 +195,7 @@ const Notification = () => {
     <div className={styles.wrapper}>
       <div className={styles.sidenav}>
         <img src="/image-removebg-preview (1).png" alt="" className={styles["sidebar-logo"]} />
-        {createSidebarLink("/record", "Dashboard", AssessmentIcon)}
+        {createSidebarLink("/record", "Record", AssessmentIcon)}
         {createSidebarLink("/student", "Student", SchoolIcon)}
         {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
         {loggedInUser.userType !== 2 && (

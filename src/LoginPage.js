@@ -29,6 +29,12 @@ const LoginPage = () => {
             case 4:
               navigate('/AdminDashboard', { state: { userObject } });
               break;
+            case 5:
+              navigate('/report', { state: { userObject } }); // Redirect for userType 5
+              break;
+            case 6:
+              navigate('/record', { state: { userObject } }); // Redirect for userType 5
+              break;  
             default:
               navigate('/');
           }
@@ -59,7 +65,7 @@ const LoginPage = () => {
       const { userType, userObject } = response.data;
       login(response.data); // Update context
 
-      console.log("User id: ",response.data.uid)  
+      console.log("User id: ", response.data.uid);
       const loginTime = new Date().toISOString(); // Get current time in ISO format
       await axios.post('http://localhost:8080/time-log/login', {
         userId: response.data.uid, // Assuming `userObject` contains `uid`
@@ -75,6 +81,12 @@ const LoginPage = () => {
         case 4:
           navigate('/AdminDashboard', { state: { userObject } });
           break;
+        case 5:
+          navigate('/report', { state: { userObject } }); // Redirect for userType 5
+          break;
+        case 6:
+          navigate('/record', { state: { userObject } }); // Redirect for userType 5
+          break;  
         default:
           alert('Incorrect Username or Password');
       }

@@ -116,17 +116,11 @@ const Record = () => {
         <div className={navStyles.wrapper}>
             <div className={navStyles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={navStyles['sidebar-logo']} />
-                {createSidebarLink("/record", "Dashboard", AssessmentIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {loggedInUser.userType !== 2 && (
-                    <>
-                        {loggedInUser.userType === 3
-                            ? createSidebarLink("/adviserCase", "Case", PostAddIcon)
-                            : createSidebarLink("/case", "Case", PostAddIcon)}
-                    </>
-                )}
-                {loggedInUser.userType === 2     && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
+                {createSidebarLink("/record", "Record", AssessmentIcon)}
+                {loggedInUser.userType !== 2 && loggedInUser.userType !== 6 && createSidebarLink("/student", "Student", SchoolIcon)}
+                {loggedInUser.userType !== 2 && loggedInUser.userType !== 6 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+                {loggedInUser.userType !== 2 && createSidebarLink("/report", "Report", PostAddIcon)}
+                {loggedInUser.userType === 2 && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType === 1 && createSidebarLink("/timeLog", "Time Log", AccessTimeFilledIcon)}
                 <button className={navStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>

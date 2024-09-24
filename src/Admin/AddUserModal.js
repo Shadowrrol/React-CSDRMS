@@ -44,6 +44,20 @@ const AddUserModal = ({ isOpen, onClose }) => {
                     >
                         Adviser
                     </button>
+                    <button
+                        type="button"
+                        className={styles['add-user-modal-button']}
+                        onClick={() => handleOpenModal('Teacher')}
+                    >
+                        Teacher
+                    </button>
+                    <button
+                        type="button"
+                        className={styles['add-user-modal-button']}
+                        onClick={() => handleOpenModal('Guidance')}
+                    >
+                        Guidance
+                    </button>
                 </form>
                 {activeRole && (
                     <RegisterUserModal

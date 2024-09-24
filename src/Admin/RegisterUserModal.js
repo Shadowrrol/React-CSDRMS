@@ -27,6 +27,8 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
         if (isOpen) {
             setMessage('');
             setError('');
+
+            // Fetch grade, section, and school year for Adviser role only
             if (role === 'Adviser') {
                 axios.get('http://localhost:8080/class/allUniqueGrades')
                     .then(response => {
@@ -35,7 +37,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                     .catch(error => {
                         console.error('Error fetching grades:', error);
                     });
-                
+
                 axios.get('http://localhost:8080/schoolYear/getAllSchoolYears')
                     .then(response => {
                         setSchoolYears(response.data.map(year => year.schoolYear));
@@ -44,13 +46,18 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                         console.error('Error fetching school years:', error);
                     });
             }
+
             // Set userType based on role
             setUserData(prevUserData => ({
                 ...prevUserData,
-                userType: role === 'Principal' ? 2 : role === 'Adviser' ? 3 : 1
+                userType: role === 'Principal' ? 2 
+                          : role === 'Adviser' ? 3 
+                          : role === 'Teacher' ? 5 
+                          : role === 'Guidance' ? 6 
+                          : 1
             }));
         }
-    }, [isOpen, role]); // Removed userData from dependency array to avoid unnecessary effect executions
+    }, [isOpen, role]);
 
     const handleGradeChange = (e) => {
         const grade = e.target.value;
@@ -71,8 +78,11 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const endpoint = role === 'Adviser' ? 'registerAdviser' :
-                         role === 'Principal' ? 'registerPrincipal' : 'registerSSO';
+        const endpoint = role === 'Adviser' ? 'registerAdviser' 
+                         : role === 'Principal' ? 'registerPrincipal' 
+                         : role === 'Teacher' ? 'registerTeacher' 
+                         : role === 'Guidance' ? 'registerGuidance' 
+                         : 'registerSSO';
         try {
             const response = await axios.post(`http://localhost:8080/user/${endpoint}`, userData);
             console.log(response.data);
@@ -228,5 +238,3 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
 };
 
 export default RegisterUserModal;
-
-
