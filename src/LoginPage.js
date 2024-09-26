@@ -53,25 +53,30 @@ const LoginPage = () => {
         username,
         password,
       });
-
+  
       if (!response.data.userType) {
         alert('Incorrect Username or Password');
         return;
       }
-
+  
       const authTokenString = JSON.stringify(response.data);
       localStorage.setItem('authToken', authTokenString);
-
+  
       const { userType, userObject } = response.data;
       login(response.data); // Update context
-
+  
       console.log("User id: ", response.data.uid);
-      const loginTime = new Date().toISOString(); // Get current time in ISO format
-      await axios.post('http://localhost:8080/time-log/login', {
-        userId: response.data.uid, // Assuming `userObject` contains `uid`
-        loginTime: loginTime,
-      });
-
+  
+      // Only log time if the userType is 3
+      if (userType === 3) {
+        const loginTime = new Date().toISOString(); // Get current time in ISO format
+        await axios.post('http://localhost:8080/time-log/login', {
+          userId: response.data.uid, // Assuming `userObject` contains `uid`
+          loginTime: loginTime,
+        });
+      }
+  
+      // Redirect based on userType
       switch (userType) {
         case 1:
         case 2:
@@ -85,7 +90,7 @@ const LoginPage = () => {
           navigate('/report', { state: { userObject } }); // Redirect for userType 5
           break;
         case 6:
-          navigate('/record', { state: { userObject } }); // Redirect for userType 5
+          navigate('/record', { state: { userObject } }); // Redirect for userType 6
           break;  
         default:
           alert('Incorrect Username or Password');
@@ -95,6 +100,7 @@ const LoginPage = () => {
       alert('Incorrect Username or Password');
     }
   };
+  
 
   return (
     <div className={styles.loginbg}>

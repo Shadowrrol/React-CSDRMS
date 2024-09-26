@@ -7,7 +7,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import styles1 from './GlobalDesign.module.css';
 
-const ViewStudentSanctions = () => {
+const ViewStudentSuspensions = () => {
     const { sid } = useParams();
     const navigate = useNavigate();
     const [sanctions, setSanctions] = useState([]);
@@ -68,4 +68,4 @@ const ViewStudentSanctions = () => {
     );
 };
 
-export default ViewStudentSanctions;
+export default ViewStudentSuspensions;

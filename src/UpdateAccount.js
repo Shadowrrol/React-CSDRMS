@@ -146,7 +146,7 @@ const UpdateAccount = () => {
           {loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/student", "Student", SchoolIcon)}
           {loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
           {loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-          {loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/case", "Case", PostAddIcon)}
+          {loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/report", "Report", PostAddIcon)}
           {loggedInUser.userType !== 3 && loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
           {loggedInUser.userType !== 2 && loggedInUser.userType !== 4 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
           

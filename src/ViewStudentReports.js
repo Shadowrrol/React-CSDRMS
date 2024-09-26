@@ -8,7 +8,7 @@ import styles1 from './GlobalDesign.module.css';
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import LocalPoliceIcon from "@mui/icons-material/LocalPolice";
 
-const ViewStudentCases = () => {
+const ViewStudentReports = () => {
     const { sid } = useParams();
     const navigate = useNavigate();    
     const [cases, setCases] = useState([]);
@@ -71,4 +71,4 @@ const ViewStudentCases = () => {
     );
 };
 
-export default ViewStudentCases;
+export default ViewStudentReports;

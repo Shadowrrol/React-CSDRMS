@@ -56,28 +56,35 @@ const Record = () => {
     
 
     const handleLogout = async () => {
-        console.log("userId:",uid)
+        console.log("userId:", uid);
         const logoutTime = new Date().toISOString();
+      
         try {
+          // Check if the userType is 3 before proceeding
+          if (userType === 3) {
             // Fetch timeLogId using userId
             const response = await axios.get(`http://localhost:8080/time-log/getLatestLog/${uid}`);
             const { timelog_id: timelogId } = response.data; // Destructure timeLogId
-
-            console.log("1: ",timelogId);
-            console.log("2: ",logoutTime);
+      
+            console.log("1: ", timelogId);
+            console.log("2: ", logoutTime);
+      
             // Send logout time to backend
             await axios.post('http://localhost:8080/time-log/logout', {
-                timelogId, // Use timeLogId
-                logoutTime,
+              timelogId, // Use timeLogId
+              logoutTime,
             });
-
-            // Clear tokens and navigate to login
-            localStorage.removeItem('authToken');
-            navigate('/');
+      
+            console.log('Logout time logged successfully.');
+          }
+      
+          // Clear tokens and navigate to login page regardless of userType
+          localStorage.removeItem('authToken');
+          navigate('/');
         } catch (error) {
-            console.error('Error logging out', error);
+          console.error('Error logging out', error);
         }
-    };
+      };
 
     const filterStudentRecords = () => {
         return studentRecords.filter(record => {
@@ -120,7 +127,7 @@ const Record = () => {
                 {loggedInUser.userType !== 2 && loggedInUser.userType !== 6 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType !== 2 && loggedInUser.userType !== 6 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/report", "Report", PostAddIcon)}
-                {loggedInUser.userType === 2 && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType === 2 && createSidebarLink("/viewSuspensions", "Suspensions", LocalPoliceIcon)}
                 {loggedInUser.userType === 1 && createSidebarLink("/timeLog", "Time Log", AccessTimeFilledIcon)}
                 <button className={navStyles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>

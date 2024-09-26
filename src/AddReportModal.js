@@ -8,8 +8,6 @@ const AddReportModal = ({ onClose, refreshReports }) => {
 
   const [newReport, setNewReport] = useState({
     complaint: '',
-    adviser: '',
-    received: '',
     studentId: '',
   });
 
@@ -46,8 +44,7 @@ const AddReportModal = ({ onClose, refreshReports }) => {
         ...newReport,
         date: new Date().toISOString().split('T')[0], // Automatically set today's date
         time: new Date().toLocaleTimeString(), // Automatically set current time
-        complainant: loggedInUser.username,
-        id: newReport.studentId, // Use the logged-in user's username as the complainant
+        complainant: loggedInUser.username, // Set the logged-in user's username as the complainant
       };
 
       await axios.post('http://localhost:8080/report/insertReport', reportData);
@@ -113,7 +110,7 @@ const AddReportModal = ({ onClose, refreshReports }) => {
           )}
         </div>
 
-        {/* Complaint, Adviser, and Received Fields */}
+        {/* Complaint Field */}
         <div>
           <textarea
             type="text"
@@ -122,20 +119,6 @@ const AddReportModal = ({ onClose, refreshReports }) => {
             value={newReport.complaint}
             onChange={handleInputChange}
           />
-          <input
-            type="text"
-            name="adviser"
-            placeholder="Adviser"
-            value={newReport.adviser}
-            onChange={handleInputChange}
-          />
-          {/* <input
-            type="text"
-            name="received"
-            placeholder="Received"
-            value={newReport.received}
-            onChange={handleInputChange}
-          /> */}
         </div>
 
         {/* Modal Actions */}

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import styles from './TimeLog.module.css'; 
 import navStyles from '../Navigation.module.css'; 
+import AdviserTimeLogModal from './AdviserTimeLogModal'; // Import the new modal
 
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
@@ -22,6 +23,9 @@ const TimeLog = () => {
     const [timeLogs, setTimeLogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
+    const [selectedAdviser, setSelectedAdviser] = useState(null); // Selected adviser state
+    const [searchQuery, setSearchQuery] = useState(''); // State for search query
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
     const { uid } = loggedInUser;
@@ -44,22 +48,25 @@ const TimeLog = () => {
     }, []);
 
     const handleLogout = async () => {
-        const logoutTime = new Date().toISOString();
-        try {
-            const response = await axios.get(`http://localhost:8080/time-log/getLatestLog/${uid}`);
-            const { timelog_id: timelogId } = response.data;
-
-            await axios.post('http://localhost:8080/time-log/logout', {
-                timelogId,
-                logoutTime,
-            });
-
-            localStorage.removeItem('authToken');
-            navigate('/');
-        } catch (error) {
-            console.error('Error logging out', error);
-        }
+        localStorage.removeItem("authToken");
+        navigate("/");
     };
+
+    const openModal = (adviser) => {
+        setSelectedAdviser(adviser); // Set the selected adviser
+        setIsModalOpen(true); // Open the modal
+    };
+
+    const closeModal = () => {
+        setSelectedAdviser(null); // Clear the selected adviser
+        setIsModalOpen(false); // Close the modal
+    };
+
+    // Filter time logs based on search query
+    const filteredTimeLogs = timeLogs.filter(log => {
+        const fullName = `${log.adviser.firstname} ${log.adviser.middlename || ''} ${log.adviser.lastname}`.toLowerCase();
+        return fullName.includes(searchQuery.toLowerCase());
+    });
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -68,48 +75,68 @@ const TimeLog = () => {
         <div className={navStyles.wrapper}>
             <div className={navStyles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="logo" className={navStyles['sidebar-logo']} />
-                {createSidebarLink("/report", "Record", AssessmentIcon)}
+                {createSidebarLink("/record", "Record", AssessmentIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {loggedInUser.userType !== 2 && (
-                    <>
-                        {loggedInUser.userType === 3
-                            ? createSidebarLink("/adviserCase", "Case", PostAddIcon)
-                            : createSidebarLink("/case", "Case", PostAddIcon)}
-                    </>
-                )}
-                {loggedInUser.userType !== 1 && loggedInUser.userType !== 3 && createSidebarLink("/viewSanctions", "Sanctions", LocalPoliceIcon)}
+                {loggedInUser.userType !== 2 && createSidebarLink("/report", "Report", PostAddIcon)}
                 {loggedInUser.userType === 1 && createSidebarLink("/timeLog", "Time Log", AccessTimeFilledIcon)}
                 <button className={navStyles.logoutbtn} onClick={handleLogout}>Logout</button>
             </div>
 
             <div className={navStyles.content}>
                 <h1>Time Logs</h1>
+
+                {/* Search input for filtering */}
+                <div className={styles.searchBar}>
+                    <input
+                        type="text"
+                        placeholder="Search by adviser name..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className={styles.searchInput}
+                    />
+                </div>
+
                 <div className={styles['table-container']}>
                     <table className={styles['time-table']}>
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>User ID</th>
+                                <th>Adviser</th>
                                 <th>Login Time</th>
                                 <th>Logout Time</th>
                                 <th>Duration</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {timeLogs.map(log => (
+                            {filteredTimeLogs.map(log => (
                                 <tr key={log.timelog_id}>
-                                    <td>{log.timelog_id}</td>
-                                    <td>{log.userId}</td>
+                                    <td>{log.adviser.firstname} {log.adviser.middlename} {log.adviser.lastname}</td>
                                     <td>{new Date(log.loginTime).toLocaleString()}</td>
                                     <td>{log.logoutTime ? new Date(log.logoutTime).toLocaleString() : 'Not logged out yet'}</td>
                                     <td>{log.duration} minute/s</td>
+                                    <td>
+                                        <button 
+                                            className={styles.viewButton} 
+                                            onClick={() => openModal(log.adviser)}
+                                        >
+                                            View Time Logs
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            {/* Render the modal for displaying adviser-specific time logs */}
+            {isModalOpen && (
+                <AdviserTimeLogModal 
+                    adviser={selectedAdviser} 
+                    onClose={closeModal} 
+                />
+            )}
         </div>
     );
 };

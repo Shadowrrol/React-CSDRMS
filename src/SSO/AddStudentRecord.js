@@ -122,7 +122,7 @@ const AddStudentRecord = () => {
                 {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
                 {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/case", "Case", PostAddIcon)}
+                {loggedInUser.userType !== 2 && createSidebarLink("/report", "Report", PostAddIcon)}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
                 {loggedInUser.userType !== 1 && loggedInUser.userType !== 2 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>

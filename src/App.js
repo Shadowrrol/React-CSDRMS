@@ -14,9 +14,9 @@ import Sanction from './SSO/Sanction';
 import TimeLog from './SSO/TimeLog'
 
 
-import ViewStudentCases from './ViewStudentCases';
-import ViewStudentSanctions from './ViewStudentSanctions';
-import ViewSanctions from './Principal/ViewSanctions';
+import ViewStudentReports from './ViewStudentReports';
+import ViewStudentSuspensions from './ViewStudentSuspensions';
+import ViewSuspensions from './Principal/ViewSuspensions';
 
 import Followup from './Adviser/Followup';
 import AddStudent from './Adviser/AddStudent';
@@ -62,9 +62,9 @@ function App() {
 
           {loggedInUser && loggedInUser.userType === 2 && (
             <>
-             <Route path="/viewSanctions" element={<ViewSanctions />} />
-             <Route path="/view-student-cases/:sid" element={<ViewStudentCases />} /> 
-             <Route path="/view-student-sanctions/:sid" element={<ViewStudentSanctions />} /> 
+             <Route path="/viewSuspensions" element={<ViewSuspensions />} />
+             <Route path="/view-student-reports/:sid" element={<ViewStudentReports />} /> 
+             <Route path="/view-student-suspensions/:sid" element={<ViewStudentSuspensions />} /> 
             </>
 
           )}

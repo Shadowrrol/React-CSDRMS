@@ -198,13 +198,8 @@ const Notification = () => {
         {createSidebarLink("/record", "Record", AssessmentIcon)}
         {createSidebarLink("/student", "Student", SchoolIcon)}
         {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-        {loggedInUser.userType !== 2 && (
-          <>
-            {loggedInUser.userType === 3
-              ? createSidebarLink("/adviserCase", "Case", PostAddIcon)
-              : createSidebarLink("/case", "Case", PostAddIcon)}
-          </>
-        )}
+        {loggedInUser.userType !== 2 && createSidebarLink("/report", "Report", PostAddIcon)}
+        
          {loggedInUser.userType === 1 && createSidebarLink("/timelog", "Time Log", AccessTimeFilledIcon)}
         <button className={styles["logoutbtn"]} onClick={handleLogout}>
           Logout
