@@ -25,7 +25,9 @@ const Student = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [file, setFile] = useState(null);
-    const [isUploading, setIsUploading] = useState(false); // State for upload loader
+    const [schoolYears, setSchoolYears] = useState([]);
+    const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,10 +45,16 @@ const Student = () => {
         } else {
             console.error('Logged-in user details are missing.');
         }
+
+        // Fetch school years for the dropdown
+        fetch('http://localhost:8080/schoolYear/getAllSchoolYears')
+            .then(response => response.json())
+            .then(data => setSchoolYears(data))
+            .catch(error => console.error('Error fetching school years:', error));
+
     }, [loggedInUser]);
 
     useEffect(() => {
-        // Reset selectedStudent if it's not in the filtered list
         if (students.length === 0 || !students.some(s => s.id === selectedStudent?.id)) {
             setSelectedStudent(null);
         }
@@ -89,9 +97,17 @@ const Student = () => {
         setFile(e.target.files[0]);
     };
 
+    const handleSchoolYearChange = (e) => {
+        setSelectedSchoolYear(e.target.value);
+    };
+
     const handleFileUpload = async () => {
         if (!file) {
             alert('Please select a file first.');
+            return;
+        }
+        if (!selectedSchoolYear) {
+            alert('Please select a school year.');
             return;
         }
 
@@ -99,6 +115,7 @@ const Student = () => {
 
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('schoolYear', selectedSchoolYear); // Add school year to the request
 
         try {
             const response = await axios.post('http://localhost:8080/student/import', formData, {
@@ -117,7 +134,6 @@ const Student = () => {
         }
     };
 
-    // Updated filtering logic
     const filteredStudents = useMemo(() => students.filter(student => {
         const query = searchQuery.toLowerCase();
         const name = `${student.firstname} ${student.middlename ? student.middlename + ' ' : ''}${student.lastname}`.toLowerCase();
@@ -160,6 +176,12 @@ const Student = () => {
                     {loggedInUser.userType === 1 && (
                         <div className={studentStyles['import-section']}>
                             <input type="file" onChange={handleFileChange} accept=".xls,.xlsx" />
+                            <select onChange={handleSchoolYearChange} value={selectedSchoolYear} className={studentStyles['school-year-dropdown']}>
+                                <option value="">Select School Year</option>
+                                {schoolYears.map((year) => (
+                                    <option key={year.schoolYear_ID} value={year.schoolYear}>{year.schoolYear}</option>
+                                ))}
+                            </select>
                             <button onClick={handleFileUpload} disabled={isUploading} className={studentStyles['import-button']}>
                                 {isUploading ? 'Uploading...' : 'Import Student Data'}
                             </button>
@@ -174,7 +196,7 @@ const Student = () => {
                                         <th>SID</th>
                                         <th>Name</th>
                                         <th>Grade - Section</th>
-                                        <th>Contact No.</th>
+                                        <th>Gender</th>
                                         {loggedInUser.userType === 3 && <th>Action</th>}
                                     </tr>
                                 </thead>
@@ -187,9 +209,9 @@ const Student = () => {
                                             className={selectedStudent?.id === student.id ? studentStyles['selected-row'] : ''}
                                         >
                                             <td>{student.sid}</td>
-                                            <td>{`${student.firstname} ${student.middlename ? student.middlename + ' ' : ''}${student.lastname}`}</td>
+                                            <td>{student.name}</td>
                                             <td>{`${student.grade} - ${student.section}`}</td>
-                                            <td>{student.con_num}</td>
+                                            <td>{student.gender}</td>
                                             {loggedInUser.userType === 3 && (
                                                 <td>
                                                     <Link to={`/update-student/${student.sid}`}>
@@ -207,10 +229,9 @@ const Student = () => {
                         )}
                     </div>
 
-                    {/* Add Report Button */}
                     {selectedStudent && (
                         <button onClick={handleAddRecord} className={studentStyles['add-report-button']} disabled={!selectedStudent}>
-                            Add Record for {selectedStudent.firstname} {selectedStudent.lastname}
+                            Add Record for {selectedStudent.name} 
                         </button>
                     )}
                 </div>
