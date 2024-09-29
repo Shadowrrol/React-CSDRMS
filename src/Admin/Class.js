@@ -9,7 +9,7 @@ import MenuPopupState from '../components/MenuPopupState';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
-// Function to create a sidebar link with an icon
+// Function to create sidebar links with icons
 const createSidebarLink = (to, text, IconComponent) => (
   <Link to={to} className={navStyles['styled-link']} key={to}>
     <IconComponent className={navStyles.icon} />
@@ -27,8 +27,8 @@ function Class() {
   const [showAddGrade, setShowAddGrade] = useState(false);
   const [showAddSchoolYear, setShowAddSchoolYear] = useState(false);
 
-  const authToken = localStorage.getItem('authToken'); // Get auth token from localStorage
-  const loggedInUser = authToken ? JSON.parse(authToken) : null; // Parse logged in user from token
+  const authToken = localStorage.getItem('authToken');
+  const loggedInUser = authToken ? JSON.parse(authToken) : null;
 
   const handleOpen = () => setShowAddGrade(true);
   const handleClose = () => setShowAddGrade(false);
@@ -69,11 +69,12 @@ function Class() {
     }
 
     try {
+      // Send the grade as a string (like G7, G8)
       await axios.post("http://localhost:8080/class/addClass", {
-        grade: parseInt(newGrade), // Ensuring grade is treated as an integer
+        grade: newGrade,  // Grade as a string (G7, G8, etc.)
         section: newSection,
       });
-      fetchClasses();
+      fetchClasses(); // Refresh classes after adding
       handleClose();
     } catch (error) {
       console.error("Error adding grade:", error);
@@ -100,7 +101,7 @@ function Class() {
       await axios.post("http://localhost:8080/schoolYear/addSchoolYear", {
         schoolYear: newSchoolYear,
       });
-      fetchSchoolYears();
+      fetchSchoolYears(); // Refresh school years after adding
       handleCloseSchoolYear();
     } catch (error) {
       console.error("Error adding school year:", error);
@@ -112,29 +113,22 @@ function Class() {
     setSearchTerm(e.target.value);
   };
 
-  // Filter classes and school years based on search term
   const filteredClasses = classes
-    .filter((classItem) =>
-      classItem.grade.toString().includes(searchTerm) ||
-      classItem.section.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .sort((a, b) => a.grade - b.grade); // Sort by grade in ascending order
+    .filter((classItem) => {
+      const gradeMatch = classItem.grade?.toString().includes(searchTerm);
+      const sectionMatch = classItem.section?.toLowerCase().includes(searchTerm.toLowerCase());
+      return gradeMatch || sectionMatch;
+    })
+    .sort((a, b) => a.grade.localeCompare(b.grade)); // Use localeCompare for sorting strings
 
-  const filteredSchoolYears = schoolYears.filter((schoolYear) =>
-    schoolYear.schoolYear.includes(searchTerm)
-  );
+  const filteredSchoolYears = schoolYears
+    .filter((schoolYear) => schoolYear.schoolYear?.includes(searchTerm));
 
   useEffect(() => {
     document.title = "Admin | Class";
     fetchClasses();
     fetchSchoolYears();
-    if (loggedInUser) {
-      // You can use loggedInUser to determine access or other logic here
-      console.log("Logged in user:", loggedInUser);
-    } else {
-      console.log("No user logged in");
-    }
-  }, [loggedInUser]); // Adding loggedInUser to dependency array
+  }, [loggedInUser]);
 
   return (
     <div className={navStyles.wrapper}>
@@ -210,10 +204,10 @@ function Class() {
               onChange={(e) => setNewGrade(e.target.value)}
             >
               <option value="">Select Grade</option>
-              <option value="7">Grade 7</option>
-              <option value="8">Grade 8</option>
-              <option value="9">Grade 9</option>
-              <option value="10">Grade 10</option>
+              <option value="G7">Grade 7</option>
+              <option value="G8">Grade 8</option>
+              <option value="G9">Grade 9</option>
+              <option value="G10">Grade 10</option>
             </select>
             <input
               type="text"

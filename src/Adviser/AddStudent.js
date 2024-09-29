@@ -16,36 +16,48 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 const AddStudent = () => {
     useEffect(() => {
         document.title = "Adviser | Add Student";
-      }, []); 
+    }, []); 
+
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
     const navigate = useNavigate(); 
+
     const [studentData, setStudentData] = useState({
         sid: '',
-        firstname: '',
-        middlename: '',
-        lastname: '',
-        grade: loggedInUser.grade,
-        section: loggedInUser.section,
-        schoolYear: loggedInUser.schoolYear,
-        adviserId:  loggedInUser.uid,
-        con_num: '',
+        name: '',
+        grade: '',
+        section: '',
+        gender: '', // Adding gender field to the state
+        schoolYear: '',
         current: 1
     });
-    
-    const createSidebarLink = (to, text, IconComponent) => (
-        <Link to={to} className={styles['styled-link']}>
-            <IconComponent className={styles.icon} /> 
-            <span className={styles['link-text']}>{text}</span> 
-        </Link>
-    );
-    
-    const handleLogout = () => {
-        // Clear the authentication token from localStorage
-        localStorage.removeItem('authToken');
-        // Redirect the user to the login page
-        navigate('/');
-    };
+
+    const [grades, setGrades] = useState([]);
+    const [sections, setSections] = useState([]);
+    const [schoolYears, setSchoolYears] = useState([]);
+
+    // Fetch grades and school years on component mount
+    useEffect(() => {
+        fetch('http://localhost:8080/class/allUniqueGrades')
+            .then((response) => response.json())
+            .then((data) => setGrades(data))
+            .catch((error) => console.error('Error fetching grades:', error));
+
+        fetch('http://localhost:8080/schoolYear/getAllSchoolYears')
+            .then((response) => response.json())
+            .then((data) => setSchoolYears(data))
+            .catch((error) => console.error('Error fetching school years:', error));
+    }, []);
+
+    // Fetch sections when grade is selected
+    useEffect(() => {
+        if (studentData.grade) {
+            fetch(`http://localhost:8080/class/sections/${studentData.grade}`)
+                .then((response) => response.json())
+                .then((data) => setSections(data))
+                .catch((error) => console.error('Error fetching sections:', error));
+        }
+    }, [studentData.grade]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -65,14 +77,24 @@ const AddStudent = () => {
             if (response.ok) {
                 navigate(`/student`);
             } else {
-                // Handle errors, maybe show an error message
                 alert('Student with this ID and school year already exists.');
             }
         })
         .catch((error) => {
             console.error('Error inserting student:', error);
-            
         });
+    };
+
+    const createSidebarLink = (to, text, IconComponent) => (
+        <Link to={to} className={styles['styled-link']}>
+            <IconComponent className={styles.icon} /> 
+            <span className={styles['link-text']}>{text}</span> 
+        </Link>
+    );
+
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        navigate('/');
     };
 
     return (
@@ -106,84 +128,79 @@ const AddStudent = () => {
                                 />
                             </div>
                             <div className={styles1['form-group']}>
-                                <label htmlFor="firstname">First Name:</label>
+                                <label htmlFor="name">Name:</label>
                                 <input
                                     type="text"
-                                    id="firstname"
-                                    name="firstname"
-                                    value={studentData.firstname}
+                                    id="name"
+                                    name="name"
+                                    value={studentData.name}
                                     onChange={handleChange}
-                                    placeholder="First Name"
-                                />
-                            </div>
-                            <div className={styles1['form-group']}>
-                                <label htmlFor="middlename">Middle Name:</label>
-                                <input
-                                    type="text"
-                                    id="middlename"
-                                    name="middlename"
-                                    value={studentData.middlename}
-                                    onChange={handleChange}
-                                    placeholder="Middle Name"
-                                />
-                            </div>
-                            <div className={styles1['form-group']}>
-                                <label htmlFor="lastname">Last Name:</label>
-                                <input
-                                    type="text"
-                                    id="lastname"
-                                    name="lastname"
-                                    value={studentData.lastname}
-                                    onChange={handleChange}
-                                    placeholder="Last Name"
+                                    placeholder="Lastname, Firstname Middlename"
                                 />
                             </div>
                             <div className={styles1['form-group']}>
                                 <label htmlFor="grade">Grade:</label>
-                                <input
-                                    type="number"
+                                <select
                                     id="grade"
                                     name="grade"
                                     value={studentData.grade}
                                     onChange={handleChange}
-                                    placeholder="Grade"
-                                    disabled // Disable input
-                                />
+                                >
+                                    <option value="">Select Grade</option>
+                                    {grades.map((grade) => (
+                                        <option key={grade} value={grade}>
+                                            {grade}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className={styles1['form-group']}>
                                 <label htmlFor="section">Section:</label>
-                                <input
-                                    type="text"
+                                <select
                                     id="section"
                                     name="section"
                                     value={studentData.section}
                                     onChange={handleChange}
-                                    placeholder="Section"
-                                    disabled // Disable input
-                                />
+                                    disabled={!studentData.grade} // Disable until grade is selected
+                                >
+                                    <option value="">Select Section</option>
+                                    {sections.map((section, index) => (
+                                        <option key={index} value={section}>
+                                            {section}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            {/* Gender field added here */}
+                            <div className={styles1['form-group']}>
+                                <label htmlFor="gender">Gender:</label>
+                                <select
+                                    id="gender"
+                                    name="gender"
+                                    value={studentData.gender}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
                             </div>
                             <div className={styles1['form-group']}>
                                 <label htmlFor="schoolYear">School Year:</label>
-                                <input
-                                    type="text"
+                                <select
                                     id="schoolYear"
                                     name="schoolYear"
                                     value={studentData.schoolYear}
                                     onChange={handleChange}
-                                    placeholder="School Year"
-                                    disabled // Disable input
-                                />
-                            </div>
-                            <div className={styles1['form-group']}>
-                                <label htmlFor="con_num">Contact Number:</label>
-                                <input
-                                    type="text"
-                                    id="con_num"
-                                    name="con_num"
-                                    value={studentData.con_num}
-                                    onChange={handleChange}
-                                    placeholder="Contact Number"
-                                />
+                                >
+                                    <option value="">Select School Year</option>
+                                    {schoolYears.map((sy) => (
+                                        <option key={sy.schoolYear_ID} value={sy.schoolYear}>
+                                            {sy.schoolYear}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <button type="submit" className={styles1['add-student-button']}>Add Student</button>
                         </div>

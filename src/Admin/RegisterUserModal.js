@@ -193,7 +193,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                                 >
                                     <option value="">Select Grade</option>
                                     {grades.map(grade => (
-                                        <option key={grade} value={grade}>Grade {grade}</option>
+                                        <option key={grade} value={grade}>{grade}</option>
                                     ))}
                                 </select>
                             </div>
