@@ -34,6 +34,7 @@ const AdviserTimeLogModal = ({ adviser, onClose }) => {
 
     const handleMonthChange = (event) => {
         setSelectedMonth(event.target.value);
+        setSelectedWeek('all'); // Reset the week when the month changes
     };
 
     const handleWeekChange = (event) => {
@@ -54,8 +55,8 @@ const AdviserTimeLogModal = ({ adviser, onClose }) => {
             return false;
         }
 
-        // Filter by week
-        if (selectedWeek !== 'all') {
+        // Filter by week (only apply if a month is selected)
+        if (selectedMonth !== 'all' && selectedWeek !== 'all') {
             const weekOfMonth = Math.ceil(logDate.getDate() / 7); // Calculate the week number of the month
             if (weekOfMonth.toString() !== selectedWeek) {
                 return false;
@@ -109,16 +110,19 @@ const AdviserTimeLogModal = ({ adviser, onClose }) => {
                         </select>
                     </label>
 
-                    <label>
-                        Week:
-                        <select value={selectedWeek} onChange={handleWeekChange}>
-                            <option value="all">All</option>
-                            <option value="1">Week 1</option>
-                            <option value="2">Week 2</option>
-                            <option value="3">Week 3</option>
-                            <option value="4">Week 4</option>
-                        </select>
-                    </label>
+                    {/* Conditionally render the week filter if a month is selected */}
+                    {selectedMonth !== 'all' && (
+                        <label>
+                            Week:
+                            <select value={selectedWeek} onChange={handleWeekChange}>
+                                <option value="all">All</option>
+                                <option value="1">Week 1</option>
+                                <option value="2">Week 2</option>
+                                <option value="3">Week 3</option>
+                                <option value="4">Week 4</option>
+                            </select>
+                        </label>
+                    )}
                 </div>
 
                 {/* Display total login count and total duration */}

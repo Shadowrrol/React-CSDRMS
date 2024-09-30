@@ -6,6 +6,7 @@ import Student from './Student';
 import Notification from './Notification';
 import Record from './Record';
 import Report from './Report';
+import ViewStudentRecord from './ViewStudentRecord';
 
 import Feedback from './SSO/Feedback';
 import Case from './SSO/Case';
@@ -21,7 +22,6 @@ import ViewSuspensions from './Principal/ViewSuspensions';
 import Followup from './Adviser/Followup';
 import AddStudent from './Adviser/AddStudent';
 import UpdateStudent from './Adviser/UpdateStudent';
-import ViewStudentRecord from './Adviser/ViewStudentRecord';
 import AdvivserCase from './Adviser/AdviserCase';
 import UpdateAccount from './UpdateAccount';
 

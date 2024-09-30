@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import styles from './TimeLog.module.css'; 
 import navStyles from '../Navigation.module.css'; 
-import AdviserTimeLogModal from './AdviserTimeLogModal'; // Import the new modal
+import AdviserTimeLogModal from './AdviserTimeLogModal'; // Import the modal
 
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
@@ -20,7 +20,7 @@ const createSidebarLink = (to, text, IconComponent) => (
 );
 
 const TimeLog = () => {
-    const [timeLogs, setTimeLogs] = useState([]);
+    const [advisers, setAdvisers] = useState([]); // Changed from timeLogs to advisers
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
@@ -32,19 +32,20 @@ const TimeLog = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchTimeLogs = async () => {
+        const fetchAdvisers = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/time-log/getAll');
-                setTimeLogs(response.data);
+                // Updated to fetch advisers instead of time logs
+                const response = await axios.get('http://localhost:8080/user/getAllAdvisers');
+                setAdvisers(response.data);
             } catch (err) {
-                setError('Failed to fetch time logs');
+                setError('Failed to fetch advisers');
                 console.error(err);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchTimeLogs();
+        fetchAdvisers();
     }, []);
 
     const handleLogout = async () => {
@@ -62,9 +63,9 @@ const TimeLog = () => {
         setIsModalOpen(false); // Close the modal
     };
 
-    // Filter time logs based on search query
-    const filteredTimeLogs = timeLogs.filter(log => {
-        const fullName = `${log.adviser.firstname} ${log.adviser.middlename || ''} ${log.adviser.lastname}`.toLowerCase();
+    // Filter advisers based on search query
+    const filteredAdvisers = advisers.filter(adviser => {
+        const fullName = `${adviser.firstname} ${adviser.middlename || ''} ${adviser.lastname}`.toLowerCase();
         return fullName.includes(searchQuery.toLowerCase());
     });
 
@@ -84,9 +85,9 @@ const TimeLog = () => {
             </div>
 
             <div className={navStyles.content}>
-                <h1>Time Logs</h1>
+                <h1>Advisers List</h1>
 
-                {/* Search input for filtering */}
+                {/* Search input for filtering advisers */}
                 <div className={styles.searchBar}>
                     <input
                         type="text"
@@ -101,24 +102,20 @@ const TimeLog = () => {
                     <table className={styles['time-table']}>
                         <thead>
                             <tr>
-                                <th>Adviser</th>
-                                <th>Login Time</th>
-                                <th>Logout Time</th>
-                                <th>Duration</th>
+                                <th>Adviser First Name</th>
+                                <th>Adviser Last Name</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredTimeLogs.map(log => (
-                                <tr key={log.timelog_id}>
-                                    <td>{log.adviser.firstname} {log.adviser.middlename} {log.adviser.lastname}</td>
-                                    <td>{new Date(log.loginTime).toLocaleString()}</td>
-                                    <td>{log.logoutTime ? new Date(log.logoutTime).toLocaleString() : 'Not logged out yet'}</td>
-                                    <td>{log.duration} minute/s</td>
+                            {filteredAdvisers.map(adviser => (
+                                <tr key={adviser.adviser_id}>
+                                    <td>{adviser.firstname}</td>
+                                    <td>{adviser.lastname}</td>
                                     <td>
                                         <button 
                                             className={styles.viewButton} 
-                                            onClick={() => openModal(log.adviser)}
+                                            onClick={() => openModal(adviser)}
                                         >
                                             View Time Logs
                                         </button>

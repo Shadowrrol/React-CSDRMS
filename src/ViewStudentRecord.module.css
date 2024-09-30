@@ -1,0 +1,45 @@
+/* Wrapper for the entire component */
+.view-student-record-wrapper {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Table styles for both tables */
+  .view-student-record-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .view-student-record-table th, 
+  .view-student-record-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .view-student-record-table th {
+    background-color: #f2f2f2;
+    text-align: left;
+  }
+  
+  .view-student-record-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .view-student-record-table tbody tr:hover {
+    background-color: #ddd;
+  }
+  
+  /* Header styles */
+  .view-student-record-header {
+    margin-bottom: 15px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .view-student-record-subheader {
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
