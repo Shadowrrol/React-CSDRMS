@@ -75,7 +75,7 @@ const AddReportModal = ({ onClose, refreshReports }) => {
   // Handle student selection
   const handleSelectStudent = (student) => {
     setNewReport({ ...newReport, studentId: student.id });
-    setSearchQuery(`${student.sid} - ${student.firstname} ${student.lastname}`); // Update the search field with selected student's details
+    setSearchQuery(`${student.sid} - ${student.name}`); // Update the search field with selected student's details
     setShowDropdown(false); // Hide dropdown after selection
   };
 
@@ -103,7 +103,7 @@ const AddReportModal = ({ onClose, refreshReports }) => {
                   onClick={() => handleSelectStudent(student)}
                   className={styles.dropdownItem}
                 >
-                  {student.sid} - {student.firstname} {student.lastname}
+                  {student.sid} - {student.name}
                 </li>
               ))}
             </ul>

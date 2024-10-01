@@ -38,7 +38,6 @@ const RecordTable = () => {
     fetchGrades();
   }, []);
 
-  // Fetch records
   const fetchRecords = async () => {
     setLoading(true);
     try {
@@ -51,7 +50,6 @@ const RecordTable = () => {
     }
   };
 
-  // Fetch all available school years
   const fetchSchoolYears = async () => {
     try {
       const response = await axios.get('http://localhost:8080/schoolYear/getAllSchoolYears');
@@ -61,7 +59,6 @@ const RecordTable = () => {
     }
   };
 
-  // Fetch all unique grades
   const fetchGrades = async () => {
     try {
       const response = await axios.get('http://localhost:8080/class/allUniqueGrades');
@@ -71,7 +68,6 @@ const RecordTable = () => {
     }
   };
 
-  // Fetch sections based on the selected grade
   const fetchSectionsByGrade = async (grade) => {
     try {
       const response = await axios.get(`http://localhost:8080/class/sections/${grade}`);
@@ -81,22 +77,24 @@ const RecordTable = () => {
     }
   };
 
-  // Function to count the frequency of each category per grade or section, with filters applied
+  const getWeekNumber = (date) => {
+    const dayOfMonth = date.getDate();
+    return Math.ceil(dayOfMonth / 7);
+  };
+
   const countFrequency = (entity, category, isSection = false) => {
     return records
       .filter((record) => {
-        // Filter by school year
         if (selectedSchoolYear && record.student.schoolYear !== selectedSchoolYear) {
           return false;
         }
-        // Filter by grade or section
         if (isSection) {
           return record.student.section === entity && record.monitored_record === category;
+        } else {
+          return record.student.grade === entity && record.monitored_record === category;
         }
-        return record.student.grade === entity && record.monitored_record === category;
       })
       .filter((record) => {
-        // Filter by month
         if (selectedMonth) {
           const recordMonth = new Date(record.record_date).getMonth() + 1;
           return recordMonth === parseInt(selectedMonth, 10);
@@ -104,36 +102,19 @@ const RecordTable = () => {
         return true;
       })
       .filter((record) => {
-        // Filter by week
         if (selectedWeek) {
           const recordDate = new Date(record.record_date);
-          const weekNumber = Math.ceil(recordDate.getDate() / 7); // Calculate the week number (1-4)
+          const weekNumber = getWeekNumber(recordDate);
           return weekNumber === parseInt(selectedWeek, 10);
         }
         return true;
       }).length;
   };
 
-  // Function to calculate the total occurrences for each category
-  const calculateTotalForCategory = (category) => {
-    return records
-      .filter((record) => record.monitored_record === category)
-      .filter((record) => {
-        // Apply filters: school year, month, and week
-        if (selectedSchoolYear && record.student.schoolYear !== selectedSchoolYear) {
-          return false;
-        }
-        if (selectedMonth) {
-          const recordMonth = new Date(record.record_date).getMonth() + 1;
-          return recordMonth === parseInt(selectedMonth, 10);
-        }
-        if (selectedWeek) {
-          const recordDate = new Date(record.record_date);
-          const weekNumber = Math.ceil(recordDate.getDate() / 7);
-          return weekNumber === parseInt(selectedWeek, 10);
-        }
-        return true;
-      }).length;
+  // Helper function to sum the total frequency of a category
+  const calculateTotalForCategory = (category, isSection = false) => {
+    const entities = isSection ? sections : grades;
+    return entities.reduce((total, entity) => total + countFrequency(entity, category, isSection), 0);
   };
 
   const categories = [
@@ -151,9 +132,9 @@ const RecordTable = () => {
     <div className={styles.tableWrapper}>
       <h2 className={styles.tableTitle}>Records</h2>
 
-      {/* Dropdown to select the school year */}
+      {/* Filters */}
       <div className={styles.filterContainer}>
-        <label htmlFor="schoolYearFilter">Filter by School Year: </label>
+        <label htmlFor="schoolYearFilter" className={styles.filterLabel}>Filter by School Year: </label>
         <select
           id="schoolYearFilter"
           value={selectedSchoolYear}
@@ -167,15 +148,14 @@ const RecordTable = () => {
           ))}
         </select>
 
-        {/* Dropdown to select the grade */}
-        <label htmlFor="gradeFilter" style={{ marginLeft: '20px' }}>Filter by Grade: </label>
+        <label htmlFor="gradeFilter" className={styles.filterLabel} style={{ marginLeft: '20px' }}>Filter by Grade: </label>
         <select
           id="gradeFilter"
           value={selectedGrade}
           onChange={(e) => {
             setSelectedGrade(e.target.value);
             setSections([]); // Reset sections when grade changes
-            fetchSectionsByGrade(e.target.value); // Fetch sections based on selected grade
+            fetchSectionsByGrade(e.target.value);
           }}
         >
           <option value="">All Grades</option>
@@ -186,8 +166,7 @@ const RecordTable = () => {
           ))}
         </select>
 
-        {/* Dropdown to select the month */}
-        <label htmlFor="monthFilter" style={{ marginLeft: '20px' }}>Filter by Month: </label>
+        <label htmlFor="monthFilter" className={styles.filterLabel} style={{ marginLeft: '20px' }}>Filter by Month: </label>
         <select
           id="monthFilter"
           value={selectedMonth}
@@ -204,10 +183,9 @@ const RecordTable = () => {
           ))}
         </select>
 
-        {/* Conditionally render the week filter if a month is selected */}
         {selectedMonth && (
           <>
-            <label htmlFor="weekFilter" style={{ marginLeft: '20px' }}>Filter by Week: </label>
+            <label htmlFor="weekFilter" className={styles.filterLabel} style={{ marginLeft: '20px' }}>Filter by Week: </label>
             <select
               id="weekFilter"
               value={selectedWeek}
@@ -249,6 +227,15 @@ const RecordTable = () => {
                 ))}
               </tr>
             ))}
+            {/* Total row */}
+            <tr>
+              <td colSpan="2" style={{ fontWeight: 'bold' }}>Total</td>
+              {categories.map((category) => (
+                <td key={category} style={{ fontWeight: 'bold' }}>
+                  {calculateTotalForCategory(category, true)}
+                </td>
+              ))}
+            </tr>
           </tbody>
         </table>
       ) : (
@@ -272,16 +259,16 @@ const RecordTable = () => {
                 ))}
               </tr>
             ))}
-          </tbody>
-          {/* Only display total if no specific grade is selected */}
-          <tfoot>
+            {/* Total row */}
             <tr>
-              <td>Total</td>
+              <td style={{ fontWeight: 'bold' }}>Total</td>
               {categories.map((category) => (
-                <td key={category}>{calculateTotalForCategory(category)}</td>
+                <td key={category} style={{ fontWeight: 'bold' }}>
+                  {calculateTotalForCategory(category)}
+                </td>
               ))}
             </tr>
-          </tfoot>
+          </tbody>
         </table>
       )}
     </div>

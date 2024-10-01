@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import styles from './Navigation.module.css'; // Using the original Navigation.module.css
-import AddReportModal from './AddReportModal'; // Import the report modal component
-import AddSuspensionModal from './SSO/AddSuspensionModal'; // Import the suspension modal component
+import styles from './Navigation.module.css';
+import AddReportModal from './AddReportModal';
+import AddSuspensionModal from './SSO/AddSuspensionModal';
 
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import PostAddIcon from '@mui/icons-material/PostAdd';
-import RateReviewIcon from '@mui/icons-material/RateReview';
 import SchoolIcon from '@mui/icons-material/School';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 
 const Reports = () => {
@@ -20,10 +17,10 @@ const Reports = () => {
   const navigate = useNavigate();
 
   const [reports, setReports] = useState([]);
-  const [showReportModal, setShowReportModal] = useState(false); // State to handle report modal visibility
-  const [showSuspensionModal, setShowSuspensionModal] = useState(false); // State to handle suspension modal visibility
-  const [selectedReportId, setSelectedReportId] = useState(null); // Store the reportId for suspension
-  const [loading, setLoading] = useState(false); // Loading state for fetching reports
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showSuspensionModal, setShowSuspensionModal] = useState(false);
+  const [selectedReportId, setSelectedReportId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Fetch reports when component is mounted
   useEffect(() => {
@@ -37,51 +34,75 @@ const Reports = () => {
     }
   }, [authToken, navigate]);
 
-  // Fetch all reports from the backend
+  // Fetch reports based on user type
   const fetchReports = async () => {
-    setLoading(true); // Set loading state
+    setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8080/report/getAllReports');
+      let response;
+  
+      if (loggedInUser?.userType === 3) {
+        // Adviser user, fetch reports based on their section and school year
+        response = await axios.get('http://localhost:8080/report/getAllReportsForAdviser', {
+          params: {
+            section: loggedInUser.section,
+            schoolYear: loggedInUser.schoolYear,
+          },
+        });
+      } else if (loggedInUser?.userType === 5) {
+        // Complainant user, fetch reports based on their username
+        response = await axios.get('http://localhost:8080/report/getAllReportsByComplainant', {
+          params: {
+            complainant: loggedInUser.username,
+          },
+        });
+      } else {
+        // For all other user types, fetch all reports
+        response = await axios.get('http://localhost:8080/report/getAllReports');
+      }
+  
       const fetchedReports = response.data;
-
-      // If loggedInUser is userType 1 (SSO), update received field for any report where received is null
+  
+      // If loggedInUser is userType 1 (SSO), update the received field for any report where received is null
       if (loggedInUser?.userType === 1) {
         const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
         const updates = fetchedReports
-          .filter((report) => !report.received)
+          .filter((report) => !report.received) // Find reports where `received` is null
           .map((report) =>
             axios.put(`http://localhost:8080/report/updateReceived/${report.reportId}`, { received: currentDate })
           );
-
-        // Wait for all updates to finish
+  
+        // Wait for all the received field updates to finish
         await Promise.all(updates);
+  
+        // Refetch the reports to reflect the updated received status
+        const updatedResponse = await axios.get('http://localhost:8080/report/getAllReports');
+        setReports(updatedResponse.data); // Update the state with the latest reports
+      } else {
+        setReports(fetchedReports); // Set fetched reports for non-SSO users
       }
-
-      setReports(fetchedReports);
     } catch (error) {
       console.error('Error fetching reports:', error);
-      alert('Failed to fetch reports. Please try again later.'); // Add user feedback
+      alert('Failed to fetch reports. Please try again later.');
     } finally {
-      setLoading(false); // Stop loading after fetching
+      setLoading(false);
     }
   };
-
+  
   // Handle completing a report
   const handleComplete = async (reportId) => {
     try {
       await axios.put(`http://localhost:8080/report/complete/${reportId}`);
-      // Refetch the reports after completing
-      fetchReports();
+      fetchReports(); // Refetch the reports after completing
     } catch (error) {
       console.error('Error completing the report:', error);
-      alert('Failed to complete the report.'); // Add user feedback
+      alert('Failed to complete the report.');
     }
   };
 
   // Handle showing suspension modal for a specific report
   const handleAddSuspension = (reportId) => {
-    setSelectedReportId(reportId); // Set the reportId for the suspension
-    setShowSuspensionModal(true);  // Show the suspension modal
+    setSelectedReportId(reportId);
+    setShowSuspensionModal(true);
   };
 
   // Handle logout
@@ -106,7 +127,7 @@ const Reports = () => {
   // Show or hide the suspension modal
   const toggleSuspensionModal = () => {
     setShowSuspensionModal(!showSuspensionModal);
-    setSelectedReportId(null); // Reset the selected reportId when closing the modal
+    setSelectedReportId(null);
   };
 
   return (
@@ -117,7 +138,7 @@ const Reports = () => {
         {loggedInUser && loggedInUser.userType !== 5 && loggedInUser.userType !== 6 && createSidebarLink('/student', 'Student', SchoolIcon)}
         {loggedInUser && loggedInUser.userType !== 5 && loggedInUser.userType !== 6 && createSidebarLink('/notification', 'Notification', NotificationsActiveIcon)}
         {createSidebarLink('/report', 'Report', PostAddIcon)}
-        {loggedInUser.userType === 1 && createSidebarLink("/timeLog", "Time Log", AccessTimeFilledIcon)}
+        {loggedInUser?.userType === 1 && createSidebarLink("/timeLog", "Time Log", AccessTimeFilledIcon)}
         <button className={styles['logoutbtn']} onClick={handleLogout}>
           Logout
         </button>
@@ -140,7 +161,7 @@ const Reports = () => {
                 <th>Adviser</th>
                 <th>Received</th>
                 <th>Complete</th>
-                <th>Actions</th>
+                {loggedInUser?.userType === 1 && <th>Actions</th>}
               </tr>
             </thead>
             <tbody>
@@ -150,41 +171,40 @@ const Reports = () => {
                   <td>{report.time}</td>
                   <td>{report.complaint}</td>
                   <td>{report.complainant}</td>
-                  <td>{report.student.firstname} {report.student.lastname}</td>
+                  <td>{report.student.name}</td>
                   <td>{report.adviser.firstname} {report.adviser.lastname}</td>
                   <td>{report.received ? report.received : 'Pending'}</td>
                   <td>{report.complete ? 'Yes' : 'No'}</td>
-                  <td>
-                    <button onClick={() => handleComplete(report.reportId)}>Complete</button>
-                    <button onClick={() => handleAddSuspension(report.reportId)}>Add Suspension</button> {/* Add Suspension Button */}
-                  </td>
+                  {loggedInUser?.userType === 1 && (
+                    <td>
+                      <button onClick={() => handleComplete(report.reportId)}>Complete</button>
+                      <button onClick={() => handleAddSuspension(report.reportId)}>Add Suspension</button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
           </table>
         )}
 
-        {/* Button to open the report modal */}
-        {loggedInUser?.userType === 1 && (
+        
           <button onClick={toggleReportModal}>Create Report</button>
-        )}
+     
 
-        {/* Modal for creating a new report */}
         {showReportModal && (
-          <AddReportModal 
-            key="addReportModal" 
-            onClose={toggleReportModal} 
-            refreshReports={fetchReports} 
+          <AddReportModal
+            key="addReportModal"
+            onClose={toggleReportModal}
+            refreshReports={fetchReports}
           />
         )}
 
-        {/* Modal for adding a suspension */}
         {showSuspensionModal && (
-          <AddSuspensionModal 
-            key="addSuspensionModal" 
-            onClose={toggleSuspensionModal} 
-            reportId={selectedReportId}  // Pass the reportId to the suspension modal
-            refreshReports={fetchReports} 
+          <AddSuspensionModal
+            key="addSuspensionModal"
+            onClose={toggleSuspensionModal}
+            reportId={selectedReportId}
+            refreshReports={fetchReports}
           />
         )}
       </div>
