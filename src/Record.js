@@ -26,8 +26,7 @@ const Record = () => {
 
   useEffect(() => {
     fetchRecords();
-    fetchSchoolYears();
-    fetchGrades();
+    fetchInitialData(); // Fetch both school years and grades in one go
   }, []);
 
   const fetchRecords = async () => {
@@ -44,21 +43,17 @@ const Record = () => {
     }
   };
 
-  const fetchSchoolYears = async () => {
+  // Refactor to fetch both school years and grades in one function
+  const fetchInitialData = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/schoolYear/getAllSchoolYears');
-      setSchoolYears(response.data);
+      const [schoolYearResponse, gradeResponse] = await Promise.all([
+        axios.get('http://localhost:8080/schoolYear/getAllSchoolYears'),
+        axios.get('http://localhost:8080/class/allUniqueGrades')
+      ]);
+      setSchoolYears(schoolYearResponse.data);
+      setGrades(gradeResponse.data);
     } catch (error) {
-      console.error('Error fetching school years:', error);
-    }
-  };
-
-  const fetchGrades = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/class/allUniqueGrades');
-      setGrades(response.data);
-    } catch (error) {
-      console.error('Error fetching grades:', error);
+      console.error('Error fetching initial data:', error);
     }
   };
 

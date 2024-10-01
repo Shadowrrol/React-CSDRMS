@@ -2,16 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from './RecordTable.module.css'; // Importing CSS module
 
-const RecordTable = () => {
-  const [grades, setGrades] = useState([]);
+const RecordTable = ({ records, schoolYears, grades }) => {
   const [sections, setSections] = useState([]);
-  const [records, setRecords] = useState([]);
-  const [schoolYears, setSchoolYears] = useState([]);
   const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedWeek, setSelectedWeek] = useState('');
   const [selectedGrade, setSelectedGrade] = useState(''); // State for selected grade
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const months = [
     { value: '09', label: 'September' },
@@ -33,40 +30,10 @@ const RecordTable = () => {
   ];
 
   useEffect(() => {
-    fetchRecords();
-    fetchSchoolYears();
-    fetchGrades();
-  }, []);
-
-  const fetchRecords = async () => {
-    setLoading(true);
-    try {
-      const recordsResponse = await axios.get('http://localhost:8080/student-record/getAllStudentRecords');
-      setRecords(recordsResponse.data);
-    } catch (error) {
-      console.error('Error fetching records:', error);
-    } finally {
-      setLoading(false);
+    if (selectedGrade) {
+      fetchSectionsByGrade(selectedGrade);
     }
-  };
-
-  const fetchSchoolYears = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/schoolYear/getAllSchoolYears');
-      setSchoolYears(response.data);
-    } catch (error) {
-      console.error('Error fetching school years:', error);
-    }
-  };
-
-  const fetchGrades = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/class/allUniqueGrades');
-      setGrades(response.data);
-    } catch (error) {
-      console.error('Error fetching grades:', error);
-    }
-  };
+  }, [selectedGrade]);
 
   const fetchSectionsByGrade = async (grade) => {
     try {
@@ -111,7 +78,7 @@ const RecordTable = () => {
       }).length;
   };
 
-  // Helper function to sum the total frequency of a category
+  // Helper function to calculate total for a category
   const calculateTotalForCategory = (category, isSection = false) => {
     const entities = isSection ? sections : grades;
     return entities.reduce((total, entity) => total + countFrequency(entity, category, isSection), 0);
@@ -227,7 +194,7 @@ const RecordTable = () => {
                 ))}
               </tr>
             ))}
-            {/* Total row */}
+            {/* Total row for sections */}
             <tr>
               <td colSpan="2" style={{ fontWeight: 'bold' }}>Total</td>
               {categories.map((category) => (
@@ -259,7 +226,7 @@ const RecordTable = () => {
                 ))}
               </tr>
             ))}
-            {/* Total row */}
+            {/* Total row for grades */}
             <tr>
               <td style={{ fontWeight: 'bold' }}>Total</td>
               {categories.map((category) => (
