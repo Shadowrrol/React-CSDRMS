@@ -7,11 +7,15 @@ import styles from './RecordAnalytics.module.css';
 Chart.register(...registerables);
 
 const RecordAnalytics = ({ records, schoolYears, grades }) => {
+  const authToken = localStorage.getItem('authToken');
+  const loggedInUser = authToken ? JSON.parse(authToken) : null;
+  
   const [sections, setSections] = useState([]);
   const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
-  const [selectedGrade, setSelectedGrade] = useState('');
-  const [selectedSection, setSelectedSection] = useState('');
+  const [selectedGrade, setSelectedGrade] = useState(loggedInUser?.userType === 3 ? loggedInUser.grade : '');
+  const [selectedSection, setSelectedSection] = useState(loggedInUser?.userType === 3 ? loggedInUser.section : '');
   const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedWeek, setSelectedWeek] = useState('');
 
   const months = [
     { value: '08', label: 'August' },
@@ -24,6 +28,13 @@ const RecordAnalytics = ({ records, schoolYears, grades }) => {
     { value: '03', label: 'March' },
     { value: '04', label: 'April' },
     { value: '05', label: 'May' },
+  ];
+
+  const weeks = [
+    { value: '1', label: 'Week 1' },
+    { value: '2', label: 'Week 2' },
+    { value: '3', label: 'Week 3' },
+    { value: '4', label: 'Week 4' },
   ];
 
   useEffect(() => {
@@ -41,7 +52,6 @@ const RecordAnalytics = ({ records, schoolYears, grades }) => {
     }
   };
 
-  // Move getRandomColor function above its usage
   const getRandomColor = () => {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -54,16 +64,19 @@ const RecordAnalytics = ({ records, schoolYears, grades }) => {
   const countRecordsByDayOrMonth = (dayOrMonth, category, isMonthView = false) => {
     return records
       .filter((record) => {
-        if (selectedSchoolYear && record.student.schoolYear !== selectedSchoolYear) return false;
+        if (loggedInUser?.userType !== 3 && selectedSchoolYear && record.student.schoolYear !== selectedSchoolYear) return false;
         if (selectedGrade && record.student.grade !== selectedGrade) return false;
         if (selectedSection && record.student.section !== selectedSection) return false;
 
         const recordDate = new Date(record.record_date);
         const recordMonth = String(recordDate.getMonth() + 1).padStart(2, '0');
+        const recordWeek = Math.ceil(recordDate.getDate() / 7);  // Calculate week based on the day of the month
         if (isMonthView) {
+          if (selectedWeek && recordWeek !== parseInt(selectedWeek, 10)) return false;
           return recordMonth === dayOrMonth && record.monitored_record === category;
         } else {
           const recordDay = recordDate.getDate();
+          if (selectedWeek && recordWeek !== parseInt(selectedWeek, 10)) return false;
           return recordDay === dayOrMonth && recordMonth === selectedMonth && record.monitored_record === category;
         }
       })
@@ -116,20 +129,26 @@ const RecordAnalytics = ({ records, schoolYears, grades }) => {
   return (
     <div className={styles.analyticsWrapper}>
       <h2 className={styles.analyticsTitle}>Analytics Overview</h2>
+
       <div className={styles.filterContainer}>
-        <label htmlFor="schoolYearFilter">Filter by School Year:</label>
-        <select
-          id="schoolYearFilter"
-          value={selectedSchoolYear}
-          onChange={(e) => setSelectedSchoolYear(e.target.value)}
-        >
-          <option value="">All School Years</option>
-          {schoolYears.map((schoolYear) => (
-            <option key={schoolYear.schoolYear_ID} value={schoolYear.schoolYear}>
-              {schoolYear.schoolYear}
-            </option>
-          ))}
-        </select>
+        {/* Hide school year filter for userType 3 */}
+        {loggedInUser?.userType !== 3 && (
+          <>
+            <label htmlFor="schoolYearFilter">Filter by School Year:</label>
+            <select
+              id="schoolYearFilter"
+              value={selectedSchoolYear}
+              onChange={(e) => setSelectedSchoolYear(e.target.value)}
+            >
+              <option value="">All School Years</option>
+              {schoolYears.map((schoolYear) => (
+                <option key={schoolYear.schoolYear_ID} value={schoolYear.schoolYear}>
+                  {schoolYear.schoolYear}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
       </div>
 
       <div className={styles.filterContainer}>
@@ -142,6 +161,7 @@ const RecordAnalytics = ({ records, schoolYears, grades }) => {
             setSelectedSection(''); // Reset section when grade changes
             fetchSectionsByGrade(e.target.value); // Fetch sections for selected grade
           }}
+          disabled={loggedInUser?.userType === 3} // Disable grade filter for userType 3
         >
           <option value="">All Grades</option>
           {grades.map((grade) => (
@@ -159,6 +179,7 @@ const RecordAnalytics = ({ records, schoolYears, grades }) => {
             id="sectionFilter"
             value={selectedSection}
             onChange={(e) => setSelectedSection(e.target.value)}
+            disabled={loggedInUser?.userType === 3} // Disable section filter for userType 3
           >
             <option value="">All Sections</option>
             {sections.map((section) => (
@@ -175,7 +196,10 @@ const RecordAnalytics = ({ records, schoolYears, grades }) => {
         <select
           id="monthFilter"
           value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
+          onChange={(e) => {
+            setSelectedMonth(e.target.value);
+            setSelectedWeek(''); // Reset week when month changes
+          }}
         >
           <option value="">All Months</option>
           {months.map((month) => (
@@ -185,6 +209,24 @@ const RecordAnalytics = ({ records, schoolYears, grades }) => {
           ))}
         </select>
       </div>
+
+      {selectedMonth && (
+        <div className={styles.filterContainer}>
+          <label htmlFor="weekFilter">Filter by Week:</label>
+          <select
+            id="weekFilter"
+            value={selectedWeek}
+            onChange={(e) => setSelectedWeek(e.target.value)}
+          >
+            <option value="">All Weeks</option>
+            {weeks.map((week) => (
+              <option key={week.value} value={week.value}>
+                {week.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className={styles.chartWrapper}>
         <Line data={lineChartData} options={lineChartOptions} className={styles.chart} />

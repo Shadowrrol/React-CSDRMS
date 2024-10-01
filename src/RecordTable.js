@@ -3,11 +3,14 @@ import axios from 'axios';
 import styles from './RecordTable.module.css'; // Importing CSS module
 
 const RecordTable = ({ records, schoolYears, grades }) => {
+  const authToken = localStorage.getItem('authToken');
+  const loggedInUser = authToken ? JSON.parse(authToken) : null;
+  
   const [sections, setSections] = useState([]);
   const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedWeek, setSelectedWeek] = useState('');
-  const [selectedGrade, setSelectedGrade] = useState(''); // State for selected grade
+  const [selectedGrade, setSelectedGrade] = useState(loggedInUser?.userType === 3 ? loggedInUser.grade : ''); // Automatically set grade for userType 3
   const [loading, setLoading] = useState(false);
 
   const months = [
@@ -101,20 +104,26 @@ const RecordTable = ({ records, schoolYears, grades }) => {
 
       {/* Filters */}
       <div className={styles.filterContainer}>
-        <label htmlFor="schoolYearFilter" className={styles.filterLabel}>Filter by School Year: </label>
-        <select
-          id="schoolYearFilter"
-          value={selectedSchoolYear}
-          onChange={(e) => setSelectedSchoolYear(e.target.value)}
-        >
-          <option value="">All School Years</option>
-          {schoolYears.map((schoolYear) => (
-            <option key={schoolYear.schoolYear_ID} value={schoolYear.schoolYear}>
-              {schoolYear.schoolYear}
-            </option>
-          ))}
-        </select>
+        {/* Hide school year filter for userType === 3 */}
+        {loggedInUser?.userType !== 3 && (
+          <>
+            <label htmlFor="schoolYearFilter" className={styles.filterLabel}>Filter by School Year: </label>
+            <select
+              id="schoolYearFilter"
+              value={selectedSchoolYear}
+              onChange={(e) => setSelectedSchoolYear(e.target.value)}
+            >
+              <option value="">All School Years</option>
+              {schoolYears.map((schoolYear) => (
+                <option key={schoolYear.schoolYear_ID} value={schoolYear.schoolYear}>
+                  {schoolYear.schoolYear}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
 
+        {/* Grade filter, disabled for userType 3 */}
         <label htmlFor="gradeFilter" className={styles.filterLabel} style={{ marginLeft: '20px' }}>Filter by Grade: </label>
         <select
           id="gradeFilter"
@@ -124,6 +133,7 @@ const RecordTable = ({ records, schoolYears, grades }) => {
             setSections([]); // Reset sections when grade changes
             fetchSectionsByGrade(e.target.value);
           }}
+          disabled={loggedInUser?.userType === 3} // Disable the grade filter for userType 3
         >
           <option value="">All Grades</option>
           {grades.map((grade) => (
