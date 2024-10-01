@@ -4,13 +4,9 @@ import styles from '../Navigation.module.css'; // Import CSS module
 import styles1 from './AddStudent.module.css'; // Import AddStudent.css
 
 // Import icons from Material-UI
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import RateReviewIcon from '@mui/icons-material/RateReview';
 import PostAddIcon from '@mui/icons-material/PostAdd';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const AddStudent = () => {
@@ -102,13 +98,9 @@ const AddStudent = () => {
             <div className={styles.sidenav}>
                 <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']}/>
                 {createSidebarLink("/record", "Record", AssessmentIcon)}
-                {loggedInUser.userType !== 3 && createSidebarLink("/account", "Account", AccountBoxIcon)}
                 {createSidebarLink("/student", "Student", SchoolIcon)}
                 {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {createSidebarLink("/feedback", "Feedback", RateReviewIcon)}
                 {createSidebarLink("/report", "Report", PostAddIcon)}
-                {loggedInUser.userType !== 3 && createSidebarLink("/sanctions", "Sanctions", LocalPoliceIcon)}
-                {loggedInUser.userType === 3 && createSidebarLink("/Followup", "Followups", PendingActionsIcon)}
                 <button className={styles['logoutbtn']} onClick={handleLogout}>Logout</button>
             </div>
             <div className={styles1.content}>
@@ -117,7 +109,7 @@ const AddStudent = () => {
                     <form onSubmit={handleSubmit} className={styles1['add-student-form']}>
                         <div className={styles1['form-container']}>
                             <div className={styles1['form-group']}>
-                                <label htmlFor="sid">Student ID:</label>
+                                <label className={styles1['student-label']} htmlFor="sid">Student ID:</label>
                                 <input 
                                     type="text"
                                     id="sid"
@@ -128,7 +120,7 @@ const AddStudent = () => {
                                 />
                             </div>
                             <div className={styles1['form-group']}>
-                                <label htmlFor="name">Name:</label>
+                                <label className={styles1['student-label']} htmlFor="name">Name:</label>
                                 <input
                                     type="text"
                                     id="name"
@@ -139,7 +131,7 @@ const AddStudent = () => {
                                 />
                             </div>
                             <div className={styles1['form-group']}>
-                                <label htmlFor="grade">Grade:</label>
+                                <label className={styles1['student-label']} htmlFor="grade">Grade:</label>
                                 <select
                                     id="grade"
                                     name="grade"
@@ -155,7 +147,7 @@ const AddStudent = () => {
                                 </select>
                             </div>
                             <div className={styles1['form-group']}>
-                                <label htmlFor="section">Section:</label>
+                                <label className={styles1['student-label']} htmlFor="section">Section:</label>
                                 <select
                                     id="section"
                                     name="section"
@@ -173,7 +165,7 @@ const AddStudent = () => {
                             </div>
                             {/* Gender field added here */}
                             <div className={styles1['form-group']}>
-                                <label htmlFor="gender">Gender:</label>
+                                <label className={styles1['student-label']} htmlFor="gender">Gender:</label>
                                 <select
                                     id="gender"
                                     name="gender"
@@ -187,7 +179,7 @@ const AddStudent = () => {
                                 </select>
                             </div>
                             <div className={styles1['form-group']}>
-                                <label htmlFor="schoolYear">School Year:</label>
+                                <label className={styles1['student-label']} htmlFor="schoolYear">School Year:</label>
                                 <select
                                     id="schoolYear"
                                     name="schoolYear"

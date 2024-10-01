@@ -160,13 +160,21 @@ const Student = () => {
             <div className={styles.content}>
                 <div className={studentStyles['student-content']}>
                     <h2>Student Records</h2>
-                    <input
-                        type="search"
-                        placeholder="Search by SID, Name, Grade - Section or Contact No."
-                        className={studentStyles.searchStud}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
+                    <div className={studentStyles['searchfilter']}>
+                        <select onChange={handleSchoolYearChange} value={selectedSchoolYear} className={studentStyles['school-year-dropdown']}>
+                            <option value="">Select School Year</option>
+                            {schoolYears.map((year) => (
+                                <option key={year.schoolYear_ID} value={year.schoolYear}>{year.schoolYear}</option>
+                            ))}
+                        </select>                    
+                        <input
+                            type="search"
+                            placeholder="Search by SID, Name, Grade - Section or Contact No."
+                            className={studentStyles.searchStud}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
                     {(loggedInUser.userType === 3) && (
                         <Link to="/add-student">
                             <button className={studentStyles['add-student-button']}>Add Student</button>
@@ -176,12 +184,6 @@ const Student = () => {
                     {loggedInUser.userType === 1 && (
                         <div className={studentStyles['import-section']}>
                             <input type="file" onChange={handleFileChange} accept=".xls,.xlsx" />
-                            <select onChange={handleSchoolYearChange} value={selectedSchoolYear} className={studentStyles['school-year-dropdown']}>
-                                <option value="">Select School Year</option>
-                                {schoolYears.map((year) => (
-                                    <option key={year.schoolYear_ID} value={year.schoolYear}>{year.schoolYear}</option>
-                                ))}
-                            </select>
                             <button onClick={handleFileUpload} disabled={isUploading} className={studentStyles['import-button']}>
                                 {isUploading ? 'Uploading...' : 'Import Student Data'}
                             </button>

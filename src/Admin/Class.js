@@ -160,7 +160,7 @@ function Class() {
                     ))
                   ) : (
                     <tr>
-                      <td className={classStyles.noresult}>No Results Found</td>
+                      <td className={classStyles.noresult}>No Results Found...</td>
                     </tr>
                   )}
                 </tbody>
@@ -185,7 +185,7 @@ function Class() {
                     ))
                   ) : (
                     <tr>
-                      <td className={classStyles.noresult}>No Results Found</td>
+                      <td className={classStyles.noresult}>No Results Found...</td>
                     </tr>
                   )}
                 </tbody>

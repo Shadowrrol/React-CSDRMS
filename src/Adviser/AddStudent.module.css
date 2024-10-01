@@ -26,9 +26,9 @@
 }
 
 label {
-    margin-right: 20px; /* Add space between label and input */
+    margin-right: -105px;
     display: flex;
-    flex-direction: row;
+    flex: 1 1;
     align-items: center;
     font-size: 18px;
     font-weight: bold;

@@ -115,39 +115,41 @@ const AdminDashboard = () => {
 
       <div className={navStyles.content}>
         <h1>User Management</h1>
-        <div className={styles['table-container']}>
-          <table className={styles['user-table']}>
-              <thead>
-                  <tr>
-                      <th>Username</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>User Type</th>
-                  </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.length > 0 ? (
-                  filteredUsers.map(user => (
-                    <tr
-                      key={user.username}
-                      onClick={() => setSelectedUser(user)}
-                      className={selectedUser?.username === user.username ? styles['selected-row'] : ''}
-                    >
-                      <td>{user.username}</td>
-                      <td>{`${user.firstname} ${user.lastname}`}</td>
-                      <td>{user.email}</td>
-                      <td>{user.userType}</td>
+        <div className={styles['user-center-container']}>
+          <div className={styles['table-container']}>           
+            <table className={styles['user-table']}>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>User Type</th>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" className={styles['no-results']} style={{ textAlign: 'center', fontSize: '1.5rem' }}>
-                      No Results Found
-                    </td>
-                  </tr>                
-                )}
-              </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {filteredUsers.length > 0 ? (
+                    filteredUsers.map(user => (
+                      <tr
+                        key={user.username}
+                        onClick={() => setSelectedUser(user)}
+                        className={selectedUser?.username === user.username ? styles['selected-row'] : ''}
+                      >
+                        <td>{user.username}</td>
+                        <td>{`${user.firstname} ${user.lastname}`}</td>
+                        <td>{user.email}</td>
+                        <td>{user.userType}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className={styles['no-results']} style={{ textAlign: 'center', fontSize: '1.5rem' }}>
+                        No Results Found...
+                      </td>
+                    </tr>                
+                  )}
+                </tbody>
+            </table>
+          </div>
         </div>
 
         <div className={styles['action-buttons']}>

@@ -1,128 +1,157 @@
-/* 
-
-.modal {
+/* Modal Overlay */
+.timelog-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
-.modalContent {
-    background-color: #fff;
-    border-radius: 10px;
+/* Modal Content */
+.timelog-modal-content {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 60%;
+    height: 90%;
     padding: 20px;
-    width: 80%;
-    max-width: 800px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.3s ease;
+    position: relative;
+    border: 2px solid #000;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.closeButton {
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-    position: absolute;
-    right: 20px;
-    top: 20px;
-}
-
-.closeButton:hover {
-    background-color: #ff1a1a;
-}
-
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
+.timelog-title {
     font-size: 24px;
-    color: #333;
+    font-weight: bold;
+    text-align: center;
+    margin: 25px;
+    color: #81343a;
 }
 
-.timeTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.timeTable th, .timeTable td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-.timeTable th {
-    background-color: #f4f4f4;
-    color: #333;
-    font-weight: 600;
+/* Close Button */
+.timelog-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
     font-size: 16px;
+    cursor: pointer;
+    color: #81343a;
+    transition: color 0.3s, transform 0.3s;
 }
 
-.timeTable tr:nth-child(even) {
-    background-color: #f9f9f9;
+.timelog-close-button:hover {
+    color: #835d5f;
+    transform: scale(1.1);
+    background-color: #dddddd;
 }
 
-.timeTable tr:hover {
-    background-color: #f1f1f1;
-}
-
-.timeTable td {
-    font-size: 14px;
-}
-
-
-.filters {
+/* Filters Section */
+.timelog-filters {
     display: flex;
-    justify-content: space-between;
+    gap: 40px; /* Space between filters */
+    justify-content: center; /* Center the filters horizontally */
     margin-bottom: 20px;
-    flex-wrap: wrap;
 }
 
-.filters label {
-    font-size: 14px;
-    margin-right: 10px;
-    display: inline-block;
-    margin-bottom: 10px;
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.filters select {
-    padding: 6px 10px;
-    font-size: 14px;
+.filter-timelog-label{
+    font-size: 18px;
+    font-weight: bold;
+    color: #800000;
+}
+
+.select-timelog {
+    margin-left: 10px;
     border-radius: 4px;
     border: 1px solid #ccc;
-    outline: none;
+    cursor: pointer;
+    max-width: 50%;
 }
 
-@media (max-width: 768px) {
-    .modalContent {
-        width: 90%;
-    }
+.timelog-duration{
+    display: flex;
+    gap: 75px;
+    margin: 35px 0px;
+    justify-content: center; /* Center horizontally */
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px #ccc;  /* Slight shadow for all text */
+}
 
-    .filters {
-        flex-direction: column;
-        gap: 10px;
-    }
+.timelog-no-results{
+    color: #888; /* Optional: Change color to gray for better visibility */
+    background-color: #fff;
+    padding: 10px; /* Optional: Add some padding for spacing */
+}
 
-    .timeTable th, .timeTable td {
-        padding: 8px 10px;
-    }
-} */
+/* Table Container */
+.timelog-center-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically (optional) */
+}
+
+.timelog-table-container {
+    max-height: 350px; /* Adjust height as needed */
+    max-width: 750px;
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 2px solid #81343a;
+}
+
+/* Table Styling */
+.timelog-table {
+    width: 100%;
+    border-collapse: collapse; /* Ensures borders are not doubled */
+    table-layout: fixed; /* Ensures consistent cell width */
+}
+
+.timelog-table thead {
+    position: sticky; /* Fixed to the top */
+    top: 0; 
+    z-index: 1; 
+}
+
+.timelog-table th, .timelog-table td {
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 14px;
+    border: none;
+}
+
+.timelog-table th {
+    background-color: #81343a; /* Header color */
+    color: #fff;
+    text-shadow: 3px 3px 5px #000;  /* Slight shadow for all text */
+    font-weight: 600;
+}
+
+.timelog-table td {
+    cursor: pointer;
+    border-right: 1px solid #ccc; /* Border for body cells */
+    border-bottom: 1px solid #ccc; /* Border for body cells */
+}
+
+.timelog-table tr {
+    background-color: #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Add shadow to create "floating" effect */
+}
+
+.timelog-table tr:hover {
+    background-color: #f4f6f9; /* Hover effect */
+}
+
+.timelog-table th:nth-child(3),
+.timelog-table td:nth-child(3) {   
+    border: none;
+}

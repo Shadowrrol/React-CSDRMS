@@ -8,7 +8,6 @@ import AdviserTimeLogModal from './AdviserTimeLogModal'; // Import the modal
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import PostAddIcon from '@mui/icons-material/PostAdd';
-import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 
@@ -20,12 +19,13 @@ const createSidebarLink = (to, text, IconComponent) => (
 );
 
 const TimeLog = () => {
-    const [advisers, setAdvisers] = useState([]); // Changed from timeLogs to advisers
+    const [advisers, setAdvisers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
-    const [selectedAdviser, setSelectedAdviser] = useState(null); // Selected adviser state
-    const [searchQuery, setSearchQuery] = useState(''); // State for search query
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedAdviser, setSelectedAdviser] = useState(null);
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
     const { uid } = loggedInUser;
@@ -34,7 +34,6 @@ const TimeLog = () => {
     useEffect(() => {
         const fetchAdvisers = async () => {
             try {
-                // Updated to fetch advisers instead of time logs
                 const response = await axios.get('http://localhost:8080/user/getAllAdvisers');
                 setAdvisers(response.data);
             } catch (err) {
@@ -53,21 +52,36 @@ const TimeLog = () => {
         navigate("/");
     };
 
-    const openModal = (adviser) => {
-        setSelectedAdviser(adviser); // Set the selected adviser
-        setIsModalOpen(true); // Open the modal
+    const openModal = () => {
+        if (selectedAdviser) {
+            setIsModalOpen(true);
+        }
     };
 
     const closeModal = () => {
-        setSelectedAdviser(null); // Clear the selected adviser
-        setIsModalOpen(false); // Close the modal
+        setSelectedAdviser(null);
+        setIsModalOpen(false);
+        setSelectedRow(null);
     };
 
     // Filter advisers based on search query
     const filteredAdvisers = advisers.filter(adviser => {
         const fullName = `${adviser.firstname} ${adviser.middlename || ''} ${adviser.lastname}`.toLowerCase();
-        return fullName.includes(searchQuery.toLowerCase());
+        const gradeSection = `${adviser.grade} - ${adviser.section}`.toLowerCase();
+        const email = adviser.email.toLowerCase();
+
+        const queryLower = searchQuery.toLowerCase();
+        return (
+            fullName.includes(queryLower) ||
+            gradeSection.includes(queryLower) ||
+            email.includes(queryLower)
+        );
     });
+
+    const handleRowClick = (adviser, index) => {
+        setSelectedAdviser(adviser);
+        setSelectedRow(index);
+    };
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -86,48 +100,63 @@ const TimeLog = () => {
 
             <div className={navStyles.content}>
                 <h1>Advisers List</h1>
-
-                {/* Search input for filtering advisers */}
-                <div className={styles.searchBar}>
-                    <input
-                        type="text"
-                        placeholder="Search by adviser name..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className={styles.searchInput}
-                    />
-                </div>
-
-                <div className={styles['table-container']}>
-                    <table className={styles['time-table']}>
-                        <thead>
-                            <tr>
-                                <th>Adviser First Name</th>
-                                <th>Adviser Last Name</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredAdvisers.map(adviser => (
-                                <tr key={adviser.adviser_id}>
-                                    <td>{adviser.firstname}</td>
-                                    <td>{adviser.lastname}</td>
-                                    <td>
-                                        <button 
-                                            className={styles.viewButton} 
-                                            onClick={() => openModal(adviser)}
-                                        >
-                                            View Time Logs
-                                        </button>
-                                    </td>
+                <div className={styles['time-center-container']}>
+                    <div className={styles['time-table-container']}>
+                        <table className={styles['time-table']}>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Grade & Section</th>
+                                    <th>Email</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                {filteredAdvisers.length > 0 ? (
+                                    filteredAdvisers.map((adviser, index) => (
+                                        <tr 
+                                            key={adviser.adviser_id} 
+                                            onClick={() => handleRowClick(adviser, index)}
+                                            className={selectedRow === index ? styles['log-selected-row'] : ''}
+                                        >
+                                            <td>{`${adviser.firstname} ${adviser.middlename ? adviser.middlename + ' ' : ''}${adviser.lastname}`}</td>
+                                            <td>{`${adviser.grade} - ${adviser.section}`}</td>
+                                            <td>{`${adviser.email}`}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="3" className={styles['log-no-results']} style={{ textAlign: 'center', fontSize: '1.5rem' }}>
+                                            No Results Found
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>                     
+                <div className={styles['log-buttons']}>                  
+                    <div className={styles['button-container']}>
+                        <button 
+                            className={styles.viewlogButton} 
+                            onClick={openModal} 
+                            disabled={!selectedAdviser}
+                        >
+                            View Time Logs
+                        </button>
+                    </div>
+                        
+                    <div className={styles['logfilter-search-bar']}>
+                        <input
+                            type="search"
+                            className={styles['logsearchRec']}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search by Name, Grade, Section, or Email..."
+                        />
+                    </div>  
+                </div>               
             </div>
 
-            {/* Render the modal for displaying adviser-specific time logs */}
             {isModalOpen && (
                 <AdviserTimeLogModal 
                     adviser={selectedAdviser} 
