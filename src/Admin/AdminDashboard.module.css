@@ -12,6 +12,7 @@ html, body {
     scroll-behavior: smooth;
     height: 100%;
     font-size: 14px;
+    text-align: center;
 }
 
 h1 {
@@ -30,19 +31,43 @@ h2 {
     text-shadow: 1px 1px 3px #ccc;  /* Slight shadow for all text */
 }
 
+.admin-dashboard-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #81343a;
+    font-weight: bold;
+  }
+
 /* Search Bar */
 .filter-search-bar {
-    display: flex;
-    justify-content: center;
+    display: flex; /* Ensure children are aligned correctly */
+    align-items: center; /* Center the icon and input vertically */
+    padding-left: 10px; /* Space to the left of the input */
 }
-
 .searchRec {
-    width: 380px;
-    padding: 15px;
+    width: 350px;
+    padding: 10px; /* Add left padding to avoid overlap with the icon */
     border-radius: 8px;
     border: 1px solid #ddd;
     background-color: #fff;
     font-size: 15px;
+}
+
+.title-search{
+    justify-content: space-between; /* Evenly distribute space between elements */
+}
+
+/* Search Icon Styles */
+.search-icon {
+    position: absolute; /* Position the icon absolutely */
+    left: 10px; /* Space from the left */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust vertical position */
+    color: #919191; /* Icon color */
+    pointer-events: none; /* Prevent interaction */
+    width: 20px; /* Adjust size if necessary */
+    height: 20px; /* Adjust size if necessary */
 }
 
 /* Table Container */
@@ -120,9 +145,7 @@ h2 {
 .user-table td:nth-child(4) {
     text-align: center;
     width: 120px; /* Set a specific width for the column */
-    overflow: hidden; /* Optional: Hide overflowed content */
-    text-overflow: ellipsis; /* Optional: Add ellipsis for overflowed text */
-    white-space: nowrap; /* Optional: Prevent text from wrapping */
+    border-right: none;
 }
 
 /* Action Buttons */

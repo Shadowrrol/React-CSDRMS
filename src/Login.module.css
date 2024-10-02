@@ -12,36 +12,37 @@
 .titleImage {
   background-image: url('./image-citutitle.png'); /* Path to your image */
   background-repeat: no-repeat;
-  background-size: contain; /* Adjust to fit the div */
-  position: fixed; /* Fixed positioning */
-  top: 30px; /* Adjust the top position */
-  left: 20px; /* Adjust the left position */
-  width: 450px; /* Set a fixed width or adjust as needed */
-  height: 310px; /* Set a fixed height or adjust as needed */
-  z-index: 1; /* Make sure it appears above the background */
-  animation: fadeInUp 0.8s ease-in-out; /* Animate on load */  
+  background-size: contain;
+  position: fixed;
+  top: 30px;
+  left: 1vw; /* Use vw for responsiveness */
+  width: 500px; /* Adjust width relative to viewport */
+  height: 50vw; /* Keep height auto to maintain aspect ratio */
+  z-index: 1;
+  animation: fadeInUp 0.8s ease-in-out;
 }
 
 .ssoImage {
-  background-image: url('./image-sso.png'); /* Path to your image */
+  background-image: url('./image-sso-color.png'); /* Path to your image */
   background-repeat: no-repeat;
-  background-size: contain; /* Adjust to fit the div */
-  position: fixed; /* Fixed positioning */
-  top: 10px; /* Distance from the top */
-  right: 10px; /* Distance from the right */
-  width: 300px; /* Set a fixed width */
-  height: 150px; /* Set a fixed height */
-  z-index: 1; /* Ensure it appears above the background */
-  animation: fadeInUp 0.8s ease-in-out; /* Animate on load */
+  background-size: contain;
+  position: fixed;
+  top: 10px;
+  right: 1vw; /* Use vw for responsiveness */
+  width: 175px; /* Make width relative to the screen */
+  height: 175px; /* Keep height auto to maintain aspect ratio */
+  z-index: 1;
+  animation: fadeInUp 0.8s ease-in-out;
 }
 
+/* Adjust form container */
 .container {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   text-align: center;
-  height: 100vh; /* Full height */
+  height: 100vh;
 }
 
 .form_area {
@@ -51,12 +52,13 @@
   flex-direction: column;
   background-color: #f9f1f2;
   height: auto;
-  width: 450px; /* Increased width */
+  width: 80vw; /* Adjust width for mobile screens */
+  max-width: 450px; /* Ensure it doesn't stretch too wide on larger screens */
   border: 2px solid #264143;
   border-radius: 20px;
   box-shadow: 3px 4px 0px 1px #E99F4C;
   margin-top: 3%;
-  animation: fadeInUp 0.8s ease-in-out; /* Animate on load */
+  animation: fadeInUp 0.8s ease-in-out;
 }
 
 .title {
@@ -65,26 +67,26 @@
   font-size: 1.5em;
   margin-top: 30px;
   margin-bottom: 10px;
-  position: relative; /* Set position to relative for the pseudo-element */
-  padding-bottom: 5px; /* Optional: adds space between text and border */
-  text-shadow: 1px 1px 3px #c2c2c2;  /* Slight shadow for all text */
+  position: relative;
+  padding-bottom: 5px;
+  text-shadow: 1px 1px 3px #c2c2c2;
 }
 
 .title::after {
-  content: ""; /* Pseudo-element content */
-  position: absolute; /* Position it absolutely */
-  left: 0; /* Start from the left edge */
-  bottom: 0; /* Align to the bottom of the title */
-  width: 120%; /* Make it longer than the title */
-  height: 2px; /* Height of the border */
-  background: linear-gradient(180deg, #81343a, #e8bd26); /* Soft red gradient */
-  transform: translateX(-10%); /* Adjust position to center */
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 120%;
+  height: 2px;
+  background: linear-gradient(180deg, #81343a, #e8bd26);
+  transform: translateX(-10%);
 }
 
 .sub_title {
   font-weight: 600;
   margin: 5px 0;
-  text-shadow: 1px 1px 3px #c2c2c2;  /* Slight shadow for all text */
+  text-shadow: 1px 1px 3px #c2c2c2;
 }
 
 .form_group {
@@ -98,45 +100,48 @@
   outline: none;
   border: 2px solid #264143;
   box-shadow: 3px 4px 0px 1px #e8bd26;
-  width: 290px;
+  width: 80vw; /* Adjust width */
+  max-width: 290px; /* Set max-width to prevent stretching */
   padding: 12px 10px;
   border-radius: 4px;
   font-size: 15px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.form_style:focus, .btn:focus {
+.form_style:focus,
+.btn:focus {
   transform: translateY(4px);
   box-shadow: 1px 2px 0px 0px #e8bd26;
-  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 
 .btn {
   padding: 15px;
   margin: 25px 0px;
-  width: 190px;
+  width: 50vw; /* Adjust width for responsiveness */
+  max-width: 190px; /* Set a max-width for larger screens */
   font-size: 15px;
   background: #81343a;
   border-radius: 10px;
   font-weight: 800;
   box-shadow: 3px 3px 0px 0px #e8bd26;
-  text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transition */
+  text-shadow: 1px 1px 3px #000;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btn:hover {
   opacity: .9;
-  transform: scale(1.05); /* Slightly enlarge on hover */
-  box-shadow: 5px 5px 0px 0px #e8bd26; /* Enhanced shadow */
+  transform: scale(1.05);
+  box-shadow: 5px 5px 0px 0px #e8bd26;
 }
 
-.btn:active{
+.btn:active {
   transform: translateY(4px);
   box-shadow: 1px 2px 0px 0px #e8bd26;
-  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Keyframes for animations */
 @keyframes fadeInUp {
   from {
     transform: translateY(20px);
@@ -145,5 +150,39 @@
   to {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+/* Media queries for smaller screens */
+@media (max-width: 768px) {
+  .titleImage {
+    width: 60vw; /* Adjust image width for smaller screens */
+    left: 1vw; /* Adjust positioning */
+  }
+
+  .ssoImage {
+    width: 120px;
+    margin-left: 75px;
+    left: calc(100% - 27vw); /* Adjust position to fit smaller screens */
+  }
+
+  .btn {
+    width: 70vw; /* Make the button larger on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .titleImage {
+    width: 80vw;
+    left: 10vw;
+  }
+
+  .ssoImage {
+    width: 40vw;
+    left: calc(100% - 45vw); /* Further adjust for very small screens */
+  }
+
+  .btn {
+    width: 80vw;
   }
 }

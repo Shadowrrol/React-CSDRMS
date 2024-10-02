@@ -31,6 +31,11 @@ const TimeLog = () => {
     const { uid } = loggedInUser;
     const navigate = useNavigate();
 
+    // Set the document title for the Time Log page
+    useEffect(() => {
+        document.title = "SSO | Time Log";
+    }, []); // Empty dependency array ensures this runs once when the component mounts
+
     useEffect(() => {
         const fetchAdvisers = async () => {
             try {

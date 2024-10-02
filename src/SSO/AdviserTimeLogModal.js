@@ -88,7 +88,7 @@ const AdviserTimeLogModal = ({ adviser, onClose }) => {
                     </div>
 
                     <div className={styles['filter-item']}>
-                        <label>
+                        <label label className={styles['filter-timelog-label']}>
                             Month:
                             <select className={styles['select-timelog']} value={selectedMonth} onChange={handleMonthChange}>
                                 <option value="all">All</option>
@@ -110,7 +110,7 @@ const AdviserTimeLogModal = ({ adviser, onClose }) => {
 
                     {selectedMonth !== 'all' && (
                         <div className={styles['filter-item']}>
-                            <label>
+                            <label label className={styles['filter-timelog-label']}>
                                 Week:
                                 <select className={styles['select-timelog']} value={selectedWeek} onChange={handleWeekChange}>
                                     <option value="all">All</option>

@@ -1,13 +1,15 @@
+import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import axios from "axios";
 import navStyles from '../Navigation.module.css';
 import classStyles from './Class.module.css';
-import { Link } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import JHSLogo from '../image-sso-yellow.png';
 import MenuPopupState from '../components/MenuPopupState';
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import AssessmentIcon from '@mui/icons-material/Assessment';
+import SchoolIcon from '@mui/icons-material/School';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import Logout from '@mui/icons-material/Logout';
 
 // Function to create sidebar links with icons
 const createSidebarLink = (to, text, IconComponent) => (
@@ -17,7 +19,11 @@ const createSidebarLink = (to, text, IconComponent) => (
   </Link>
 );
 
-function Class() {
+const Class = () => {
+  const navigate = useNavigate();
+  const authToken = localStorage.getItem('authToken');
+  const loggedInUser = authToken ? JSON.parse(authToken) : null;
+
   const [classes, setClasses] = useState([]);
   const [schoolYears, setSchoolYears] = useState([]);
   const [newGrade, setNewGrade] = useState("");
@@ -26,9 +32,6 @@ function Class() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddGrade, setShowAddGrade] = useState(false);
   const [showAddSchoolYear, setShowAddSchoolYear] = useState(false);
-
-  const authToken = localStorage.getItem('authToken');
-  const loggedInUser = authToken ? JSON.parse(authToken) : null;
 
   const handleOpen = () => setShowAddGrade(true);
   const handleClose = () => setShowAddGrade(false);
@@ -130,18 +133,37 @@ function Class() {
     fetchSchoolYears();
   }, [loggedInUser]);
 
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    navigate('/');
+  };
+
   return (
     <div className={navStyles.wrapper}>
+      {/* Sidebar */}
       <div className={navStyles.sidenav}>
-        <img src="/image-removebg-preview (1).png" alt="logo" className={navStyles['sidebar-logo']} />
-        {createSidebarLink("/AdminDashboard", "Dashboard", AssessmentIcon)}
-        {createSidebarLink("/class", "Class", MeetingRoomIcon)}
-        <MenuPopupState />
+        <div className={navStyles['sidenav-title']}>MENU</div>
+        {createSidebarLink("/AdminDashboard", "Dashboard", AccountBoxIcon)}
+        {createSidebarLink("/class", "Class", SchoolIcon)}
+        {/* Removed the logout button from the sidebar */}
       </div>
 
       <div className={navStyles.content}>
-        <h1 className={classStyles.classtitle}>Class Management</h1>
+        {/* Header */}
+        <header className={navStyles.header}>
+          {/* App Logo & Title */}     
+          <div className={navStyles.JHSheaderContainer}>
+            <img src={JHSLogo} alt="JHS Logo" className={navStyles.JHSLogo} />
+            <span className={navStyles.JHSTitle}>JHS Success Hub</span>
+          </div>
+          {/* Logout Button */}
+          <button className={navStyles.logoutbtn} onClick={handleLogout}>
+            <Logout />
+          </button>
+        </header>
 
+        {/* Page title */}
+        <h1 className={classStyles.classtitle}>Class Management</h1>
         <div className={classStyles.divide}>
           <div className={classStyles.tableContainer}>
             <div className={classStyles.table}>

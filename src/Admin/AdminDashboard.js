@@ -3,8 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import navStyles from '../Navigation.module.css';
 import styles from './AdminDashboard.module.css';
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import AssessmentIcon from '@mui/icons-material/Assessment';
+import JHSLogo from '../image-sso-yellow.png';
+/*import SearchIcon from '@mui/icons-material/Search';*/
+import SchoolIcon from '@mui/icons-material/School';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import Logout from '@mui/icons-material/Logout';
 import AddUserModal from './AddUserModal';  
 import ConfirmationModal from './ConfirmationModal';  
 import UpdateAccountModal from './UpdateAccountModal'; 
@@ -19,81 +22,71 @@ const createSidebarLink = (to, text, IconComponent) => (
 
 const AdminDashboard = () => {
   // State variables
-  const navigate = useNavigate(); // Hook to programmatically navigate
-  const authToken = localStorage.getItem('authToken'); // Get auth token from localStorage
-  const loggedInUser = authToken ? JSON.parse(authToken) : null; // Parse logged in user from token
+  const navigate = useNavigate();
+  const authToken = localStorage.getItem('authToken');
+  const loggedInUser = authToken ? JSON.parse(authToken) : null;
 
-  const [users, setUsers] = useState([]); // State to store user data
-  const [selectedUser, setSelectedUser] = useState(null); // State to store the currently selected user
-  const [searchQuery, setSearchQuery] = useState(''); // State to manage search input
-  const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false); // State to control visibility of the add user modal
-  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false); // State to control visibility of the confirmation modal
-  const [confirmationMessage, setConfirmationMessage] = useState(''); // State to hold confirmation message
-  const [isUpdateAccountModalOpen, setIsUpdateAccountModalOpen] = useState(false); // State to control visibility of the update account modal
-
-  // Effect to set the document title, validate token, and fetch users on component mount
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [isUpdateAccountModalOpen, setIsUpdateAccountModalOpen] = useState(false);
+  
   useEffect(() => {
-    // If no authToken is found, redirect to login page
     if (!authToken || !loggedInUser) {
       navigate('/login');
       return;
     }
 
     document.title = "Admin | Dashboard";
-    fetchUsers(); // Fetch the user list
+    fetchUsers();
   }, [authToken, loggedInUser, navigate]);
 
-  // Function to fetch users from the server
   const fetchUsers = async () => {
     try {
       const response = await axios.get('http://localhost:8080/user/allUsers');
-      setUsers(response.data); // Set fetched users to state
+      setUsers(response.data);
     } catch (error) {
-      console.error('Error fetching users:', error); // Log any errors
+      console.error('Error fetching users:', error);
     }
   };
 
-  // Function to handle user logout
   const handleLogout = () => {
-    localStorage.removeItem('authToken'); // Remove auth token
-    navigate('/'); // Redirect to the login page
+    localStorage.removeItem('authToken');
+    navigate('/');
   };
 
-  // Function to handle user deletion
   const handleDeleteUser = () => {
     if (selectedUser) {
       setConfirmationMessage(`Are you sure you want to delete the user "${selectedUser.username}"?`);
-      setIsConfirmationModalOpen(true); // Open the confirmation modal
+      setIsConfirmationModalOpen(true);
     }
   };
 
-  // Function to confirm deletion of a user
   const confirmDelete = async () => {
     if (selectedUser) {
       try {
         await axios.delete(`http://localhost:8080/user/deleteUser/${selectedUser.username}`);
-        setUsers(prevUsers => prevUsers.filter(user => user.username !== selectedUser.username)); // Remove deleted user from the list
-        setSelectedUser(null); // Deselect user after deletion
+        setUsers(prevUsers => prevUsers.filter(user => user.username !== selectedUser.username));
+        setSelectedUser(null);
       } catch (error) {
-        console.error('Error deleting user:', error); // Log any errors
+        console.error('Error deleting user:', error);
       }
     }
   };
 
-  // Function to handle updating a user
   const handleUpdateUser = () => {
     if (selectedUser) {
-      setIsUpdateAccountModalOpen(true); // Open the update account modal
+      setIsUpdateAccountModalOpen(true);
     }
   };
 
-  // Function to handle opening the add user modal
   const handleAddUser = () => setIsAddUserModalOpen(true);
 
-  // Function to refresh the user list
   const refreshUsers = () => fetchUsers();
 
-  // Memoized filtered user list based on search query
   const filteredUsers = useMemo(() => users.filter(user => {
     const lowerCaseQuery = searchQuery.toLowerCase();
     const usernameMatches = user.username.toLowerCase().includes(lowerCaseQuery);
@@ -106,52 +99,69 @@ const AdminDashboard = () => {
 
   return (
     <div className={navStyles.wrapper}>
+      {/* Sidebar */}
       <div className={navStyles.sidenav}>
-        <img src="/image-removebg-preview (1).png" alt="logo" className={navStyles['sidebar-logo']} />
-        {createSidebarLink("/AdminDashboard", "Dashboard", AssessmentIcon)}
-        {createSidebarLink("/class", "Class", MeetingRoomIcon)}
-        <button className={navStyles.logoutbtn} onClick={handleLogout}>Logout</button>
+        <div className={navStyles['sidenav-title']}>MENU</div>
+        {createSidebarLink("/AdminDashboard", "Dashboard", AccountBoxIcon)}
+        {createSidebarLink("/class", "Class", SchoolIcon)}
+        {/* Removed the logout button from the sidebar */}
       </div>
 
+      {/* Main Content */}
       <div className={navStyles.content}>
-        <h1>User Management</h1>
+        {/* Header */}
+        <header className={navStyles.header}>
+          {/* App Logo & Title */}     
+          <div className={navStyles.JHSheaderContainer}>
+            <img src={JHSLogo} alt="JHS Logo" className={navStyles.JHSLogo} />
+            <span className={navStyles.JHSTitle}>JHS Success Hub</span>
+          </div>
+          {/* Logout Button */}
+          <button className={navStyles.logoutbtn} onClick={handleLogout}>
+            <Logout />
+          </button>
+        </header>
+
+        {/* Page title */}
+        <h1 className={navStyles['admin-dashboard-title']}>User Management</h1>
         <div className={styles['user-center-container']}>
-          <div className={styles['table-container']}>           
+          <div className={styles['table-container']}>
             <table className={styles['user-table']}>
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>User Type</th>
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>User Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.length > 0 ? (
+                  filteredUsers.map(user => (
+                    <tr
+                      key={user.username}
+                      onClick={() => setSelectedUser(user)}
+                      className={selectedUser?.username === user.username ? styles['selected-row'] : ''}
+                    >
+                      <td>{user.username}</td>
+                      <td>{`${user.firstname} ${user.lastname}`}</td>
+                      <td>{user.email}</td>
+                      <td>{user.userType}</td>
                     </tr>
-                </thead>
-                <tbody>
-                  {filteredUsers.length > 0 ? (
-                    filteredUsers.map(user => (
-                      <tr
-                        key={user.username}
-                        onClick={() => setSelectedUser(user)}
-                        className={selectedUser?.username === user.username ? styles['selected-row'] : ''}
-                      >
-                        <td>{user.username}</td>
-                        <td>{`${user.firstname} ${user.lastname}`}</td>
-                        <td>{user.email}</td>
-                        <td>{user.userType}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="4" className={styles['no-results']} style={{ textAlign: 'center', fontSize: '1.5rem' }}>
-                        No Results Found...
-                      </td>
-                    </tr>                
-                  )}
-                </tbody>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className={styles['no-results']} style={{ textAlign: 'center', fontSize: '1.5rem' }}>
+                      No Results Found...
+                    </td>
+                  </tr>
+                )}
+              </tbody>
             </table>
           </div>
         </div>
 
+        {/* Action Buttons and Search */}
         <div className={styles['action-buttons']}>
           <button
             className={`${styles['action-btn']} ${styles['admin-add-btn']}`}
@@ -173,19 +183,20 @@ const AdminDashboard = () => {
           >
             Delete
           </button>
-
+          
           <div className={styles['filter-search-bar']}>
             <input
               type="search"
               className={styles['searchRec']}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by Username, Name, Email or User Type"
+              placeholder="Search Users..."
             />
-          </div>
+          </div>          
         </div>
       </div>
 
+      {/* Modals */}
       <AddUserModal isOpen={isAddUserModalOpen} onClose={() => setIsAddUserModalOpen(false)} />
       <ConfirmationModal
         isOpen={isConfirmationModalOpen}
@@ -197,10 +208,10 @@ const AdminDashboard = () => {
         isOpen={isUpdateAccountModalOpen}
         onClose={() => {
           setIsUpdateAccountModalOpen(false);
-          refreshUsers(); // Refresh the user list after updating
+          refreshUsers();
         }}
         user={selectedUser}
-        onUpdateSuccess={refreshUsers} // Pass the refresh function to the modal
+        onUpdateSuccess={refreshUsers}
       />
     </div>
   );
