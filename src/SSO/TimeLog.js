@@ -79,7 +79,7 @@ const TimeLog = () => {
             <Navigation loggedInUser={loggedInUser} />          
 
             <div className={navStyles.content}>
-                <div className={navStyles['h1-title']}>Advisers List</div>
+                <div className={navStyles['h1-title']}>Time Logs</div>
                 <div className={styles['time-center-container']}>
                     <div className={styles['time-table-container']}>
                         <table className={styles['time-table']}>
@@ -121,7 +121,7 @@ const TimeLog = () => {
                             onClick={openModal} 
                             disabled={!selectedAdviser}
                         >
-                            View Time Logs
+                            View Logs
                         </button>
                     </div>
                         

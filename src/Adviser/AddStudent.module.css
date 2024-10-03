@@ -32,8 +32,7 @@ label {
 }
 
 input[type="text"],
-input[type="number"],
-select {
+input[type="number"] {
     width: 250px; /* Fixed width for input boxes */
     flex: 1; /* Allow input to grow and fill remaining space */
     padding: 10px; /* Increase padding for better touch targets */
@@ -43,13 +42,6 @@ select {
     box-sizing: border-box; /* Include padding and border in input width */
 }
 
-
-select {
-    appearance: none; /* Remove default select arrow */
-    background-image: url('data:image/svg+xml;utf8,<svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M7 10l5 5 5-5H7z"/></svg>'); /* Add custom select arrow */
-    background-repeat: no-repeat; /* Prevent arrow from repeating */
-    background-position: right 10px center; /* Position arrow on the right with padding */
-}
 
 .add-student-button {
     background-color: #861b1c; /* Blue button color */

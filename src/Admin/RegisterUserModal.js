@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import styles from './RegisterUserModal.module.css';
-import styles1 from '../GlobalForm.module.css';
+import formStyles from '../GlobalForm.module.css';
 
 const RegisterUserModal = ({ isOpen, onClose, role }) => {
     const [userData, setUserData] = useState({
@@ -117,10 +117,10 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
             <div className={styles['modal-content']} onClick={e => e.stopPropagation()}>
                 <button className={styles['modal-close-button']} onClick={onClose}>X</button>
                 <h2>Register {role}</h2>
-                <form onSubmit={handleSubmit} className={styles1['form-container']}>
-                    {message && <p className={styles1.success}>{message}</p>}
-                    {error && <p className={styles1.error}>{error}</p>}
-                    <div className={styles1['form-group']}>
+                <form onSubmit={handleSubmit} className={formStyles['form-container']}>
+                    {message && <p className={formStyles.success}>{message}</p>}
+                    {error && <p className={formStyles.error}>{error}</p>}
+                    <div className={formStyles['form-group']}>
                         <label htmlFor="username">Username:</label>
                         <input
                             type="text"
@@ -132,7 +132,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                             required
                         />
                     </div>
-                    <div className={styles1['form-group']}>
+                    <div className={formStyles['form-group']}>
                         <label htmlFor="password">Password:</label>
                         <input
                             type="password"
@@ -144,7 +144,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                             required
                         />
                     </div>
-                    <div className={styles1['form-group']}>
+                    <div className={formStyles['form-group']}>
                         <label htmlFor="firstname">First Name:</label>
                         <input
                             type="text"
@@ -156,7 +156,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                             required
                         />
                     </div>
-                    <div className={styles1['form-group']}>
+                    <div className={formStyles['form-group']}>
                         <label htmlFor="lastname">Last Name:</label>
                         <input
                             type="text"
@@ -168,7 +168,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                             required
                         />
                     </div>
-                    <div className={styles1['form-group']}>
+                    <div className={formStyles['form-group']}>
                         <label htmlFor="email">Email:</label>
                         <input
                             type="email"
@@ -182,7 +182,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                     </div>
                     {role === 'Adviser' && (
                         <>
-                            <div className={styles1['form-group']}>
+                            <div className={formStyles['form-group']}>
                                 <label htmlFor="grade">Grade:</label>
                                 <select
                                     id="grade"
@@ -197,7 +197,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                                     ))}
                                 </select>
                             </div>
-                            <div className={styles1['form-group']}>
+                            <div className={formStyles['form-group']}>
                                 <label htmlFor="section">Section:</label>
                                 <select
                                     id="section"
@@ -212,7 +212,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                                     ))}
                                 </select>
                             </div>
-                            <div className={styles1['form-group']}>
+                            <div className={formStyles['form-group']}>
                                 <label htmlFor="schoolYear">School Year:</label>
                                 <select
                                     id="schoolYear"
@@ -229,7 +229,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                             </div>
                         </>
                     )}
-                    <button type="submit" className={styles1['global-button']}>Register</button>
+                    <button type="submit" className={formStyles['global-button']}>Register</button>
                 </form>
             </div>
         </div>,

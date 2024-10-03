@@ -198,6 +198,10 @@ body{
         margin-left: -40px;
     }
 
+    .h1-title{
+        margin-top: 10px;
+    }
+
     /* Hide logo in collapsed view */
     .sidebar-logo {
         display: none;
@@ -237,6 +241,10 @@ body{
 
     .sidenav-title {
         font-size: 12px; /* Even smaller font size for mobile */
+    }
+
+    .h1-title{
+        margin-top: 10px;
     }
 
     .content {

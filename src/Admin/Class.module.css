@@ -75,7 +75,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 380px;
+  width: 370px;
   background-color: white;
   border: 2px solid black;
   border-radius: 10px;
@@ -84,27 +84,46 @@
 
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centers the input fields horizontally */
   justify-content: center;
 }
 
 .modalHeader {
-  text-align: center;
+  text-align: left;
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 16px;
 }
 
-.inputField {
-  margin-top: 5px;
-  margin-bottom: 10px;
-  width: 250px;
-  flex: 1 1;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-sizing: border-box;
+.class-container {
+  display: flex; /* Use flexbox */
+  flex-direction: column; /* Arrange children in a column */
+}
+
+.class-group {
+  display: flex; /* Use flexbox */
+  align-items: center; /* Align items vertically */
+  margin-bottom: 5px;
+}
+
+.class-group label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #800000;
+}
+
+.class-group input[type="section"],
+.class-group input[type="year"],
+.class-group select {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    width: 210px; /* Fixed width for input and select boxes */
+    padding: 10px; /* Increase padding for better touch targets */
+    font-size: 14px; /* Increase font size for better readability */
+    border: 1px solid #ddd; /* Add border for inputs */
+    border-radius: 5px; /* Add border radius for inputs */
+    box-sizing: border-box; /* Include padding and border in input width */
+    margin-left: auto; /* Align to the right */
+    background-color: #f9f9f9; /* Optional: Background color for better UX */
 }
 
 .buttonGroup {
