@@ -19,30 +19,56 @@ const Student = () => {
     const [isUploading, setIsUploading] = useState(false);
     const navigate = useNavigate();
 
+    // Fetch students and school years
     useEffect(() => {
         if (loggedInUser) {
             document.title = loggedInUser.userType === 3 ? "Adviser | Student" : loggedInUser.userType === 1 ? "SSO | Student" : "Student";
 
-            const url = loggedInUser.userType === 3
-                ? `http://localhost:8080/student/getAllStudentsByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`
-                : 'http://localhost:8080/student/getAllCurrentStudents';
+            // Fetch students based on userType
+            const fetchStudents = async () => {
+                try {
+                    let url = '';
+                    let params = {};
 
-            fetch(url)
+                    // Adviser-specific API call with section and school year
+                    if (loggedInUser.userType === 3) {
+                        url = 'http://localhost:8080/student/getAllStudentsByAdviser';
+                        params = {
+                            section: loggedInUser.section,
+                            schoolYear: loggedInUser.schoolYear,
+                        };
+                    } else {
+                        // For other user types
+                        url = 'http://localhost:8080/student/getAllCurrentStudents';
+                    }
+
+                    const response = await axios.get(url, {
+                        params,
+                        headers: {
+                            Authorization: `Bearer ${authToken}`,
+                        },
+                    });
+
+                    setStudents(response.data); // Set students in state
+                } catch (error) {
+                    console.error('Error fetching students:', error);
+                }
+            };
+
+            fetchStudents();
+
+            // Fetch school years for the dropdown
+            fetch('http://localhost:8080/schoolYear/getAllSchoolYears')
                 .then(response => response.json())
-                .then(data => setStudents(data))
-                .catch(error => console.error('Error fetching students:', error));
+                .then(data => setSchoolYears(data))
+                .catch(error => console.error('Error fetching school years:', error));
+
         } else {
             console.error('Logged-in user details are missing.');
         }
+    }, [loggedInUser, authToken]);
 
-        // Fetch school years for the dropdown
-        fetch('http://localhost:8080/schoolYear/getAllSchoolYears')
-            .then(response => response.json())
-            .then(data => setSchoolYears(data))
-            .catch(error => console.error('Error fetching school years:', error));
-
-    }, [loggedInUser]);
-
+    // Remove selected student if no longer in the student list
     useEffect(() => {
         if (students.length === 0 || !students.some(s => s.id === selectedStudent?.id)) {
             setSelectedStudent(null);
@@ -214,7 +240,7 @@ const Student = () => {
                         </button>
                     )}
                 </div>
-            </div>
+            </div>                 
         </div>
     );
 };

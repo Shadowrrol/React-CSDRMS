@@ -94,6 +94,13 @@ const AddReportModal = ({ onClose, refreshReports }) => {
     setShowDropdown(false); // Hide dropdown after selection
   };
 
+  // Handle clearing the student selection
+  const handleClearSelection = () => {
+    setNewReport({ ...newReport, studentId: '' });
+    setSearchQuery(''); // Clear the search query
+    setShowDropdown(false); // Hide the dropdown
+  };
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
@@ -101,13 +108,23 @@ const AddReportModal = ({ onClose, refreshReports }) => {
 
         {/* Student Search and Select Field */}
         <div className={styles.studentSearchContainer}>
-          <input
-            type="text"
-            placeholder="Search student by name or ID"
-            value={searchQuery}
-            onChange={handleSearch}
-            onFocus={() => setShowDropdown(true)} // Show dropdown when the field is focused
-          />
+          <div className={styles.searchWrapper}>
+            <input
+              type="text"
+              placeholder="Search student by name or ID"
+              value={searchQuery}
+              onChange={handleSearch}
+              onFocus={() => setShowDropdown(true)} // Show dropdown when the field is focused
+              disabled={!!newReport.studentId} // Disable input if a student is selected
+            />
+
+            {/* Show "X" button when a student is selected */}
+            {newReport.studentId && (
+              <button className={styles.clearButton} onClick={handleClearSelection}>
+                ✕
+              </button>
+            )}
+          </div>
 
           {/* Dropdown list for filtered students */}
           {showDropdown && filteredStudents.length > 0 && (
