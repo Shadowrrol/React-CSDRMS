@@ -1,0 +1,11 @@
+.reportButton:disabled {
+    background-color: #D3D3D3; /* Light Gray */
+    color: #999999; /* Muted gray text */
+    cursor: not-allowed;
+    border: 1px solid #CCCCCC; /* Light gray border */
+  }
+  
+  .reportButton:disabled:hover {
+    background-color: #D3D3D3; /* Keep background unchanged on hover */
+    cursor: not-allowed;
+  }

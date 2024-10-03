@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import styles from './AddSuspensionModal.module.css'; // Style the modal as needed
 
-const AddSuspensionModal = ({ onClose, reportId, refreshReports }) => {
+const AddSuspensionModal = ({ onClose, reportId, refreshReports, refreshSuspensions }) => {
   const [suspensionData, setSuspensionData] = useState({
     days: '',
     startDate: '',
@@ -25,7 +25,9 @@ const AddSuspensionModal = ({ onClose, reportId, refreshReports }) => {
       };
 
       await axios.post('http://localhost:8080/suspension/insertSuspension', suspensionPayload);
-      refreshReports(); // Refresh the reports list after submission
+      
+      refreshSuspensions(); // Call the suspension refresh function passed from parent
+      refreshReports(); // Optionally refresh reports to reflect any report changes
       onClose(); // Close the modal after submission
     } catch (error) {
       console.error('Error creating suspension:', error);
@@ -38,32 +40,46 @@ const AddSuspensionModal = ({ onClose, reportId, refreshReports }) => {
         <h2>Add Suspension</h2>
 
         {/* Suspension form fields */}
-        <div>
+        <div className={styles.formGroup}>
+          <label htmlFor="days">Number of Suspension Days</label>
           <input
             type="number"
+            id="days"
             name="days"
             placeholder="Number of Suspension Days"
             value={suspensionData.days}
             onChange={handleInputChange}
           />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="startDate">Start Date</label>
           <input
             type="date"
+            id="startDate"
             name="startDate"
-            placeholder="Start Date"
             value={suspensionData.startDate}
             onChange={handleInputChange}
           />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="endDate">End Date</label>
           <input
             type="date"
+            id="endDate"
             name="endDate"
-            placeholder="End Date"
             value={suspensionData.endDate}
             onChange={handleInputChange}
           />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="returnDate">Return Date</label>
           <input
             type="date"
+            id="returnDate"
             name="returnDate"
-            placeholder="Return Date"
             value={suspensionData.returnDate}
             onChange={handleInputChange}
           />

@@ -20,7 +20,22 @@ const AddReportModal = ({ onClose, refreshReports }) => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
+        let response;
+        
+        // Check if usertype is 3 (Adviser)
+        if (loggedInUser.userType === 3) {
+          // Fetch students by adviser's section and school year
+          response = await axios.get('http://localhost:8080/student/getAllStudentsByAdviser', {
+            params: {
+              section: loggedInUser.section, // Pass section from logged in user
+              schoolYear: loggedInUser.schoolYear, // Pass schoolYear from logged in user
+            },
+          });
+        } else {
+          // Default API call for other user types
+          response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
+        }
+
         setStudents(response.data);
         setFilteredStudents(response.data); // Set filtered students initially to all students
       } catch (error) {
@@ -29,7 +44,7 @@ const AddReportModal = ({ onClose, refreshReports }) => {
     };
 
     fetchStudents();
-  }, []);
+  }, [loggedInUser]);
 
   // Handle input changes for the form
   const handleInputChange = (e) => {
