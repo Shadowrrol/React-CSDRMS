@@ -10,6 +10,8 @@ import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import navStyles from './Navigation.module.css'; // CSS for Navigation
 import JHSLogo from './image-sso-yellow.png';
+/*import TableViewIcon from '@mui/icons-material/TableView';*/
+
 /*import MenuPopupState from '../components/MenuPopupState';*/
 
 const Navigation = ({ loggedInUser }) => {
@@ -28,20 +30,39 @@ const Navigation = ({ loggedInUser }) => {
   );
 
   return (
-    <>
+    <>  
         {/* Sidebar */}
         <div className={navStyles.sidenav}>
             <div className={navStyles['sidenav-title']}>MENU</div>
-            {/* Admin */}
+
+            {/* SSO - usertype 1 */}
+            {loggedInUser.userType === 1 && createSidebarLink("/record", "Dashboard", AssessmentIcon)}
+            {loggedInUser.userType === 1 && createSidebarLink("/student", "Student", SchoolIcon)}
+            {loggedInUser.userType === 1 && createSidebarLink("/timeLog", "Time Log", AccessTimeFilledIcon)}
+            {loggedInUser.userType === 1 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+            {loggedInUser.userType === 1 && createSidebarLink("/report", "Report", PostAddIcon)}
+            {/* {loggedInUser.userType === 1 && loggedInUser.userType === 6 && createSidebarLink("/student", "Student", SchoolIcon)} 
+                {loggedInUser.userType === 2 && loggedInUser.userType === 6 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)} */}
+
+            {/* Principal - usertype 2 */}
+            {loggedInUser.userType === 2 && createSidebarLink("/record", "Dashboard", AssessmentIcon)}
+            {loggedInUser.userType === 2 && createSidebarLink("/viewSuspensions", "Suspension", LocalPoliceIcon)}
+            {loggedInUser.userType === 2 && createSidebarLink("/report", "Report", PostAddIcon)}
+
+            {/* Adviser - usertype 3 */}
+            {loggedInUser.userType === 3 && createSidebarLink("/record", "Dashboard", AssessmentIcon)}
+            {loggedInUser.userType === 3 && createSidebarLink("/student", "Student", SchoolIcon)}
+            {loggedInUser.userType === 3 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+            {loggedInUser.userType === 3 && createSidebarLink("/report", "Report", PostAddIcon)}            
+
+            {/* Admin - usertype 4 */}
             {loggedInUser.userType === 4 && createSidebarLink("/AdminDashboard", "Dashboard", AccountBoxIcon)}
             {loggedInUser.userType === 4 && createSidebarLink("/Class", "Class", SchoolIcon)}
 
-            {loggedInUser.userType === 2 && createSidebarLink("/record", "Dashboard", AssessmentIcon)}
-            {loggedInUser.userType === 1 && loggedInUser.userType === 6 && createSidebarLink("/student", "Student", SchoolIcon)}
-            {loggedInUser.userType === 2 && loggedInUser.userType === 6 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-            {loggedInUser.userType === 2 && createSidebarLink("/report", "Report", PostAddIcon)}
-            {loggedInUser.userType === 2 && createSidebarLink("/viewSuspensions", "Suspensions", LocalPoliceIcon)}
-            {loggedInUser.userType === 1 && createSidebarLink("/timeLog", "Time Log", AccessTimeFilledIcon)}
+            {/* Guidance - usertype 6 */}
+            {loggedInUser.userType === 6 && createSidebarLink("/record", "Dashboard", AssessmentIcon)}
+            {loggedInUser.userType === 6 && createSidebarLink("/report", "Report", PostAddIcon)}             
+
         </div>
 
         {/* Header */}

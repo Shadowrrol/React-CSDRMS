@@ -1,19 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Navigation.module.css";
-
-import AssessmentIcon from "@mui/icons-material/Assessment";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import PostAddIcon from "@mui/icons-material/PostAdd";
-import SchoolIcon from "@mui/icons-material/School";
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
-
-const createSidebarLink = (to, text, IconComponent) => (
-  <Link to={to} className={styles["styled-link"]}>
-    <IconComponent className={styles.icon} />
-    <span className={styles["link-text"]}>{text}</span>
-  </Link>
-);
+import Navigation from './Navigation';
 
 const Notification = () => {
   const navigate = useNavigate();
@@ -129,11 +117,6 @@ const Notification = () => {
     fetchData(); // Fetch all data
   }, [fetchData]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    navigate("/");
-  };
-
   const getSanctionStatus = (isApproved) => {
     return isApproved === 1 ? "Accepted" : isApproved === 2 ? "Declined" : "Pending";
   };
@@ -193,21 +176,10 @@ const Notification = () => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.sidenav}>
-        <img src="/image-removebg-preview (1).png" alt="" className={styles["sidebar-logo"]} />
-        {createSidebarLink("/record", "Record", AssessmentIcon)}
-        {createSidebarLink("/student", "Student", SchoolIcon)}
-        {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-        {loggedInUser.userType !== 2 && createSidebarLink("/report", "Report", PostAddIcon)}
-        
-         {loggedInUser.userType === 1 && createSidebarLink("/timelog", "Time Log", AccessTimeFilledIcon)}
-        <button className={styles["logoutbtn"]} onClick={handleLogout}>
-          Logout
-        </button>
-      </div>
+      <Navigation loggedInUser={loggedInUser} />
 
       <div className={styles.content}>
-        <h1>Notifications</h1>
+        <div className={styles['h1-title']}>Notifications</div>
         {sanctionError && <p style={{ color: "red" }}>{sanctionError}</p>}
         {feedbackError && <p style={{ color: "red" }}>{feedbackError}</p>}
         {followupError && <p style={{ color: "red" }}>{followupError}</p>}

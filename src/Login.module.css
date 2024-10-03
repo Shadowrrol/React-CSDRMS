@@ -62,7 +62,7 @@
 }
 
 .title {
-  color: #81343a;
+  color: #8A252C;
   font-weight: 1000;
   font-size: 1.5em;
   margin-top: 30px;
@@ -79,7 +79,7 @@
   bottom: 0;
   width: 120%;
   height: 2px;
-  background: linear-gradient(180deg, #81343a, #e8bd26);
+  background: linear-gradient(180deg, #8A252C, #e8bd26);
   transform: translateX(-10%);
 }
 
@@ -121,7 +121,7 @@
   width: 50vw; /* Adjust width for responsiveness */
   max-width: 190px; /* Set a max-width for larger screens */
   font-size: 15px;
-  background: #81343a;
+  background: #8A252C;
   border-radius: 10px;
   font-weight: 800;
   box-shadow: 3px 3px 0px 0px #e8bd26;

@@ -1,66 +1,123 @@
-/* Report.module.css */
+/* Content title */
+.h1-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 28px;
+  color: #81343a;
+  font-weight: bold;
+  margin-right: 5px;
+}
 
+.RecordTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.TitleContainer {
+  display: flex; /* Use flexbox */
+  align-items: center; /* Align titles vertically */
+}
+
+/* Filter Styles */
 .filters {
-    margin-bottom: 20px; /* Space between filters and the chart */
-    display: flex;
-    gap: 10px; /* Space between individual filter elements */
-    flex-wrap: wrap; /* Allows filters to wrap to the next line if necessary */
-    text-align: center;
+  margin-bottom: 20px; /* Space between filters and the chart */
+  display: flex;
+  gap: 10px; /* Space between individual filter elements */
+  flex-wrap: wrap; /* Allows filters to wrap to the next line if necessary */
+  text-align: center;
 }
 
-.filters select {
-    padding: 5px; /* Reduced padding for smaller buttons */
-    font-size: 14px; /* Adjust font size for smaller appearance */
-    border: 1px solid #ccc; /* Border styling */
-    border-radius: 4px; /* Rounded corners */
-    background-color: #fff; /* Background color */
+.filters select,
+.filterContainer select {
+  padding: 10px; /* Reduced padding for smaller buttons */
+  font-size: 14px; /* Adjust font size for smaller appearance */
+  border: 1px solid #ccc; /* Border styling */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #fff; /* Background color */
+  color: #414141; 
+  margin-left: 10px;
+  width: 10%;
+  text-align: center;
 }
 
+.filterContainer {
+  margin-bottom: 20px;
+}
+
+.switchViewButton {
+  background-color: #81343a; /* Button color */
+  color: #fff; /* White text color */
+  border: none; /* Remove button border */
+  border-radius: 20px; /* Add border radius to button */
+  padding: 12px 20px; /* Increase padding for better touch targets */
+  font-size: 16px; /* Increase font size for better readability */
+  cursor: pointer; /* Show pointer cursor on hover */
+  margin: 0 auto; /* Center the button horizontally */
+  display: flex;
+  transition: transform 0.3s ease, background-color 0.3s ease-in-out;
+  animation: fadeInLeft 0.8s ease-in-out;
+  text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
+  margin-top: 20px;
+}
+
+.switchViewButton:hover {
+  background-color: #6d3f3e; 
+  transform: scale(1.05); /* Slightly enlarge on hover */ 
+}
+
+.switchViewButton:focus {
+  outline: none;
+}
+
+/* Chart Styles */
 .chart {
-    margin-top: 30px; /* Space above the chart */
-    padding: 20px; /* Padding around the chart for better spacing */
-    border: 1px solid #ddd; /* Optional: border around the chart */
-    border-radius: 8px; /* Rounded corners for the chart */
-    background-color: #f9f9f9; /* Light background for contrast */
+  margin-top: 30px; /* Space above the chart */
+  padding: 20px; /* Padding around the chart for better spacing */
+  border: 1px solid #ddd; /* Optional: border around the chart */
+  border-radius: 8px; /* Rounded corners for the chart */
+  background-color: #f9f9f9; /* Light background for contrast */
 }
 
-/* Record.module.css */
+.chartWrapper {
+  margin-top: 30px;
+  max-width: 100%;
+}
 
-.recordWrapper {
-    margin: 20px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .recordTitle {
-    font-size: 28px;
-    font-weight: bold;
-    color: #4a4a4a;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .switchViewButton {
-    display: block;
-    margin: 0 auto 20px auto;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .switchViewButton:hover {
-    background-color: #0056b3;
-  }
-  
-  .switchViewButton:focus {
-    outline: none;
-  }
-  
-  
+.chartContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chart{
+  width: 100%;
+}
+
+/* Table Styles */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.table tr:hover {
+  background-color: #f1f1f1;
+}
+

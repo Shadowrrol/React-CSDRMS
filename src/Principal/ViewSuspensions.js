@@ -2,8 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import navStyles from "../Navigation.module.css"; // Import CSS module
-import AssessmentIcon from "@mui/icons-material/Assessment";
-import LocalPoliceIcon from "@mui/icons-material/LocalPolice";
+import Navigation from '../Navigation'; // Import the Navigation component
 import Button from "@mui/material/Button";
 import SuspensionModal from "./SuspensionModal"; // Import the modal component
 
@@ -55,15 +54,9 @@ const ViewSuspensions = () => {
 
   return (
     <div className={navStyles.wrapper}>
-      <div className={navStyles.sidenav}>
-        <img src="/image-removebg-preview (1).png" alt="" className={navStyles["sidebar-logo"]} />
-        {createSidebarLink("/record", "Record", AssessmentIcon)}
-        {createSidebarLink("/viewSuspensions", "Suspensions", LocalPoliceIcon)}
-        <button className={navStyles["logoutbtn"]} onClick={handleLogout}>
-          Logout
-        </button>
-      </div>
-      <div className="content">
+      <Navigation loggedInUser={loggedInUser} />
+
+      <div className={navStyles.content}>
         <h2>Suspension List</h2>
         {loading && <p>Loading suspensions...</p>}
         {error && <p>{error}</p>}

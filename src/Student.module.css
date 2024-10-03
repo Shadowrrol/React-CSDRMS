@@ -30,7 +30,6 @@
 .searchfilter {
     display: flex;
     gap: 10px;
-    margin-top: 20px;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically (optional) */
 }
@@ -50,7 +49,7 @@
 
 .student-content h2 {
     margin-bottom: 20px;
-    color: #81343a; /* Dark red text color */
+    color: #8A252C; /* Dark red text color */
     font-family: 'Arial', sans-serif; /* Modern font */
     font-size: 28px;
     text-shadow: 1px 1px 3px #808080;  /* Slight shadow for all text */
@@ -58,7 +57,7 @@
 
 .student-content button {
     background-color: #FFD700; /* Gold background for buttons */
-    color: #81343a; /* Dark red text for buttons */
+    color: #8A252C; /* Dark red text for buttons */
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -88,7 +87,7 @@
     width: 100%;
     border-collapse: collapse; /* Ensures borders are not doubled */
     table-layout: fixed; /* Ensures consistent cell width */
-    border: 2px solid #81343a;  
+    border: 2px solid #8A252C;  
 }
 
 .student-table thead {
@@ -104,11 +103,11 @@
 }
 
 .student-table th {
-    background-color: #81343a;
+    background-color: #8A252C;
     color: #fff;
     font-weight: 600;
     text-shadow: 3px 3px 5px #000;  /* Slight shadow for all text */
-    border: 0.5px solid #81343a;  
+    border: 0.5px solid #8A252C;  
 }
 
 .student-table td {
@@ -133,7 +132,7 @@
 }
 
 .student-table tr.selected-row {
-    color: #81343a; /* Dark red text color for selected row */
+    color: #8A252C; /* Dark red text color for selected row */
     font-weight: bold; /* Bold text for selected row */
     background-color: #e0e0e0 !important; /* Light gray background for the selected row */
 }

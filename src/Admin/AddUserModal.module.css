@@ -29,7 +29,7 @@
   border: none;
   font-size: 16px;
   cursor: pointer;
-  color: #81343a;
+  color: #8A252C;
   transition: color 0.3s, transform 0.3s;
 }
 
@@ -41,7 +41,7 @@
 
 .add-user-modal-button {
   display: block;
-  background-color: #81343a;
+  background-color: #8A252C;
   color: #fff;
   border: none;
   border-radius: 5px;

@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import styles from './Navigation.module.css';
+import navStyles from './Navigation.module.css';
+import Navigation from './Navigation'; // Importing the updated Navigation component
 import AddReportModal from './AddReportModal';
 import AddSuspensionModal from './SSO/AddSuspensionModal';
-
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import SchoolIcon from '@mui/icons-material/School';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import PostAddIcon from '@mui/icons-material/PostAdd';
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 
 const Reports = () => {
   const authToken = localStorage.getItem('authToken');
@@ -105,20 +100,6 @@ const Reports = () => {
     setShowSuspensionModal(true);
   };
 
-  // Handle logout
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    navigate('/');
-  };
-
-  // Sidebar link generator
-  const createSidebarLink = (to, text, IconComponent) => (
-    <Link to={to} className={styles['styled-link']}>
-      <IconComponent className={styles.icon} />
-      <span className={styles['link-text']}>{text}</span>
-    </Link>
-  );
-
   // Show or hide the report modal
   const toggleReportModal = () => {
     setShowReportModal(!showReportModal);
@@ -131,21 +112,11 @@ const Reports = () => {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.sidenav}>
-        <img src="/image-removebg-preview (1).png" alt="Logo" className={styles['sidebar-logo']} />
-        {loggedInUser && loggedInUser.userType !== 5 && createSidebarLink('/record', 'Record', AssessmentIcon)}
-        {loggedInUser && loggedInUser.userType !== 5 && loggedInUser.userType !== 6 && createSidebarLink('/student', 'Student', SchoolIcon)}
-        {loggedInUser && loggedInUser.userType !== 5 && loggedInUser.userType !== 6 && createSidebarLink('/notification', 'Notification', NotificationsActiveIcon)}
-        {createSidebarLink('/report', 'Report', PostAddIcon)}
-        {loggedInUser?.userType === 1 && createSidebarLink("/timeLog", "Time Log", AccessTimeFilledIcon)}
-        <button className={styles['logoutbtn']} onClick={handleLogout}>
-          Logout
-        </button>
-      </div>
+    <div className={navStyles.wrapper}>
+      <Navigation loggedInUser={loggedInUser} />  
 
       {/* Reports section */}
-      <div>
+      <div className={navStyles.content}>
         <h2>Reports List</h2>
         {loading ? (
           <p>Loading reports...</p>

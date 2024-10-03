@@ -95,7 +95,7 @@ function App() {
 
           )}
 
-          {(loggedInUser && (loggedInUser.userType === 1 || loggedInUser.userType === 3 || loggedInUser.userType === 5 || loggedInUser.userType === 6)) && (
+          {(loggedInUser && (loggedInUser.userType !== 4)) && (
             <>
             <Route path="/report" element={<Report />} /> 
             </>

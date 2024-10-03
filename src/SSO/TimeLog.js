@@ -1,22 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+/* import { useNavigate } from 'react-router-dom'; */
 import axios from 'axios';
 import styles from './TimeLog.module.css'; 
 import navStyles from '../Navigation.module.css'; 
+import Navigation from '../Navigation'; // Importing the updated Navigation component
 import AdviserTimeLogModal from './AdviserTimeLogModal'; // Import the modal
-
-import SchoolIcon from '@mui/icons-material/School';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import PostAddIcon from '@mui/icons-material/PostAdd';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
-
-const createSidebarLink = (to, text, IconComponent) => (
-    <Link to={to} className={navStyles['styled-link']}>
-        <IconComponent className={navStyles.icon} />
-        <span className={navStyles['link-text']}>{text}</span>
-    </Link>
-);
 
 const TimeLog = () => {
     const [advisers, setAdvisers] = useState([]);
@@ -29,7 +17,7 @@ const TimeLog = () => {
     const authToken = localStorage.getItem('authToken');
     const loggedInUser = JSON.parse(authToken);
     const { uid } = loggedInUser;
-    const navigate = useNavigate();
+    /*const navigate = useNavigate();*/
 
     // Set the document title for the Time Log page
     useEffect(() => {
@@ -51,11 +39,6 @@ const TimeLog = () => {
 
         fetchAdvisers();
     }, []);
-
-    const handleLogout = async () => {
-        localStorage.removeItem("authToken");
-        navigate("/");
-    };
 
     const openModal = () => {
         if (selectedAdviser) {
@@ -93,18 +76,10 @@ const TimeLog = () => {
 
     return (
         <div className={navStyles.wrapper}>
-            <div className={navStyles.sidenav}>
-                <img src="/image-removebg-preview (1).png" alt="logo" className={navStyles['sidebar-logo']} />
-                {createSidebarLink("/record", "Record", AssessmentIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/student", "Student", SchoolIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/report", "Report", PostAddIcon)}
-                {loggedInUser.userType === 1 && createSidebarLink("/timeLog", "Time Log", AccessTimeFilledIcon)}
-                <button className={navStyles.logoutbtn} onClick={handleLogout}>Logout</button>
-            </div>
+            <Navigation loggedInUser={loggedInUser} />          
 
             <div className={navStyles.content}>
-                <h1>Advisers List</h1>
+                <div className={navStyles['h1-title']}>Advisers List</div>
                 <div className={styles['time-center-container']}>
                     <div className={styles['time-table-container']}>
                         <table className={styles['time-table']}>

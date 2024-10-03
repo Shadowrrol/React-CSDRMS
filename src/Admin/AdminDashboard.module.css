@@ -5,7 +5,7 @@
     box-sizing: border-box;
 }
 
-html, body {
+/* html, body {
     font-family: 'Poppins', sans-serif;
     background-color: #f7f9fc;
     color: #333;
@@ -13,12 +13,12 @@ html, body {
     height: 100%;
     font-size: 14px;
     text-align: center;
-}
+} */
 
 h1 {
     font-size: 28px;
     font-weight: bold;
-    color: #81343a;
+    color: #8A252C;
     margin: 0px 0 25px 0;
     text-shadow: 1px 1px 3px #808080;  /* Slight shadow for all text */
 }
@@ -73,7 +73,7 @@ h2 {
     max-height: 400px; /* Adjust height as needed */
     max-width: 850px;
     overflow-y: auto; /* Enable vertical scrolling */
-    border: 2px solid #81343a;
+    border: 2px solid #8A252C;
 }
 
 /* Table Styling */
@@ -96,7 +96,7 @@ h2 {
 }
 
 .user-table th {
-    background-color: #81343a;
+    background-color: #8A252C;
     color: #fff;
     text-shadow: 3px 3px 5px #000;  /* Slight shadow for all text */
     font-weight: 600;
@@ -120,7 +120,7 @@ h2 {
 
 .selected-row {
     background-color: #e0e0e0 !important;
-    color: #81343a; /* Dark red text color for selected row */
+    color: #8A252C; /* Dark red text color for selected row */
     font-weight: bold;
 }
 

@@ -117,8 +117,9 @@ const Class = () => {
     <div className={navStyles.wrapper}>
       <Navigation loggedInUser={loggedInUser} />  
 
+      {/* Main Content */}
       <div className={navStyles.content}>
-        <h1 className={navStyles['h1-title']}>Class Management</h1>
+        <div className={navStyles['h1-title']}>Class Management</div>
         <div className={classStyles.divide}>
           <div className={classStyles.tableContainer}>
             <div className={classStyles.table}>

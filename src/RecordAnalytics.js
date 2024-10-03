@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
-import axios from 'axios';
-import styles from './RecordAnalytics.module.css';
+import styles from './Record.module.css';
+import RecordFilter from './RecordFilter'; // Importing the new RecordFilter component
 
 Chart.register(...registerables);
 
 const RecordAnalytics = ({ records, schoolYears, grades }) => {
   const authToken = localStorage.getItem('authToken');
   const loggedInUser = authToken ? JSON.parse(authToken) : null;
-  
-  const [sections, setSections] = useState([]);
+
   const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
   const [selectedGrade, setSelectedGrade] = useState(loggedInUser?.userType === 3 ? loggedInUser.grade : '');
   const [selectedSection, setSelectedSection] = useState(loggedInUser?.userType === 3 ? loggedInUser.section : '');
@@ -30,57 +29,24 @@ const RecordAnalytics = ({ records, schoolYears, grades }) => {
     { value: '05', label: 'May' },
   ];
 
-  const weeks = [
-    { value: '1', label: 'Week 1' },
-    { value: '2', label: 'Week 2' },
-    { value: '3', label: 'Week 3' },
-    { value: '4', label: 'Week 4' },
-  ];
-
-  useEffect(() => {
-    if (selectedGrade) {
-      fetchSectionsByGrade(selectedGrade);
-    }
-  }, [selectedGrade]);
-
-  const fetchSectionsByGrade = async (grade) => {
-    try {
-      const response = await axios.get(`http://localhost:8080/class/sections/${grade}`);
-      setSections(response.data);
-    } catch (error) {
-      console.error('Error fetching sections:', error);
-    }
-  };
-
-  const getRandomColor = () => {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  };
-
   const countRecordsByDayOrMonth = (dayOrMonth, category, isMonthView = false) => {
-    return records
-      .filter((record) => {
-        if (loggedInUser?.userType !== 3 && selectedSchoolYear && record.student.schoolYear !== selectedSchoolYear) return false;
-        if (selectedGrade && record.student.grade !== selectedGrade) return false;
-        if (selectedSection && record.student.section !== selectedSection) return false;
+    return records.filter((record) => {
+      if (loggedInUser?.userType !== 3 && selectedSchoolYear && record.student.schoolYear !== selectedSchoolYear) return false;
+      if (selectedGrade && record.student.grade !== selectedGrade) return false;
+      if (selectedSection && record.student.section !== selectedSection) return false;
 
-        const recordDate = new Date(record.record_date);
-        const recordMonth = String(recordDate.getMonth() + 1).padStart(2, '0');
-        const recordWeek = Math.ceil(recordDate.getDate() / 7);  // Calculate week based on the day of the month
-        if (isMonthView) {
-          if (selectedWeek && recordWeek !== parseInt(selectedWeek, 10)) return false;
-          return recordMonth === dayOrMonth && record.monitored_record === category;
-        } else {
-          const recordDay = recordDate.getDate();
-          if (selectedWeek && recordWeek !== parseInt(selectedWeek, 10)) return false;
-          return recordDay === dayOrMonth && recordMonth === selectedMonth && record.monitored_record === category;
-        }
-      })
-      .length;
+      const recordDate = new Date(record.record_date);
+      const recordMonth = String(recordDate.getMonth() + 1).padStart(2, '0');
+      const recordWeek = Math.ceil(recordDate.getDate() / 7);
+      if (isMonthView) {
+        if (selectedWeek && recordWeek !== parseInt(selectedWeek, 10)) return false;
+        return recordMonth === dayOrMonth && record.monitored_record === category;
+      } else {
+        const recordDay = recordDate.getDate();
+        if (selectedWeek && recordWeek !== parseInt(selectedWeek, 10)) return false;
+        return recordDay === dayOrMonth && recordMonth === selectedMonth && record.monitored_record === category;
+      }
+    }).length;
   };
 
   const categories = ['Absent', 'Tardy', 'Cutting Classes', 'Improper Uniform', 'Offense', 'Misbehavior', 'Clinic', 'Sanction'];
@@ -127,112 +93,42 @@ const RecordAnalytics = ({ records, schoolYears, grades }) => {
   };
 
   return (
-    <div className={styles.analyticsWrapper}>
-      <h2 className={styles.analyticsTitle}>Analytics Overview</h2>
-
-      <div className={styles.filterContainer}>
-        {/* Hide school year filter for userType 3 */}
-        {loggedInUser?.userType !== 3 && (
-          <>
-            <label htmlFor="schoolYearFilter">Filter by School Year:</label>
-            <select
-              id="schoolYearFilter"
-              value={selectedSchoolYear}
-              onChange={(e) => setSelectedSchoolYear(e.target.value)}
-            >
-              <option value="">All School Years</option>
-              {schoolYears.map((schoolYear) => (
-                <option key={schoolYear.schoolYear_ID} value={schoolYear.schoolYear}>
-                  {schoolYear.schoolYear}
-                </option>
-              ))}
-            </select>
-          </>
-        )}
-      </div>
-
-      <div className={styles.filterContainer}>
-        <label htmlFor="gradeFilter">Filter by Grade:</label>
-        <select
-          id="gradeFilter"
-          value={selectedGrade}
-          onChange={(e) => {
-            setSelectedGrade(e.target.value);
-            setSelectedSection(''); // Reset section when grade changes
-            fetchSectionsByGrade(e.target.value); // Fetch sections for selected grade
-          }}
-          disabled={loggedInUser?.userType === 3} // Disable grade filter for userType 3
-        >
-          <option value="">All Grades</option>
-          {grades.map((grade) => (
-            <option key={grade} value={grade}>
-              {grade}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {selectedGrade && (
-        <div className={styles.filterContainer}>
-          <label htmlFor="sectionFilter">Filter by Section:</label>
-          <select
-            id="sectionFilter"
-            value={selectedSection}
-            onChange={(e) => setSelectedSection(e.target.value)}
-            disabled={loggedInUser?.userType === 3} // Disable section filter for userType 3
-          >
-            <option value="">All Sections</option>
-            {sections.map((section) => (
-              <option key={section} value={section}>
-                {section}
-              </option>
-            ))}
-          </select>
+    <>
+        <div className={styles.TitleContainer}>
+          <div className={styles['h1-title']}>Student Records</div>
+          <h2 className={styles.RecordTitle}> - Analytics Overview</h2> 
         </div>
-      )}
 
-      <div className={styles.filterContainer}>
-        <label htmlFor="monthFilter">Filter by Month:</label>
-        <select
-          id="monthFilter"
-          value={selectedMonth}
-          onChange={(e) => {
-            setSelectedMonth(e.target.value);
-            setSelectedWeek(''); // Reset week when month changes
-          }}
-        >
-          <option value="">All Months</option>
-          {months.map((month) => (
-            <option key={month.value} value={month.value}>
-              {month.label}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {selectedMonth && (
-        <div className={styles.filterContainer}>
-          <label htmlFor="weekFilter">Filter by Week:</label>
-          <select
-            id="weekFilter"
-            value={selectedWeek}
-            onChange={(e) => setSelectedWeek(e.target.value)}
-          >
-            <option value="">All Weeks</option>
-            {weeks.map((week) => (
-              <option key={week.value} value={week.value}>
-                {week.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+        <RecordFilter
+          schoolYears={schoolYears}
+          grades={grades}
+          loggedInUser={loggedInUser}
+          selectedSchoolYear={selectedSchoolYear}
+          setSelectedSchoolYear={setSelectedSchoolYear}
+          selectedGrade={selectedGrade}
+          setSelectedGrade={setSelectedGrade}
+          selectedSection={selectedSection}
+          setSelectedSection={setSelectedSection}  
+          selectedMonth={selectedMonth}
+          setSelectedMonth={setSelectedMonth}
+          selectedWeek={selectedWeek}
+          setSelectedWeek={setSelectedWeek}
+        />
 
       <div className={styles.chartWrapper}>
         <Line data={lineChartData} options={lineChartOptions} className={styles.chart} />
       </div>
-    </div>
+    </>
   );
+};
+
+const getRandomColor = () => {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 };
 
 export default RecordAnalytics;

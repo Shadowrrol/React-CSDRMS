@@ -82,13 +82,11 @@ const AdminDashboard = () => {
 
   return (
     <div className={navStyles.wrapper}>
-      {/* Using the Navigation component */}
       <Navigation loggedInUser={loggedInUser} />  
 
       {/* Main Content */}
       <div className={navStyles.content}>
-        {/* Page title */}
-        <h1 className={navStyles['h1-title']}>User Management</h1>
+        <div className={navStyles['h1-title']}>User Management</div>
         <div className={styles['user-center-container']}>
           <div className={styles['table-container']}>
             <table className={styles['user-table']}>

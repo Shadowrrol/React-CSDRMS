@@ -1,22 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from './Navigation.module.css';
+import navStyles from './Navigation.module.css';
+import Navigation from './Navigation';
 import studentStyles from './Student.module.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
-import SchoolIcon from '@mui/icons-material/School';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import PostAddIcon from '@mui/icons-material/PostAdd';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
-
-const createSidebarLink = (to, text, IconComponent) => (
-    <Link to={to} className={styles['styled-link']}>
-        <IconComponent className={styles.icon} />
-        <span className={styles['link-text']}>{text}</span>
-    </Link>
-);
 
 const Student = () => {
     const authToken = localStorage.getItem('authToken');
@@ -59,11 +48,6 @@ const Student = () => {
             setSelectedStudent(null);
         }
     }, [students, selectedStudent]);
-
-    const handleLogout = () => {
-        localStorage.removeItem('authToken');
-        navigate('/');
-    };
 
     const handleDelete = (sid) => {
         if (window.confirm(`Type 'delete' to confirm deletion of student SID ${sid}`)) {
@@ -147,19 +131,12 @@ const Student = () => {
     }), [students, searchQuery]);
 
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.sidenav}>
-                <img src="/image-removebg-preview (1).png" alt="" className={styles['sidebar-logo']} />
-                {createSidebarLink("/record", "Record", AssessmentIcon)}
-                {createSidebarLink("/student", "Student", SchoolIcon)}
-                {createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
-                {loggedInUser.userType !== 2 && createSidebarLink("/report", "Report", PostAddIcon)}
-                {loggedInUser.userType === 1 && createSidebarLink("/timelog", "Time Log", AccessTimeFilledIcon)}
-                <button className={styles.logoutbtn} onClick={handleLogout}>Logout</button>
-            </div>
-            <div className={styles.content}>
+        <div className={navStyles.wrapper}>
+            <Navigation loggedInUser={loggedInUser} />
+           
+            <div className={navStyles.content}>
                 <div className={studentStyles['student-content']}>
-                    <h2>Student Records</h2>
+                    <div className={navStyles['h1-title']}>Student Records</div>
                     <div className={studentStyles['searchfilter']}>
                         <select onChange={handleSchoolYearChange} value={selectedSchoolYear} className={studentStyles['school-year-dropdown']}>
                             <option value="">Select School Year</option>

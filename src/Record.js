@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import RecordTable from './RecordTable';
 import RecordAnalytics from './RecordAnalytics';
-import styles2 from './Record.module.css'; // CSS for Record
+import recStyle from './Record.module.css'; // CSS for Record
+import navStyles from './Navigation.module.css'; // CSS for Navigation
 import Navigation from './Navigation'; // Import the Navigation component
 
 const Record = () => {
@@ -51,21 +52,22 @@ const Record = () => {
   };
 
   return (
-    <div>
-      {/* Call the Navigation component and pass the loggedInUser */}
+    <div className={navStyles['wrapper']}>
       <Navigation loggedInUser={loggedInUser} />
 
-      {/* Page title */}
-      <h1 className={styles2.recordTitle}>Student Records</h1>
-      <button className={styles2.switchViewButton} onClick={toggleView}>
-        {view === 'table' ? 'Switch to Analytics' : 'Switch to Table'}
-      </button>
+      {/* Main Content */}
+      <div className={navStyles.content}>
+        {loading ? <p>Loading...</p> : view === 'table' ? (
+          <RecordTable records={records} schoolYears={schoolYears} grades={grades} />
+        ) : (
+          <RecordAnalytics records={records} schoolYears={schoolYears} grades={grades} />
+        )}
 
-      {loading ? <p>Loading...</p> : view === 'table' ? (
-        <RecordTable records={records} schoolYears={schoolYears} grades={grades} />
-      ) : (
-        <RecordAnalytics records={records} schoolYears={schoolYears} grades={grades} />
-      )}
+        <button className={recStyle.switchViewButton} onClick={toggleView}>
+          {view === 'table' ? 'Switch to Analytics' : 'Switch to Table'}
+        </button>
+        
+      </div>  
     </div>
   );
 };
