@@ -31,14 +31,6 @@ h2 {
     text-shadow: 1px 1px 3px #ccc;  /* Slight shadow for all text */
 }
 
-.admin-dashboard-title {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 28px;
-    color: #81343a;
-    font-weight: bold;
-  }
-
 /* Search Bar */
 .filter-search-bar {
     display: flex; /* Ensure children are aligned correctly */

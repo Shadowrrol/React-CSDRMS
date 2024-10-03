@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from './RecordTable.module.css'; // Importing CSS module
+import navStyles from './Navigation.module.css';
 
 const RecordTable = ({ records, schoolYears, grades }) => {
   const authToken = localStorage.getItem('authToken');
@@ -102,152 +103,154 @@ const RecordTable = ({ records, schoolYears, grades }) => {
     <div className={styles.tableWrapper}>
       <h2 className={styles.tableTitle}>Records</h2>
 
-      {/* Filters */}
-      <div className={styles.filterContainer}>
-        {/* Hide school year filter for userType === 3 */}
-        {loggedInUser?.userType !== 3 && (
-          <>
-            <label htmlFor="schoolYearFilter" className={styles.filterLabel}>Filter by School Year: </label>
-            <select
-              id="schoolYearFilter"
-              value={selectedSchoolYear}
-              onChange={(e) => setSelectedSchoolYear(e.target.value)}
-            >
-              <option value="">All School Years</option>
-              {schoolYears.map((schoolYear) => (
-                <option key={schoolYear.schoolYear_ID} value={schoolYear.schoolYear}>
-                  {schoolYear.schoolYear}
-                </option>
-              ))}
-            </select>
-          </>
-        )}
-
-        {/* Grade filter, disabled for userType 3 */}
-        <label htmlFor="gradeFilter" className={styles.filterLabel} style={{ marginLeft: '20px' }}>Filter by Grade: </label>
-        <select
-          id="gradeFilter"
-          value={selectedGrade}
-          onChange={(e) => {
-            setSelectedGrade(e.target.value);
-            setSections([]); // Reset sections when grade changes
-            fetchSectionsByGrade(e.target.value);
-          }}
-          disabled={loggedInUser?.userType === 3} // Disable the grade filter for userType 3
-        >
-          <option value="">All Grades</option>
-          {grades.map((grade) => (
-            <option key={grade} value={grade}>
-              {grade}
-            </option>
-          ))}
-        </select>
-
-        <label htmlFor="monthFilter" className={styles.filterLabel} style={{ marginLeft: '20px' }}>Filter by Month: </label>
-        <select
-          id="monthFilter"
-          value={selectedMonth}
-          onChange={(e) => {
-            setSelectedMonth(e.target.value);
-            setSelectedWeek(''); // Reset week filter when month changes
-          }}
-        >
-          <option value="">All Months</option>
-          {months.map((month) => (
-            <option key={month.value} value={month.value}>
-              {month.label}
-            </option>
-          ))}
-        </select>
-
-        {selectedMonth && (
-          <>
-            <label htmlFor="weekFilter" className={styles.filterLabel} style={{ marginLeft: '20px' }}>Filter by Week: </label>
-            <select
-              id="weekFilter"
-              value={selectedWeek}
-              onChange={(e) => setSelectedWeek(e.target.value)}
-            >
-              <option value="">All Weeks</option>
-              {weeks.map((week) => (
-                <option key={week.value} value={week.value}>
-                  {week.label}
-                </option>
-              ))}
-            </select>
-          </>
-        )}
-      </div>
-
-      {loading ? (
-        <p>Loading records...</p>
-      ) : selectedGrade ? (
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Grade</th>
-              <th>Section</th>
-              {categories.map((category) => (
-                <th key={category}>{category}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {sections.map((section) => (
-              <tr key={section}>
-                <td>{selectedGrade}</td>
-                <td>{section}</td>
-                {categories.map((category) => (
-                  <td key={category}>
-                    {countFrequency(section, category, true)}
-                  </td>
+      <div className={navStyles.content}>
+        {/* Filters */}
+        <div className={styles.filterContainer}>
+          {/* Hide school year filter for userType === 3 */}
+          {loggedInUser?.userType !== 3 && (
+            <>
+              <label htmlFor="schoolYearFilter" className={styles.filterLabel}>Filter by School Year: </label>
+              <select
+                id="schoolYearFilter"
+                value={selectedSchoolYear}
+                onChange={(e) => setSelectedSchoolYear(e.target.value)}
+              >
+                <option value="">All School Years</option>
+                {schoolYears.map((schoolYear) => (
+                  <option key={schoolYear.schoolYear_ID} value={schoolYear.schoolYear}>
+                    {schoolYear.schoolYear}
+                  </option>
                 ))}
-              </tr>
-            ))}
-            {/* Total row for sections */}
-            <tr>
-              <td colSpan="2" style={{ fontWeight: 'bold' }}>Total</td>
-              {categories.map((category) => (
-                <td key={category} style={{ fontWeight: 'bold' }}>
-                  {calculateTotalForCategory(category, true)}
-                </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
-      ) : (
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Grade</th>
-              {categories.map((category) => (
-                <th key={category}>{category}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
+              </select>
+            </>
+          )}
+
+          {/* Grade filter, disabled for userType 3 */}
+          <label htmlFor="gradeFilter" className={styles.filterLabel} style={{ marginLeft: '20px' }}>Filter by Grade: </label>
+          <select
+            id="gradeFilter"
+            value={selectedGrade}
+            onChange={(e) => {
+              setSelectedGrade(e.target.value);
+              setSections([]); // Reset sections when grade changes
+              fetchSectionsByGrade(e.target.value);
+            }}
+            disabled={loggedInUser?.userType === 3} // Disable the grade filter for userType 3
+          >
+            <option value="">All Grades</option>
             {grades.map((grade) => (
-              <tr key={grade}>
-                <td>{grade}</td>
+              <option key={grade} value={grade}>
+                {grade}
+              </option>
+            ))}
+          </select>
+
+          <label htmlFor="monthFilter" className={styles.filterLabel} style={{ marginLeft: '20px' }}>Filter by Month: </label>
+          <select
+            id="monthFilter"
+            value={selectedMonth}
+            onChange={(e) => {
+              setSelectedMonth(e.target.value);
+              setSelectedWeek(''); // Reset week filter when month changes
+            }}
+          >
+            <option value="">All Months</option>
+            {months.map((month) => (
+              <option key={month.value} value={month.value}>
+                {month.label}
+              </option>
+            ))}
+          </select>
+
+          {selectedMonth && (
+            <>
+              <label htmlFor="weekFilter" className={styles.filterLabel} style={{ marginLeft: '20px' }}>Filter by Week: </label>
+              <select
+                id="weekFilter"
+                value={selectedWeek}
+                onChange={(e) => setSelectedWeek(e.target.value)}
+              >
+                <option value="">All Weeks</option>
+                {weeks.map((week) => (
+                  <option key={week.value} value={week.value}>
+                    {week.label}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
+        </div>
+
+        {loading ? (
+          <p>Loading records...</p>
+        ) : selectedGrade ? (
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Grade</th>
+                <th>Section</th>
                 {categories.map((category) => (
-                  <td key={category}>
-                    {countFrequency(grade, category)}
+                  <th key={category}>{category}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {sections.map((section) => (
+                <tr key={section}>
+                  <td>{selectedGrade}</td>
+                  <td>{section}</td>
+                  {categories.map((category) => (
+                    <td key={category}>
+                      {countFrequency(section, category, true)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+              {/* Total row for sections */}
+              <tr>
+                <td colSpan="2" style={{ fontWeight: 'bold' }}>Total</td>
+                {categories.map((category) => (
+                  <td key={category} style={{ fontWeight: 'bold' }}>
+                    {calculateTotalForCategory(category, true)}
                   </td>
                 ))}
               </tr>
-            ))}
-            {/* Total row for grades */}
-            <tr>
-              <td style={{ fontWeight: 'bold' }}>Total</td>
-              {categories.map((category) => (
-                <td key={category} style={{ fontWeight: 'bold' }}>
-                  {calculateTotalForCategory(category)}
-                </td>
+            </tbody>
+          </table>
+        ) : (
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Grade</th>
+                {categories.map((category) => (
+                  <th key={category}>{category}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {grades.map((grade) => (
+                <tr key={grade}>
+                  <td>{grade}</td>
+                  {categories.map((category) => (
+                    <td key={category}>
+                      {countFrequency(grade, category)}
+                    </td>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          </tbody>
-        </table>
-      )}
+              {/* Total row for grades */}
+              <tr>
+                <td style={{ fontWeight: 'bold' }}>Total</td>
+                {categories.map((category) => (
+                  <td key={category} style={{ fontWeight: 'bold' }}>
+                    {calculateTotalForCategory(category)}
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        )}
+      </div>  
     </div>
   );
 };

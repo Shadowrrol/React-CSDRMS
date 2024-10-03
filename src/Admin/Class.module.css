@@ -140,14 +140,6 @@
   background-color: #e53935;
 }
 
-.classtitle {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 28px;
-  color: #81343a;
-  font-weight: bold;
-}
-
 /* Fade In Animation */
 @keyframes fadeInUp {
   from {

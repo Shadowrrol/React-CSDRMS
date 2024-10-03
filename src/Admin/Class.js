@@ -1,26 +1,12 @@
-import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import axios from "axios";
-import navStyles from '../Navigation.module.css';
 import classStyles from './Class.module.css';
-import JHSLogo from '../image-sso-yellow.png';
-import MenuPopupState from '../components/MenuPopupState';
-import SchoolIcon from '@mui/icons-material/School';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import Logout from '@mui/icons-material/Logout';
-
-// Function to create sidebar links with icons
-const createSidebarLink = (to, text, IconComponent) => (
-  <Link to={to} className={navStyles['styled-link']} key={to}>
-    <IconComponent className={navStyles.icon} />
-    <span>{text}</span>
-  </Link>
-);
+import navStyles from '../Navigation.module.css';
+import Navigation from '../Navigation';
 
 const Class = () => {
-  const navigate = useNavigate();
   const authToken = localStorage.getItem('authToken');
   const loggedInUser = authToken ? JSON.parse(authToken) : null;
 
@@ -32,11 +18,21 @@ const Class = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddGrade, setShowAddGrade] = useState(false);
   const [showAddSchoolYear, setShowAddSchoolYear] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleOpen = () => setShowAddGrade(true);
   const handleClose = () => setShowAddGrade(false);
   const handleOpenSchoolYear = () => setShowAddSchoolYear(true);
   const handleCloseSchoolYear = () => setShowAddSchoolYear(false);
+
+  useEffect(() => {
+    document.title = "Admin | Class";
+    const fetchData = async () => {
+      await Promise.all([fetchClasses(), fetchSchoolYears()]);
+      setLoading(false);
+    };
+    fetchData();
+  }, [loggedInUser]);
 
   const fetchClasses = async () => {
     try {
@@ -62,22 +58,18 @@ const Class = () => {
       return;
     }
 
-    const sectionExists = classes.some(
-      (classItem) => classItem.section === newSection
-    );
-
+    const sectionExists = classes.some(classItem => classItem.section === newSection);
     if (sectionExists) {
       alert("Section already exists");
       return;
     }
 
     try {
-      // Send the grade as a string (like G7, G8)
       await axios.post("http://localhost:8080/class/addClass", {
-        grade: newGrade,  // Grade as a string (G7, G8, etc.)
+        grade: newGrade,
         section: newSection,
       });
-      fetchClasses(); // Refresh classes after adding
+      await fetchClasses();
       handleClose();
     } catch (error) {
       console.error("Error adding grade:", error);
@@ -91,10 +83,7 @@ const Class = () => {
       return;
     }
 
-    const schoolYearExists = schoolYears.some(
-      (schoolYear) => schoolYear.schoolYear === newSchoolYear
-    );
-
+    const schoolYearExists = schoolYears.some(schoolYear => schoolYear.schoolYear === newSchoolYear);
     if (schoolYearExists) {
       alert("School year already exists");
       return;
@@ -104,7 +93,7 @@ const Class = () => {
       await axios.post("http://localhost:8080/schoolYear/addSchoolYear", {
         schoolYear: newSchoolYear,
       });
-      fetchSchoolYears(); // Refresh school years after adding
+      await fetchSchoolYears();
       handleCloseSchoolYear();
     } catch (error) {
       console.error("Error adding school year:", error);
@@ -112,58 +101,24 @@ const Class = () => {
     }
   };
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  const handleSearch = (e) => setSearchTerm(e.target.value);
 
   const filteredClasses = classes
-    .filter((classItem) => {
-      const gradeMatch = classItem.grade?.toString().includes(searchTerm);
-      const sectionMatch = classItem.section?.toLowerCase().includes(searchTerm.toLowerCase());
-      return gradeMatch || sectionMatch;
-    })
-    .sort((a, b) => a.grade.localeCompare(b.grade)); // Use localeCompare for sorting strings
+    .filter(classItem => classItem.grade?.toString().includes(searchTerm) || classItem.section?.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => a.grade.localeCompare(b.grade));
 
-  const filteredSchoolYears = schoolYears
-    .filter((schoolYear) => schoolYear.schoolYear?.includes(searchTerm));
+  const filteredSchoolYears = schoolYears.filter(schoolYear => schoolYear.schoolYear?.includes(searchTerm));
 
-  useEffect(() => {
-    document.title = "Admin | Class";
-    fetchClasses();
-    fetchSchoolYears();
-  }, [loggedInUser]);
-
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    navigate('/');
-  };
+  if (loading) {
+    return <div>Loading...</div>; // You can customize this loading state
+  }
 
   return (
     <div className={navStyles.wrapper}>
-      {/* Sidebar */}
-      <div className={navStyles.sidenav}>
-        <div className={navStyles['sidenav-title']}>MENU</div>
-        {createSidebarLink("/AdminDashboard", "Dashboard", AccountBoxIcon)}
-        {createSidebarLink("/class", "Class", SchoolIcon)}
-        {/* Removed the logout button from the sidebar */}
-      </div>
+      <Navigation loggedInUser={loggedInUser} />  
 
       <div className={navStyles.content}>
-        {/* Header */}
-        <header className={navStyles.header}>
-          {/* App Logo & Title */}     
-          <div className={navStyles.JHSheaderContainer}>
-            <img src={JHSLogo} alt="JHS Logo" className={navStyles.JHSLogo} />
-            <span className={navStyles.JHSTitle}>JHS Success Hub</span>
-          </div>
-          {/* Logout Button */}
-          <button className={navStyles.logoutbtn} onClick={handleLogout}>
-            <Logout />
-          </button>
-        </header>
-
-        {/* Page title */}
-        <h1 className={classStyles.classtitle}>Class Management</h1>
+        <h1 className={navStyles['h1-title']}>Class Management</h1>
         <div className={classStyles.divide}>
           <div className={classStyles.tableContainer}>
             <div className={classStyles.table}>
@@ -175,7 +130,7 @@ const Class = () => {
                 </thead>
                 <tbody>
                   {filteredClasses.length > 0 ? (
-                    filteredClasses.map((classItem) => (
+                    filteredClasses.map(classItem => (
                       <tr key={classItem.class_id}>
                         <td>{`${classItem.grade} - ${classItem.section}`}</td>
                       </tr>
@@ -200,7 +155,7 @@ const Class = () => {
                 </thead>
                 <tbody>
                   {filteredSchoolYears.length > 0 ? (
-                    filteredSchoolYears.map((schoolYear) => (
+                    filteredSchoolYears.map(schoolYear => (
                       <tr key={schoolYear.schoolYear_ID}>
                         <td>{schoolYear.schoolYear}</td>
                       </tr>
@@ -220,24 +175,26 @@ const Class = () => {
         <Modal open={showAddGrade} onClose={handleClose}>
           <Box className={classStyles.modalContainer}>
             <h2 className={classStyles.modalHeader}>Add New Grade and Section</h2>
-            <select
-              className={classStyles.inputField}
-              value={newGrade}
-              onChange={(e) => setNewGrade(e.target.value)}
-            >
-              <option value="">Select Grade</option>
-              <option value="G7">Grade 7</option>
-              <option value="G8">Grade 8</option>
-              <option value="G9">Grade 9</option>
-              <option value="G10">Grade 10</option>
-            </select>
-            <input
-              type="text"
-              className={classStyles.inputField}
-              placeholder="Enter Section"
-              value={newSection}
-              onChange={(e) => setNewSection(e.target.value)}
-            />
+            <label>
+              Grade:
+              <select className={classStyles.inputField} value={newGrade} onChange={e => setNewGrade(e.target.value)}>
+                <option value="">Select Grade</option>
+                <option value="G7">Grade 7</option>
+                <option value="G8">Grade 8</option>
+                <option value="G9">Grade 9</option>
+                <option value="G10">Grade 10</option>
+              </select>
+            </label>
+            <label>
+              Section:
+              <input
+                type="text"
+                className={classStyles.inputField}
+                placeholder="Enter Section"
+                value={newSection}
+                onChange={e => setNewSection(e.target.value)}
+              />
+            </label>
             <div className={classStyles.buttonGroup}>
               <button onClick={addGrade} className={classStyles.button}>Add</button>
               <button onClick={handleClose} className={`${classStyles.button} ${classStyles.buttonCancel}`}>Cancel</button>
@@ -249,13 +206,16 @@ const Class = () => {
         <Modal open={showAddSchoolYear} onClose={handleCloseSchoolYear}>
           <Box className={classStyles.modalContainer}>
             <h2 className={classStyles.modalHeader}>Add New School Year</h2>
-            <input
-              type="text"
-              className={classStyles.inputField}
-              placeholder="Enter School Year"
-              value={newSchoolYear}
-              onChange={(e) => setNewSchoolYear(e.target.value)}
-            />
+            <label>
+              School Year:
+              <input
+                type="text"
+                className={classStyles.inputField}
+                placeholder="Enter School Year"
+                value={newSchoolYear}
+                onChange={e => setNewSchoolYear(e.target.value)}
+              />
+            </label>
             <div className={classStyles.buttonGroup}>
               <button onClick={addSchoolYear} className={classStyles.button}>Add</button>
               <button onClick={handleCloseSchoolYear} className={`${classStyles.button} ${classStyles.buttonCancel}`}>Cancel</button>
@@ -270,15 +230,15 @@ const Class = () => {
             <input
               type="search"
               placeholder="Search by Grade, Section or School Year..."
-              className={classStyles.searchInput}
               value={searchTerm}
               onChange={handleSearch}
+              className={classStyles.searchInput}
             />
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Class;

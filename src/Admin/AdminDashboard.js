@@ -1,24 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import navStyles from '../Navigation.module.css';
 import styles from './AdminDashboard.module.css';
-import JHSLogo from '../image-sso-yellow.png';
-/*import SearchIcon from '@mui/icons-material/Search';*/
-import SchoolIcon from '@mui/icons-material/School';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import Logout from '@mui/icons-material/Logout';
+import navStyles from '../Navigation.module.css'; // CSS for Navigation
+import Navigation from '../Navigation'; // Importing the updated Navigation component
 import AddUserModal from './AddUserModal';  
 import ConfirmationModal from './ConfirmationModal';  
 import UpdateAccountModal from './UpdateAccountModal'; 
-
-// Function to create a sidebar link with an icon
-const createSidebarLink = (to, text, IconComponent) => (
-  <Link to={to} className={navStyles['styled-link']} key={to}>
-    <IconComponent className={navStyles.icon} />
-    <span>{text}</span>
-  </Link>
-);
 
 const AdminDashboard = () => {
   // State variables
@@ -51,11 +39,6 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error('Error fetching users:', error);
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    navigate('/');
   };
 
   const handleDeleteUser = () => {
@@ -99,31 +82,13 @@ const AdminDashboard = () => {
 
   return (
     <div className={navStyles.wrapper}>
-      {/* Sidebar */}
-      <div className={navStyles.sidenav}>
-        <div className={navStyles['sidenav-title']}>MENU</div>
-        {createSidebarLink("/AdminDashboard", "Dashboard", AccountBoxIcon)}
-        {createSidebarLink("/class", "Class", SchoolIcon)}
-        {/* Removed the logout button from the sidebar */}
-      </div>
+      {/* Using the Navigation component */}
+      <Navigation loggedInUser={loggedInUser} />  
 
       {/* Main Content */}
       <div className={navStyles.content}>
-        {/* Header */}
-        <header className={navStyles.header}>
-          {/* App Logo & Title */}     
-          <div className={navStyles.JHSheaderContainer}>
-            <img src={JHSLogo} alt="JHS Logo" className={navStyles.JHSLogo} />
-            <span className={navStyles.JHSTitle}>JHS Success Hub</span>
-          </div>
-          {/* Logout Button */}
-          <button className={navStyles.logoutbtn} onClick={handleLogout}>
-            <Logout />
-          </button>
-        </header>
-
         {/* Page title */}
-        <h1 className={navStyles['admin-dashboard-title']}>User Management</h1>
+        <h1 className={navStyles['h1-title']}>User Management</h1>
         <div className={styles['user-center-container']}>
           <div className={styles['table-container']}>
             <table className={styles['user-table']}>
@@ -194,25 +159,25 @@ const AdminDashboard = () => {
             />
           </div>          
         </div>
-      </div>
 
-      {/* Modals */}
-      <AddUserModal isOpen={isAddUserModalOpen} onClose={() => setIsAddUserModalOpen(false)} />
-      <ConfirmationModal
-        isOpen={isConfirmationModalOpen}
-        onClose={() => setIsConfirmationModalOpen(false)}
-        onConfirm={confirmDelete}
-        message={confirmationMessage}
-      />
-      <UpdateAccountModal
-        isOpen={isUpdateAccountModalOpen}
-        onClose={() => {
-          setIsUpdateAccountModalOpen(false);
-          refreshUsers();
-        }}
-        user={selectedUser}
-        onUpdateSuccess={refreshUsers}
-      />
+        {/* Modals */}
+        <AddUserModal isOpen={isAddUserModalOpen} onClose={() => setIsAddUserModalOpen(false)} />
+        <ConfirmationModal
+          isOpen={isConfirmationModalOpen}
+          onClose={() => setIsConfirmationModalOpen(false)}
+          onConfirm={confirmDelete}
+          message={confirmationMessage}
+        />
+        <UpdateAccountModal
+          isOpen={isUpdateAccountModalOpen}
+          onClose={() => {
+            setIsUpdateAccountModalOpen(false);
+            refreshUsers();
+          }}
+          user={selectedUser}
+          onUpdateSuccess={refreshUsers}
+        />
+      </div>
     </div>
   );
 };

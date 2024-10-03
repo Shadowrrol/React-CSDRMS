@@ -14,8 +14,8 @@
   background-repeat: no-repeat;
   background-size: contain;
   position: fixed;
-  top: 30px;
-  left: 1vw; /* Use vw for responsiveness */
+  top: 25px;
+  left: 25px; /* Use vw for responsiveness */
   width: 500px; /* Adjust width relative to viewport */
   height: 50vw; /* Keep height auto to maintain aspect ratio */
   z-index: 1;
@@ -27,8 +27,8 @@
   background-repeat: no-repeat;
   background-size: contain;
   position: fixed;
-  top: 10px;
-  right: 1vw; /* Use vw for responsiveness */
+  top: 20px;
+  right: 20px; /* Use vw for responsiveness */
   width: 175px; /* Make width relative to the screen */
   height: 175px; /* Keep height auto to maintain aspect ratio */
   z-index: 1;
