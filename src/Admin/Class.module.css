@@ -100,8 +100,6 @@
 }
 
 .class-group {
-  display: flex; /* Use flexbox */
-  align-items: center; /* Align items vertically */
   margin-bottom: 5px;
 }
 
@@ -113,7 +111,7 @@
 
 .class-group input[type="section"],
 .class-group input[type="year"],
-.class-group select {
+.class-group select[id='grade'] {
     margin-top: 5px;
     margin-bottom: 10px;
     width: 210px; /* Fixed width for input and select boxes */

@@ -10,7 +10,7 @@
     max-height: 400px; /* Adjust height as needed */
     max-width: 750px;
     overflow-y: auto; /* Enable vertical scrolling */
-    border: 2px solid #81343a;
+    border: 2px solid #8A252C;
 }
 
 /* Table Styling */
@@ -33,7 +33,7 @@
 }
 
 .time-table th {
-    background-color: #81343a; /* Header color */
+    background-color: #8A252C; /* Header color */
     color: #fff;
     text-shadow: 3px 3px 5px #000;  /* Slight shadow for all text */
     font-weight: 600;
@@ -89,7 +89,7 @@
 
 .log-selected-row {
     background-color: #e0e0e0 !important;
-    color: #81343a; /* Dark red text color for selected row */
+    color: #8A252C; /* Dark red text color for selected row */
     font-weight: bold;
 }
 

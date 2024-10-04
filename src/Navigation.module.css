@@ -132,6 +132,11 @@ body{
     font-weight: bold;
 }
 
+.TitleContainer {
+    display: flex; /* Use flexbox */
+    align-items: center; /* Align titles vertically */
+}
+
 /* Content Area */
 .content {
     flex-grow: 1;

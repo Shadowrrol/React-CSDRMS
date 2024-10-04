@@ -7,7 +7,7 @@ import RecordFilter from './RecordFilter'; // Importing the new RecordFilter com
 const RecordTable = ({ records, schoolYears, grades }) => {
   const authToken = localStorage.getItem('authToken');
   const loggedInUser = authToken ? JSON.parse(authToken) : null;
-  
+
   const [sections, setSections] = useState([]);
   const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
@@ -82,7 +82,7 @@ const RecordTable = ({ records, schoolYears, grades }) => {
   ];
 
   return (
-    <>
+    <div className={styles.container}>
       <div className={styles.TitleContainer}>
         <div className={styles['h1-title']}>Student Records</div>
         <h2 className={styles.RecordTitle}> - Table Overview</h2> 
@@ -98,7 +98,7 @@ const RecordTable = ({ records, schoolYears, grades }) => {
         selectedGrade={selectedGrade}
         setSelectedGrade={setSelectedGrade}
         selectedSection={selectedSection}
-        setSelectedSection={setSelectedSection}  
+        setSelectedSection={setSelectedSection}
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
         selectedWeek={selectedWeek}
@@ -107,70 +107,54 @@ const RecordTable = ({ records, schoolYears, grades }) => {
 
       {loading ? (
         <p>Loading records...</p>
-      ) : selectedGrade ? (
+      ) : (
+      <div className={tableStyles['table-container']}>
         <table className={tableStyles['global-table']}>
           <thead>
             <tr>
               <th>Grade</th>
-              <th>Section</th>
+              {selectedGrade && <th>Section</th>}
               {categories.map((category) => (
                 <th key={category}>{category}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {sections
-              .filter(section => !selectedSection || section === selectedSection) // Filter by selected section
-              .map((section) => (
-                <tr key={section}>
-                  <td>{selectedGrade}</td>
-                  <td>{section}</td>
+            {selectedGrade ? (
+              sections
+                .filter(section => !selectedSection || section === selectedSection)
+                .map((section) => (
+                  <tr key={section}>
+                    <td>{selectedGrade}</td>
+                    <td>{section}</td>
+                    {categories.map((category) => (
+                      <td key={category}>{countFrequency(section, category, true)}</td>
+                    ))}
+                  </tr>
+                ))
+            ) : (
+              grades.map((grade) => (
+                <tr key={grade}>
+                  <td>{grade}</td>
                   {categories.map((category) => (
-                    <td key={category}>{countFrequency(section, category, true)}</td>
+                    <td key={category}>{countFrequency(grade, category)}</td>
                   ))}
                 </tr>
-              ))}
+              ))
+            )}
             <tr>
-              <td colSpan="2" style={{ fontWeight: 'bold' }}>Total</td>
+              <td colSpan={selectedGrade ? "2" : "1"} style={{ fontWeight: 'bold' }}>Total</td>
               {categories.map((category) => (
                 <td key={category} style={{ fontWeight: 'bold' }}>
-                  {calculateTotalForCategory(category, true)}
+                  {calculateTotalForCategory(category, !!selectedGrade)}
                 </td>
               ))}
             </tr>
           </tbody>
         </table>
-      ) : (
-        <table className={tableStyles['global-table']}>
-          <thead>
-            <tr>
-              <th>Grade</th>
-              {categories.map((category) => (
-                <th key={category}>{category}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {grades.map((grade) => (
-              <tr key={grade}>
-                <td>{grade}</td>
-                {categories.map((category) => (
-                  <td key={category}>{countFrequency(grade, category)}</td>
-                ))}
-              </tr>
-            ))} 
-            <tr>
-              <td>Total</td>
-              {categories.map((category) => (
-                <td key={category} style={{ fontWeight: 'bold' }}>
-                  {calculateTotalForCategory(category)}
-                </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
+      </div>
       )}
-    </>
+    </div>
   );
 };
 

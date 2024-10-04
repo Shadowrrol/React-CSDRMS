@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from './AddReportModal.module.css';
+import styles from './ReportModal.module.css'; // Correctly importing the styles
 
-const AddReportModal = ({ onClose, refreshReports }) => {
+const ReportModal = ({ onClose, refreshReports }) => {
   const authToken = localStorage.getItem('authToken');
   const loggedInUser = authToken ? JSON.parse(authToken) : null;
 
@@ -102,65 +102,70 @@ const AddReportModal = ({ onClose, refreshReports }) => {
   };
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
+    <div className={styles['report-modal-overlay']}>
+      <div className={styles['report-modal-content']}>
+
         <h2>Create New Report</h2>
 
         {/* Student Search and Select Field */}
-        <div className={styles.studentSearchContainer}>
-          <div className={styles.searchWrapper}>
-            <input
-              type="text"
-              placeholder="Search student by name or ID"
-              value={searchQuery}
-              onChange={handleSearch}
-              onFocus={() => setShowDropdown(true)} // Show dropdown when the field is focused
-              disabled={!!newReport.studentId} // Disable input if a student is selected
-            />
+        <div className={styles['report-container']}>
+            <div className={styles.searchWrapper}>
+                <div className={styles['report-group']}>
+                    <label>Student: </label>
+                    <input  
+                    type="text"
+                    placeholder="Search student by name or ID"
+                    value={searchQuery}
+                    onChange={handleSearch}
+                    onFocus={() => setShowDropdown(true)} // Show dropdown when the field is focused
+                    disabled={!!newReport.studentId} // Disable input if a student is selected
+                    />
 
-            {/* Show "X" button when a student is selected */}
-            {newReport.studentId && (
-              <button className={styles.clearButton} onClick={handleClearSelection}>
-                ✕
-              </button>
+                    {/* Show "X" button when a student is selected */}
+                    {newReport.studentId && (
+                    <button className={styles.clearButton} onClick={handleClearSelection}>
+                        ✕
+                    </button>
+                    )}
+                </div>
+            </div>
+
+            {/* Dropdown list for filtered students */}
+            {showDropdown && filteredStudents.length > 0 && (                
+                <ul className={styles.dropdown}>
+                {filteredStudents.map((student) => (
+                    <li
+                    key={student.id}
+                    onClick={() => handleSelectStudent(student)}
+                    className={styles.dropdownItem}
+                    >
+                    {student.sid} - {student.name}
+                    </li>
+                ))}
+                </ul>
             )}
-          </div>
-
-          {/* Dropdown list for filtered students */}
-          {showDropdown && filteredStudents.length > 0 && (
-            <ul className={styles.dropdown}>
-              {filteredStudents.map((student) => (
-                <li
-                  key={student.id}
-                  onClick={() => handleSelectStudent(student)}
-                  className={styles.dropdownItem}
-                >
-                  {student.sid} - {student.name}
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
 
         {/* Complaint Field */}
-        <div>
-          <textarea
-            type="text"
+        <div className={styles['report-group']}>
+        <label>Complaint: </label>                
+        <textarea
+            className={styles['report-modal-textarea']} // Apply the new CSS class here
             name="complaint"
             placeholder="Complaint"
             value={newReport.complaint}
             onChange={handleInputChange}
-          />
+        />
         </div>
 
-        {/* Modal Actions */}
-        <div className={styles.modalActions}>
-          <button onClick={handleCreateReport}>Create Report</button>
-          <button onClick={onClose}>Cancel</button>
+
+        <div className={styles['report-buttonGroup']}>
+          <button onClick={handleCreateReport} className={styles['report-button']}>Create</button>
+          <button onClick={onClose} className={`${styles['report-button']} ${styles['report-button-cancel']}`}>Cancel</button>
         </div>
       </div>
     </div>
   );
 };
 
-export default AddReportModal;
+export default ReportModal;

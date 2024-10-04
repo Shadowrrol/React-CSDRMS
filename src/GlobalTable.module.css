@@ -1,18 +1,24 @@
 .table-container {
-    width: 100%;
-    overflow-x: auto; /* Ensure horizontal scrolling for smaller screens */
-    margin-top: 20px;
+    max-height: 400px; /* Adjust height as needed */
+    max-width: 100%;
+    overflow-y: auto; /* Ensure horizontal scrolling for smaller screens */
+    border: 2px solid #8A252C;
 }
 
 .global-table {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    border: 1px solid #ddd;
+    border-collapse: collapse; /* Ensures borders are not doubled */
+    table-layout: fixed; /* Ensures consistent cell width */
+}
+
+.global-table thead {
+    position: sticky; /* Sticky header */
+    top: 0; /* Fixed to the top */
+    z-index: 1; /* Ensure header stays on top of scrolling body */
 }
 
 .global-table th, .global-table td {
-    padding: 15px; /* Increased padding for better touch targets */
+    padding: 12px;
     text-align: center;
     font-size: 16px; /* Larger font size for readability */
     border-bottom: 1px solid #ddd;
@@ -23,6 +29,8 @@
     color: white; /* White text for headers */
     text-shadow: 3px 3px 5px #000;  /* Slight shadow for all text */
     font-weight: 600;
+    border-left: none;
+    border: 0.5px solid #8A252C;  
 }
 
 .global-table td {
