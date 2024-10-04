@@ -1,0 +1,158 @@
+/* Overlay and content container for the modal */
+.report-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.report-modal-content {
+    background-color: #fff;
+    padding: 20px;
+    width: 750px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+/* Input and Dropdown Styles */
+.report-container {
+    margin-bottom: 5px;
+    justify-content: space-between;
+}
+
+.searchWrapper {
+    position: relative;
+}
+
+.searchWrapper input {
+    width: 50%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.clearButton {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #666;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.dropdown {
+    list-style-type: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.dropdownItem {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.dropdownItem:hover {
+    background-color: #f1f1f1;
+}
+
+/* Button group and buttons for the modal */
+.report-buttonGroup {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.report-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    background-color: #4caf50;
+    color: white;
+    font-size: 14px;
+    transition: background-color 0.3s, transform 0.3s;
+    text-shadow: 1px 1px 3px #000; /* Slight shadow for all text */
+}
+
+.report-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+.report-button-cancel {
+    background-color: #e53935;
+    text-shadow: 1px 1px 3px #000; /* Slight shadow for all text */
+}
+
+.report-button-cancel:hover {
+    background-color: #c82333;
+}
+
+
+.report-group {
+    display: flex; /* Use flexbox */
+    margin-bottom: 5px;
+}
+
+.report-group label {
+    margin-right: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #800000;
+}
+
+.report-group input[type="section"],
+.report-group input[type="year"],
+.report-group select[id='grade'] {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    width: 210px; /* Fixed width for input and select boxes */
+    padding: 10px; /* Increase padding for better touch targets */
+    font-size: 14px; /* Increase font size for better readability */
+    border: 1px solid #ddd; /* Add border for inputs */
+    border-radius: 5px; /* Add border radius for inputs */
+    box-sizing: border-box; /* Include padding and border in input width */
+    margin-left: auto; /* Align to the right */
+    background-color: #f9f9f9; /* Optional: Background color for better UX */
+}
+
+.report-group input[type="text"], /* Ensure this matches the type of your input */
+.report-modal-textarea { /* Modify to match the textarea style */
+    margin-right: 10px; /* Add right margin */
+}
+
+/* Specific styles for the textarea in ReportModal */
+.report-modal-textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 5px; /* Match the border-radius with the input */
+    border: 1px solid #ccc; /* Match the border style with the input */
+    margin-bottom: 20px; /* Add space below */
+    resize: vertical; /* Allow vertical resizing */
+    font-family: Arial, sans-serif;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+.report-modal-textarea:focus {
+    border-color: #80bdff; /* Blue border on focus */
+    outline: none; /* Remove default outline */
+}
