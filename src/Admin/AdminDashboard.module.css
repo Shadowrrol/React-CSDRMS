@@ -157,6 +157,7 @@ h2 {
     border: none;
     color: #fff;
     transition: background-color 0.3s, transform 0.3s;
+    font-weight: bold;
 }
 
 .admin-add-btn {

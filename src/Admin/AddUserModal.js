@@ -20,7 +20,7 @@ const AddUserModal = ({ isOpen, onClose }) => {
     return ReactDOM.createPortal(
         <div className={styles['add-user-modal-overlay']} onClick={handleCloseModal}>
             <div className={styles['add-user-modal-content']} onClick={e => e.stopPropagation()}>
-                <button className={styles['add-user-modal-close-button']} onClick={handleCloseModal}>X</button>
+                <button className={styles['modal-close-button']} onClick={handleCloseModal}>X</button>
                 <h2>Create User</h2>
                 <form>
                     <button

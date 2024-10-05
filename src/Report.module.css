@@ -14,6 +14,7 @@
   transition: background-color 0.3s, transform 0.3s;
   text-shadow: 1px 1px 3px #000; /* Slight shadow for all text */
   margin-right: 10px;
+  font-weight: bold;
 }
 
 .report-action-button:hover {
@@ -23,7 +24,7 @@
 
 .report-action-button:disabled {
   background-color: #D3D3D3; /* Light Gray */
-  color: #999999; /* Muted gray text */
+  color: #fff; /* Muted gray text */
   cursor: not-allowed;
   border: 1px solid #CCCCCC; /* Light gray border */
   text-shadow: none;
@@ -47,6 +48,7 @@
   transition: background-color 0.3s, transform 0.3s;
   text-shadow: 1px 1px 3px #000; /* Slight shadow for all text */
   margin-right: 10px;
+  font-weight: bold;
 }
 
 .report-suspension-button:hover {
@@ -56,16 +58,16 @@
 
 .report-suspension-button:disabled {
   background-color: #D3D3D3; /* Light Gray */
-  color: #999999; /* Muted gray text */
+  color: #fff; /* Muted gray text */
   cursor: not-allowed;
   border: 1px solid #CCCCCC; /* Light gray border */
   text-shadow: none;
+  transform: none;
 }i
 
 .report-suspension-button:disabled:hover {
   background-color: #D3D3D3; /* Keep background unchanged on hover */
   cursor: not-allowed;
-  transform: none;
 }
 
 

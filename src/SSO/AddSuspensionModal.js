@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import styles from './AddSuspensionModal.module.css'; // Style the modal as needed
+import styles from '../ReportModal.module.css'; // Importing the CSS file
 
 const AddSuspensionModal = ({ onClose, reportId, refreshReports, refreshSuspensions }) => {
   const [suspensionData, setSuspensionData] = useState({
@@ -35,60 +35,61 @@ const AddSuspensionModal = ({ onClose, reportId, refreshReports, refreshSuspensi
   };
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
+    <div className={styles['report-modal-overlay']}>
+      <div className={styles['suspension-modal-content']}>
         <h2>Add Suspension</h2>
 
-        {/* Suspension form fields */}
-        <div className={styles.formGroup}>
-          <label htmlFor="days">Number of Suspension Days</label>
+        <div className={styles['report-group']}>
+          <label>Days of Suspension:</label>
           <input
             type="number"
-            id="days"
             name="days"
-            placeholder="Number of Suspension Days"
             value={suspensionData.days}
             onChange={handleInputChange}
+            className={styles['suspension-input']}
           />
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="startDate">Start Date</label>
+        <div className={styles['report-group']}>
+          <label>Start Date:</label>
           <input
             type="date"
-            id="startDate"
             name="startDate"
             value={suspensionData.startDate}
             onChange={handleInputChange}
+            className={styles['suspension-input']}
           />
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="endDate">End Date</label>
+        <div className={styles['report-group']}>
+          <label>End Date:</label>
           <input
             type="date"
-            id="endDate"
             name="endDate"
             value={suspensionData.endDate}
             onChange={handleInputChange}
+            className={styles['suspension-input']}
           />
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="returnDate">Return Date</label>
+        <div className={styles['report-group']}>
+          <label>Return Date:</label>
           <input
             type="date"
-            id="returnDate"
             name="returnDate"
             value={suspensionData.returnDate}
             onChange={handleInputChange}
+            className={styles['suspension-input']}
           />
         </div>
 
-        {/* Modal Actions */}
-        <div className={styles.modalActions}>
-          <button onClick={handleCreateSuspension}>Add Suspension</button>
-          <button onClick={onClose}>Cancel</button>
+        <div className={styles['report-buttonGroup']}>
+          <button onClick={handleCreateSuspension} className={styles['report-button']}>
+            Create
+          </button>
+          <button onClick={onClose} className={`${styles['report-button']} ${styles['report-button-cancel']}`}>
+            Cancel
+          </button>
         </div>
       </div>
     </div>

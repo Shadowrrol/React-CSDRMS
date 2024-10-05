@@ -178,8 +178,8 @@
               <h2 className={classStyles.modalHeader}>Add New Grade & Section</h2>
               <div className={classStyles['class-container']}>
                 <div className={classStyles['class-group']}>
-                  <label>Grade: </label>
-                    <select className={classStyles['classSelect']}value={newGrade} onChange={e => setNewGrade(e.target.value)}
+                    <label className={classStyles['classgroup-label']}>Grade: </label>
+                    <select className={classStyles['classgroup-input']}value={newGrade} onChange={e => setNewGrade(e.target.value)}
                       id="grade"
                       name="grade"
                     >
@@ -191,8 +191,9 @@
                     </select>
                 </div>
                 <div className={classStyles['class-group']}>
-                  <label>Section: </label>
+                    <label className={classStyles['classgroup-label']}>Section: </label>
                     <input
+                      className={classStyles['classgroup-input']}
                       type="section"
                       placeholder="Enter Section"
                       value={newSection}
@@ -213,8 +214,9 @@
               <h2 className={classStyles.modalHeader}>Add New School Year</h2>
               <div className={classStyles['class-container']}>
                 <div className={classStyles['class-group']}>
-                  <label>School Year: </label>
+                    <label className={classStyles['classgroup-label-year']}>School Year: </label>
                     <input
+                      className={classStyles['classgroup-input-year']}                    
                       type="year"
                       placeholder="Enter School Year"
                       value={newSchoolYear}
@@ -235,7 +237,7 @@
             <div className={classStyles.searchContainer}>
               <input
                 type="search"
-                placeholder="Search by Grade, Section or School Year..."
+                placeholder="Search by Class..."
                 value={searchTerm}
                 onChange={handleSearch}
                 className={classStyles.searchInput}

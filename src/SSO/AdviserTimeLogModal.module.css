@@ -35,20 +35,24 @@
 /* Close Button */
 .timelog-close-button {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 20px;
+    right: 20px;
     background: none;
     border: none;
     font-size: 16px;
     cursor: pointer;
-    color: #81343a;
+    color: #8A252C;
     transition: color 0.3s, transform 0.3s;
+    border-radius: 4px;
+    padding: 7px 15px;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .timelog-close-button:hover {
-    color: #835d5f;
-    transform: scale(1.1);
-    background-color: #dddddd;
+    color: #8A252C; /* Change color on hover */
+    background-color: #ccc; 
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
 }
 
 /* Filters Section */

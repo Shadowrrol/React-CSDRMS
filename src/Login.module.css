@@ -127,6 +127,8 @@
   box-shadow: 3px 3px 0px 0px #e8bd26;
   text-shadow: 1px 1px 3px #000;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: #fff;
+  cursor: pointer;
 }
 
 .btn:hover {

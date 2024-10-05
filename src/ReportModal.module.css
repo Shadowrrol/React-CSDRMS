@@ -15,10 +15,21 @@
 .report-modal-content {
     background-color: #fff;
     padding: 20px;
-    width: 750px;
+    width: 550px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     position: relative;
+    border: 2px solid #000;
+}
+
+.suspension-modal-content {
+    background-color: #fff;
+    padding: 20px;
+    width: 450px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    border: 2px solid #000;
 }
 
 /* Input and Dropdown Styles */
@@ -31,24 +42,17 @@
     position: relative;
 }
 
-.searchWrapper input {
-    width: 50%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
 .clearButton {
     background: none;
     border: none;
     font-size: 16px;
     color: #666;
     position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 16%;
+    top: 23%;
     cursor: pointer;
+    transform: scale(1.05);
+    font-weight: bold;
 }
 
 .dropdown {
@@ -58,7 +62,9 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     max-height: 150px;
+    max-width: 360px;  
     overflow-y: auto;
+    margin-left: 21.7%;
 }
 
 .dropdownItem {
@@ -76,13 +82,14 @@
     display: flex;
     gap: 8px;
     justify-content: center;
-}
+}   
 
 .report-button {
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
     font-size: 0.85rem;
+    font-weight: bold;
     cursor: pointer;
     background-color: #4caf50;
     color: white;
@@ -108,7 +115,8 @@
 
 .report-group {
     display: flex; /* Use flexbox */
-    margin-bottom: 5px;
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 .report-group label {
@@ -118,24 +126,14 @@
     color: #800000;
 }
 
-.report-group input[type="section"],
-.report-group input[type="year"],
-.report-group select[id='grade'] {
-    margin-top: 5px;
-    margin-bottom: 10px;
-    width: 210px; /* Fixed width for input and select boxes */
-    padding: 10px; /* Increase padding for better touch targets */
-    font-size: 14px; /* Increase font size for better readability */
-    border: 1px solid #ddd; /* Add border for inputs */
-    border-radius: 5px; /* Add border radius for inputs */
-    box-sizing: border-box; /* Include padding and border in input width */
-    margin-left: auto; /* Align to the right */
-    background-color: #f9f9f9; /* Optional: Background color for better UX */
-}
-
-.report-group input[type="text"], /* Ensure this matches the type of your input */
-.report-modal-textarea { /* Modify to match the textarea style */
+.report-input{
     margin-right: 10px; /* Add right margin */
+    width: 65%;
+    margin-left: 26px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 /* Specific styles for the textarea in ReportModal */
@@ -145,14 +143,27 @@
     font-size: 14px;
     border-radius: 5px; /* Match the border-radius with the input */
     border: 1px solid #ccc; /* Match the border style with the input */
-    margin-bottom: 20px; /* Add space below */
+    margin-bottom: 10px; /* Add space below */
     resize: vertical; /* Allow vertical resizing */
     font-family: Arial, sans-serif;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s ease;
+    margin-left: auto;
 }
 
 .report-modal-textarea:focus {
-    border-color: #80bdff; /* Blue border on focus */
     outline: none; /* Remove default outline */
+    box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.2);
+}
+
+.suspension-input{
+    margin-right: 10px; /* Add right margin */
+    width: 35%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-bottom: 10px;
+    text-align: center;
 }

@@ -113,7 +113,8 @@ const ReportModal = ({ onClose, refreshReports }) => {
                 <div className={styles['report-group']}>
                     <label>Student: </label>
                     <input  
-                    type="text"
+                    className={styles['report-input']}
+                    type="student"
                     placeholder="Search student by name or ID"
                     value={searchQuery}
                     onChange={handleSearch}
@@ -124,7 +125,7 @@ const ReportModal = ({ onClose, refreshReports }) => {
                     {/* Show "X" button when a student is selected */}
                     {newReport.studentId && (
                     <button className={styles.clearButton} onClick={handleClearSelection}>
-                        ✕
+                      ✕
                     </button>
                     )}
                 </div>
