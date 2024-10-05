@@ -31,6 +31,7 @@ import Class from './Admin/Class'
 
 import PrivateRoute from './PrivateRoute';
 import { AuthContext, AuthProvider } from './AuthContext';
+import PageNotFound from './PageNotFound';
 
 
 function App() {
@@ -101,6 +102,7 @@ function App() {
             </>
 
           )}
+          <Route path ="*" element={<PageNotFound/>}/>
 
         </Routes>
       </div>
