@@ -1,0 +1,159 @@
+/* EditReportModal.module.css */
+.clearButton {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #666;
+    position: absolute;
+    right: 5%;
+    top: 23%;
+    cursor: pointer;
+    transform: scale(1.05);
+    font-weight: bold;
+}
+
+
+
+.edit-report-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.edit-report-modal-content {
+    background-color: #fff;
+    padding: 20px;
+    width: 550px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    border: 2px solid #000;
+}
+
+.edit-report-modal h2 {
+  margin-bottom: 20px;
+}
+
+.edit-report-modal label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.edit-report-modal input[type="text"],
+.edit-report-modal input[type="date"],
+.edit-report-modal input[type="time"],
+.edit-report-modal textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.edit-report-modal input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.edit-report-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #4caf50;
+    color: white;
+    font-size: 14px;
+    transition: background-color 0.3s, transform 0.3s;
+    text-shadow: 1px 1px 3px #000; /* Slight shadow for all text */
+}
+
+.edit-report-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+.edit-report-button-cancel {
+    background-color: #e53935;
+    text-shadow: 1px 1px 3px #000; /* Slight shadow for all text */
+}
+
+.edit-report-button-cancel:hover {
+    background-color: #c82333;
+}
+
+.edit-report-input{
+    margin-right: 10px; /* Add right margin */
+    width: 65%;
+    margin-left: 26px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.edit-report-group {
+    display: flex; /* Use flexbox */
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.edit-report-group label {
+    margin-right: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #800000;
+}
+
+
+/* EditReportModal.module.css */
+
+.student-list {
+    list-style: none;
+    padding: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+  }
+  
+  .student-list li {
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  .student-list li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .selected-student {
+    background-color: #d3eaff;
+    font-weight: bold;
+  }
+
+  .dropdown {
+    list-style-type: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 150px;
+    max-width: 360px;  
+    overflow-y: auto;
+    margin-left: 21.7%;
+}
+
+.dropdownItem {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+  

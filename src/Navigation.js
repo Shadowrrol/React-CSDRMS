@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logout from '@mui/icons-material/Logout';
 import SchoolIcon from '@mui/icons-material/School';
@@ -16,6 +16,7 @@ import JHSLogo from './image-sso-yellow.png';
 
 const Navigation = ({ loggedInUser }) => {
   const navigate = useNavigate();
+  const [notifications] = useState(9);
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
@@ -72,6 +73,10 @@ const Navigation = ({ loggedInUser }) => {
                 <span className={navStyles.JHSTitle}>JHS Success Hub</span>
             </div>
             {/* Logout Button */}
+            <div className={navStyles['notification-icon']}>
+            <NotificationsActiveIcon/>
+            {notifications > 0 && <span  className={navStyles.badge}>{notifications}</span>}
+            </div>
             <button className={navStyles.logoutbtn} onClick={handleLogout}>
                 <Logout />
             </button>

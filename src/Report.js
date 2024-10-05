@@ -5,6 +5,7 @@ import navStyles from './Navigation.module.css';
 import tableStyles from './GlobalTable.module.css';
 import Navigation from './Navigation'; // Importing the updated Navigation component
 import ReportModal from './ReportModal';
+import EditReportModal from './EditReportModal'; // Importing the EditReportModal component
 import AddSuspensionModal from './SSO/AddSuspensionModal';
 import styles from './Report.module.css';
 
@@ -17,6 +18,7 @@ const Reports = () => {
   const [suspensions, setSuspensions] = useState([]); // Store all suspensions here
   const [showReportModal, setShowReportModal] = useState(false);
   const [showSuspensionModal, setShowSuspensionModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false); // State for Edit Report Modal
   const [selectedReportId, setSelectedReportId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedReportStatus, setSelectedReportStatus] = useState({ completed: false, suspended: false });
@@ -54,7 +56,7 @@ const Reports = () => {
             schoolYear: loggedInUser.schoolYear,
           },
         });
-      } else if (loggedInUser?.userType === 5) {
+      } else if (loggedInUser?.userType === 5 || loggedInUser?.userType === 6) {
         response = await axios.get('http://localhost:8080/report/getAllReportsByComplainant', {
           params: {
             complainant: loggedInUser.username,
@@ -67,7 +69,7 @@ const Reports = () => {
       const fetchedReports = response.data;
 
       if (loggedInUser?.userType === 1) {
-        const currentDate = new Date().toISOString().split('T')[0]; 
+        const currentDate = new Date().toISOString().split('T')[0];
         const updates = fetchedReports
           .filter((report) => !report.received)
           .map((report) =>
@@ -76,9 +78,9 @@ const Reports = () => {
 
         await Promise.all(updates);
         const updatedResponse = await axios.get('http://localhost:8080/report/getAllReports');
-        setReports(updatedResponse.data); 
+        setReports(updatedResponse.data);
       } else {
-        setReports(fetchedReports); 
+        setReports(fetchedReports);
       }
     } catch (error) {
       console.error('Error fetching reports:', error);
@@ -118,11 +120,21 @@ const Reports = () => {
 
   const handleRowClick = (report) => {
     setSelectedReportId(report.reportId);
-    // Update the selected report's status
     setSelectedReportStatus({
       completed: report.complete,
       suspended: isReportSuspended(report.reportId)
     });
+  };
+
+  // Handle opening the edit modal
+  const handleEdit = (reportId) => {
+    setSelectedReportId(reportId);
+    setShowEditModal(true);
+  };
+
+  // Handle viewing the report and redirecting to ViewReport.js
+  const handleViewReport = (reportId) => {
+    navigate(`/view-report/${reportId}`);
   };
 
   return (
@@ -147,7 +159,7 @@ const Reports = () => {
                   <th>Student</th>
                   <th>Adviser</th>
                   <th>Received</th>
-                  {/*<th>Complete</th>*/}
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -160,7 +172,9 @@ const Reports = () => {
                     <td>{report.student.name}</td>
                     <td>{report.adviser.firstname} {report.adviser.lastname}</td>
                     <td>{report.received ? report.received : 'Pending'}</td>
-                    {/* <td>{report.complete ? 'Yes' : 'No'}</td> */}
+                    <td>
+                      <button onClick={() => handleViewReport(report.reportId)}>View Report</button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -172,22 +186,30 @@ const Reports = () => {
           <button className={styles['report-action-button']} onClick={toggleReportModal}>
             Create Report
           </button>
+          <button
+                className={styles['report-action-button']}
+                onClick={() => handleEdit(selectedReportId)}
+                disabled={!selectedReportId} // Only enable if a report is selected
+              >
+                Edit Report
+              </button>
           {loggedInUser?.userType === 1 && (
             <>
               <button
                 className={styles['report-action-button']}
                 onClick={() => handleComplete(selectedReportId)}
-                disabled={!selectedReportId || selectedReportStatus.completed} // Disable if selected report is completed
+                disabled={!selectedReportId || selectedReportStatus.completed}
               >
                 Complete
               </button>
               <button
                 className={styles['report-suspension-button']}
                 onClick={() => handleAddSuspension(selectedReportId)}
-                disabled={!selectedReportId || selectedReportStatus.suspended || selectedReportStatus.completed} // Disable if selected report is already suspended or completed
+                disabled={!selectedReportId || selectedReportStatus.suspended || selectedReportStatus.completed}
               >
                 {selectedReportStatus.suspended ? 'Suspended' : 'Add Suspension'}
               </button>
+             
             </>
           )}
         </div>
@@ -207,6 +229,14 @@ const Reports = () => {
             reportId={selectedReportId}
             refreshReports={fetchReports}
             refreshSuspensions={fetchSuspensions} 
+          />
+        )}
+
+        {showEditModal && (
+          <EditReportModal
+            reportId={selectedReportId}
+            onClose={() => setShowEditModal(false)}
+            refreshReports={fetchReports}
           />
         )}
       </div>

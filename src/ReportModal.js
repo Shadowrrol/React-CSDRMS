@@ -16,14 +16,14 @@ const ReportModal = ({ onClose, refreshReports }) => {
   const [searchQuery, setSearchQuery] = useState(''); // State for handling the search query
   const [showDropdown, setShowDropdown] = useState(false); // State for showing/hiding dropdown
 
-  // Fetch the list of students when the modal opens
+  // Fetch the list of students once when the component mounts
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         let response;
         
         // Check if usertype is 3 (Adviser)
-        if (loggedInUser.userType === 3) {
+        if (loggedInUser?.userType === 3) {
           // Fetch students by adviser's section and school year
           response = await axios.get('http://localhost:8080/student/getAllStudentsByAdviser', {
             params: {
@@ -36,15 +36,32 @@ const ReportModal = ({ onClose, refreshReports }) => {
           response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
         }
 
-        setStudents(response.data);
-        setFilteredStudents(response.data); // Set filtered students initially to all students
+        setStudents(response.data); // Set fetched students
       } catch (error) {
         console.error('Error fetching students:', error);
       }
     };
 
-    fetchStudents();
-  }, [loggedInUser]);
+    // Fetch students only when component mounts
+    if (loggedInUser) {
+      fetchStudents();
+    }
+  }, []); // Empty array ensures it only runs once
+
+  // Filter students based on search query
+  useEffect(() => {
+    if (searchQuery === '') {
+      setFilteredStudents([]); // Show no students when search query is empty
+    } else {
+      const lowercasedSearchTerm = searchQuery.toLowerCase();
+      const filtered = students.filter(
+        (student) =>
+          student.name.toLowerCase().includes(lowercasedSearchTerm) ||
+          student.sid.toLowerCase().includes(lowercasedSearchTerm)
+      );
+      setFilteredStudents(filtered);
+    }
+  }, [searchQuery, students]);
 
   // Handle input changes for the form
   const handleInputChange = (e) => {
@@ -68,23 +85,6 @@ const ReportModal = ({ onClose, refreshReports }) => {
     } catch (error) {
       console.error('Error creating report:', error);
     }
-  };
-
-  // Handle search and filter students
-  const handleSearch = (e) => {
-    const searchValue = e.target.value.toLowerCase();
-    setSearchQuery(searchValue);
-
-    // Filter students based on the search query
-    const filtered = students.filter(
-      (student) =>
-        student.firstname.toLowerCase().includes(searchValue) ||
-        student.lastname.toLowerCase().includes(searchValue) ||
-        student.sid.toLowerCase().includes(searchValue)
-    );
-
-    setFilteredStudents(filtered);
-    setShowDropdown(true); // Show dropdown when typing
   };
 
   // Handle student selection
@@ -114,11 +114,10 @@ const ReportModal = ({ onClose, refreshReports }) => {
                     <label>Student: </label>
                     <input  
                     className={styles['report-input']}
-                    type="student"
+                    type="text"
                     placeholder="Search student by name or ID"
                     value={searchQuery}
-                    onChange={handleSearch}
-                    onFocus={() => setShowDropdown(true)} // Show dropdown when the field is focused
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     disabled={!!newReport.studentId} // Disable input if a student is selected
                     />
 
@@ -131,19 +130,24 @@ const ReportModal = ({ onClose, refreshReports }) => {
                 </div>
             </div>
 
-            {/* Dropdown list for filtered students */}
-            {showDropdown && filteredStudents.length > 0 && (                
-                <ul className={styles.dropdown}>
-                {filteredStudents.map((student) => (
-                    <li
-                    key={student.id}
-                    onClick={() => handleSelectStudent(student)}
-                    className={styles.dropdownItem}
-                    >
-                    {student.sid} - {student.name}
-                    </li>
-                ))}
-                </ul>
+            {/* Only show dropdown and messages when no student is selected */}
+            {!newReport.studentId && (
+              <div>
+                {/* Show filtered students only when search query is not empty */}
+                {searchQuery && filteredStudents.length > 0 ? (
+                  <ul className={styles.dropdown}>
+                    {filteredStudents.map((student) => (
+                      <li key={student.id}
+                      onClick={() => handleSelectStudent(student)}
+                      className={styles.dropdownItem}>
+                        {student.name} ({student.sid})
+                      </li>
+                    ))}
+                  </ul>
+                ) : searchQuery && filteredStudents.length === 0 ? (
+                  <p className={styles.dropdown}>No students found.</p>
+                ) : null }
+              </div>
             )}
         </div>
 
