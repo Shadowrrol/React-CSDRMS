@@ -47,6 +47,7 @@ const LoginPage = () => {
   }, [navigate]);
 
   const handleLogin = async (e) => {
+    console.log(`Here: ${process.env.REACT_APP_API_URL}`)
     e.preventDefault();
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/user/login`, {
