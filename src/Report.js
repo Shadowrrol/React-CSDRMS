@@ -158,6 +158,7 @@ const Reports = () => {
                   <th>Complainant</th>
                   <th>Student</th>
                   <th>Adviser</th>
+                  <th>Encoder</th>
                   <th>Received</th>
                   <th>Actions</th>
                 </tr>
@@ -171,6 +172,7 @@ const Reports = () => {
                     <td>{report.complainant}</td>
                     <td>{report.student.name}</td>
                     <td>{report.adviser.firstname} {report.adviser.lastname}</td>
+                    <td>{report.encoder}</td>
                     <td>{report.received ? report.received : 'Pending'}</td>
                     <td>
                       <button onClick={() => handleViewReport(report.reportId)}>View Report</button>

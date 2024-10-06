@@ -77,6 +77,7 @@ const ReportModal = ({ onClose, refreshReports }) => {
         date: new Date().toISOString().split('T')[0], // Automatically set today's date
         time: new Date().toLocaleTimeString(), // Automatically set current time
         complainant: loggedInUser.username, // Set the logged-in user's username as the complainant
+        encoder: loggedInUser.firstname + ' ' + loggedInUser.lastname,
       };
 
       await axios.post('http://localhost:8080/report/insertReport', reportData);
