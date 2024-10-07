@@ -23,7 +23,7 @@ const ViewStudentSuspensions = () => {
         document.title = 'Student Sanctions';
         const fetchSanctions = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/sanction/getSanctionsBySid/${sid}`);
+                const response = await axios.get(`https://spring-csdrms.onrender.com/sanction/getSanctionsBySid/${sid}`);
                 setSanctions(response.data);
             } catch (error) {
                 console.error('Error fetching sanctions:', error);

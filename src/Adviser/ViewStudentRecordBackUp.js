@@ -49,9 +49,9 @@ const ViewStudentRecord = () => {
             try {
                 let response;
                 if (loggedInUser.userType === 3) {
-                    response = await fetch(`http://localhost:8080/student/getStudentById/${id}`);
+                    response = await fetch(`https://spring-csdrms.onrender.com/student/getStudentById/${id}`);
                 } else {
-                    response = await fetch(`http://localhost:8080/student/getCurrentStudent/${id}`);
+                    response = await fetch(`https://spring-csdrms.onrender.com/student/getCurrentStudent/${id}`);
                 }
 
                 if (!response.ok) {
@@ -76,9 +76,9 @@ const ViewStudentRecord = () => {
                     if (loggedInUser.userType === 3) {
                         const section = student.section;
                         const schoolYear = student.schoolYear;
-                        response = await fetch(`http://localhost:8080/student-record/getStudentRecordsBySectionAndSchoolYear?section=${section}&schoolYear=${schoolYear}`);
+                        response = await fetch(`https://spring-csdrms.onrender.com/student-record/getStudentRecordsBySectionAndSchoolYear?section=${section}&schoolYear=${schoolYear}`);
                     } else {
-                        response = await fetch(`http://localhost:8080/student-record/getStudentRecords/${student.sid}`);
+                        response = await fetch(`https://spring-csdrms.onrender.com/student-record/getStudentRecords/${student.sid}`);
                     }
 
                     const data = await response.json();

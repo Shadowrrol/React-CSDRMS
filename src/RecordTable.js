@@ -24,7 +24,7 @@ const RecordTable = ({ records, schoolYears, grades }) => {
 
   const fetchSectionsByGrade = async (grade) => {
     try {
-      const response = await axios.get(`http://localhost:8080/class/sections/${grade}`);
+      const response = await axios.get(`https://spring-csdrms.onrender.com/class/sections/${grade}`);
       setSections(response.data);
     } catch (error) {
       console.error('Error fetching sections:', error);

@@ -51,7 +51,7 @@ const AdminDashboard = () => {
   const confirmDelete = async () => {
     if (selectedUser) {
       try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/user/deleteUser/${selectedUser.username}`);
+        await axios.delete(`https://spring-csdrms.onrender.com/user/deleteUser/${selectedUser.username}`);
         setUsers(prevUsers => prevUsers.filter(user => user.username !== selectedUser.username));
         setSelectedUser(null);
       } catch (error) {

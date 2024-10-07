@@ -36,7 +36,7 @@
 
     const fetchClasses = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/class/getAllClasses");
+        const response = await axios.get("https://spring-csdrms.onrender.com/class/getAllClasses");
         setClasses(response.data);
       } catch (error) {
         console.error("Error fetching classes:", error);
@@ -45,7 +45,7 @@
 
     const fetchSchoolYears = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/schoolYear/getAllSchoolYears");
+        const response = await axios.get("https://spring-csdrms.onrender.com/schoolYear/getAllSchoolYears");
         setSchoolYears(response.data);
       } catch (error) {
         console.error("Error fetching school years:", error);
@@ -65,7 +65,7 @@
       }
 
       try {
-        await axios.post("http://localhost:8080/class/addClass", {
+        await axios.post("https://spring-csdrms.onrender.com/class/addClass", {
           grade: newGrade,
           section: newSection,
         });
@@ -90,7 +90,7 @@
       }
 
       try {
-        await axios.post("http://localhost:8080/schoolYear/addSchoolYear", {
+        await axios.post("https://spring-csdrms.onrender.com/schoolYear/addSchoolYear", {
           schoolYear: newSchoolYear,
         });
         await fetchSchoolYears();

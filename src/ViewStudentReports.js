@@ -24,7 +24,7 @@ const ViewStudentReports = () => {
         document.title = "Student Cases";
         const fetchCases = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/cases/student/${sid}`);
+                const response = await axios.get(`https://spring-csdrms.onrender.com/api/cases/student/${sid}`);
                 setCases(response.data);
             } catch (error) {
                 console.error('Error fetching cases:', error);

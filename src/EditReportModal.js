@@ -26,7 +26,7 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
   // Fetch the report data and set it in the form
   useEffect(() => {
     if (reportId) {
-      axios.get(`http://localhost:8080/report/getReport/${reportId}`)
+      axios.get(`https://spring-csdrms.onrender.com/report/getReport/${reportId}`)
         .then(response => {
           setReportData(response.data);
           setSearchQuery(response.data.student?.name || ''); // Set the current student name in the search field
@@ -41,14 +41,14 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
       try {
         let response;
         if (loggedInUser?.userType === 3) {
-          response = await axios.get('http://localhost:8080/student/getAllStudentsByAdviser', {
+          response = await axios.get('https://spring-csdrms.onrender.com/student/getAllStudentsByAdviser', {
             params: {
               section: loggedInUser.section,
               schoolYear: loggedInUser.schoolYear,
             },
           });
         } else {
-          response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
+          response = await axios.get('https://spring-csdrms.onrender.com/student/getAllCurrentStudents');
         }
         setStudents(response.data);
       } catch (error) {
@@ -91,7 +91,7 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
     }
 
     try {
-      await axios.put(`http://localhost:8080/report/updateReport/${reportId}`, reportData);
+      await axios.put(`https://spring-csdrms.onrender.com/report/updateReport/${reportId}`, reportData);
       refreshReports(); // Refresh the report list after submission
       onClose(); // Close the modal after submission
     } catch (error) {

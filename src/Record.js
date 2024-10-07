@@ -24,8 +24,8 @@ const Record = () => {
     setLoading(true);
     try {
       const response = loggedInUser?.userType === 3 
-        ? await axios.get(`http://localhost:8080/student-record/getStudentRecordsBySectionAndSchoolYear?section=${loggedInUser.section}&schoolYear=${loggedInUser.schoolYear}`)
-        : await axios.get('http://localhost:8080/student-record/getAllStudentRecords');
+        ? await axios.get(`https://spring-csdrms.onrender.com/student-record/getStudentRecordsBySectionAndSchoolYear?section=${loggedInUser.section}&schoolYear=${loggedInUser.schoolYear}`)
+        : await axios.get('https://spring-csdrms.onrender.com/student-record/getAllStudentRecords');
       setRecords(response.data);
     } catch (error) {
       console.error('Error fetching records:', error);
@@ -37,8 +37,8 @@ const Record = () => {
   const fetchInitialData = async () => {
     try {
       const [schoolYearResponse, gradeResponse] = await Promise.all([
-        axios.get('http://localhost:8080/schoolYear/getAllSchoolYears'),
-        axios.get('http://localhost:8080/class/allUniqueGrades')
+        axios.get('https://spring-csdrms.onrender.com/schoolYear/getAllSchoolYears'),
+        axios.get('https://spring-csdrms.onrender.com/class/allUniqueGrades')
       ]);
       setSchoolYears(schoolYearResponse.data);
       setGrades(gradeResponse.data);

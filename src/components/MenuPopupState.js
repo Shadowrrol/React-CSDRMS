@@ -43,11 +43,11 @@ const MenuPopupState = () => {
 
         try {
             // Fetch timeLogId using uid
-            const response = await axios.get(`http://localhost:8080/time-log/getLatestLog/${user.uid}`);
+            const response = await axios.get(`https://spring-csdrms.onrender.com/time-log/getLatestLog/${user.uid}`);
             const timeLogId = response.data.timelog_id;
 
             // Send logout time to backend
-            await axios.post('http://localhost:8080/time-log/logout', {
+            await axios.post('https://spring-csdrms.onrender.com/time-log/logout', {
                 timelogId: timeLogId,
                 logoutTime,
             });

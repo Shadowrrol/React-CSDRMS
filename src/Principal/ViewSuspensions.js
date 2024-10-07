@@ -36,7 +36,7 @@ const ViewSuspensions = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('http://localhost:8080/suspension/getAllSuspensions');
+      const response = await axios.get('https://spring-csdrms.onrender.com/suspension/getAllSuspensions');
       setSuspensions(response.data);
     } catch (error) {
       console.error('Error fetching suspensions:', error);

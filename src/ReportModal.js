@@ -25,7 +25,7 @@ const ReportModal = ({ onClose, refreshReports }) => {
         // Check if usertype is 3 (Adviser)
         if (loggedInUser?.userType === 3) {
           // Fetch students by adviser's section and school year
-          response = await axios.get('http://localhost:8080/student/getAllStudentsByAdviser', {
+          response = await axios.get('https://spring-csdrms.onrender.com/student/getAllStudentsByAdviser', {
             params: {
               section: loggedInUser.section, // Pass section from logged in user
               schoolYear: loggedInUser.schoolYear, // Pass schoolYear from logged in user
@@ -33,7 +33,7 @@ const ReportModal = ({ onClose, refreshReports }) => {
           });
         } else {
           // Default API call for other user types
-          response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
+          response = await axios.get('https://spring-csdrms.onrender.com/student/getAllCurrentStudents');
         }
 
         setStudents(response.data); // Set fetched students
@@ -79,7 +79,7 @@ const ReportModal = ({ onClose, refreshReports }) => {
         complainant: loggedInUser.username, // Set the logged-in user's username as the complainant
       };
 
-      await axios.post('http://localhost:8080/report/insertReport', reportData);
+      await axios.post('https://spring-csdrms.onrender.com/report/insertReport', reportData);
       refreshReports(); // Refresh the reports list after submission
       onClose(); // Close the modal after submission
     } catch (error) {

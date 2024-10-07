@@ -61,7 +61,7 @@ const ViewStudentRecord = () => {
   // Fetch student details from the API
   const fetchStudentDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/student/getCurrentStudent/${id}`);
+      const response = await axios.get(`https://spring-csdrms.onrender.com/student/getCurrentStudent/${id}`);
       setStudent(response.data); // Set the student data to the state
     } catch (error) {
       console.error('Error fetching student details:', error);
@@ -85,7 +85,7 @@ const ViewStudentRecord = () => {
   const fetchStudentRecords = async (sid) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8080/student-record/getStudentRecords/${sid}`);
+      const response = await axios.get(`https://spring-csdrms.onrender.com/student-record/getStudentRecords/${sid}`);
       setRecords(response.data);
     } catch (error) {
       console.error('Error fetching student records:', error);
@@ -98,7 +98,7 @@ const ViewStudentRecord = () => {
   const fetchStudentRecordsByAdviser = async (sid, section) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8080/student-record/getStudentRecordsByAdviser`, {
+      const response = await axios.get(`https://spring-csdrms.onrender.com/student-record/getStudentRecordsByAdviser`, {
         params: {
           sid: sid,
           section: section,
@@ -116,7 +116,7 @@ const ViewStudentRecord = () => {
   // Fetch school years from the API (only for non-adviser users)
   const fetchSchoolYears = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/schoolYear/getAllSchoolYears');
+      const response = await axios.get('https://spring-csdrms.onrender.com/schoolYear/getAllSchoolYears');
       setSchoolYears(response.data);
     } catch (error) {
       console.error('Error fetching school years:', error);

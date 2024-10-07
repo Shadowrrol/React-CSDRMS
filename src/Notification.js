@@ -26,7 +26,7 @@ const Notification = () => {
         
         // Check if userType is 3 (Adviser), then fetch by section and schoolYear
         if (loggedInUser.userType === 3) {
-          response = await axios.get('http://localhost:8080/suspension/getAllSuspensionsBySectionAndSchoolYear', {
+          response = await axios.get('https://spring-csdrms.onrender.com/suspension/getAllSuspensionsBySectionAndSchoolYear', {
             headers: {
               Authorization: `Bearer ${authToken}`,
             },
@@ -37,7 +37,7 @@ const Notification = () => {
           });
         } else {
           // Fetch all suspensions for other user types
-          response = await axios.get('http://localhost:8080/suspension/getAllSuspensions', {
+          response = await axios.get('https://spring-csdrms.onrender.com/suspension/getAllSuspensions', {
             headers: {
               Authorization: `Bearer ${authToken}`,
             },
