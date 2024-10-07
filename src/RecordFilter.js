@@ -4,7 +4,6 @@ import axios from 'axios';
 
 const RecordFilter = ({
   schoolYears,
-  grades,
   loggedInUser,
   selectedSchoolYear,
   setSelectedSchoolYear,
@@ -15,7 +14,9 @@ const RecordFilter = ({
   selectedMonth,
   setSelectedMonth,
   selectedWeek,
-  setSelectedWeek
+  setSelectedWeek,
+  grades,
+  showGradeAndSection = true, // New prop to control visibility of grade and section filters
 }) => {
   const [sections, setSections] = useState([]);
 
@@ -73,35 +74,40 @@ const RecordFilter = ({
         </select>
       )}
 
-      <select
-        value={selectedGrade}
-        onChange={(e) => {
-          setSelectedGrade(e.target.value);
-          setSelectedSection(''); // Reset section when grade changes
-          fetchSectionsByGrade(e.target.value); // Fetch sections for selected grade
-        }}
-        disabled={loggedInUser?.userType === 3} // Disable for logged-in users who are restricted to a specific grade
-      >
-        <option value="">All Grades</option>
-        {grades.map((grade) => (
-          <option key={grade} value={grade}>
-            {grade}
-          </option>
-        ))}
-      </select>
+      {/* Conditionally render grade and section filters based on the new prop */}
+      {showGradeAndSection && (
+        <>
+          <select
+            value={selectedGrade}
+            onChange={(e) => {
+              setSelectedGrade(e.target.value);
+              setSelectedSection(''); // Reset section when grade changes
+              fetchSectionsByGrade(e.target.value); // Fetch sections for selected grade
+            }}
+            disabled={loggedInUser?.userType === 3}
+          >
+            <option value="">All Grades</option>
+            {grades.map((grade) => (
+              <option key={grade} value={grade}>
+                {grade}
+              </option>
+            ))}
+          </select>
 
-      {selectedGrade && (
-        <select
-          value={selectedSection}
-          onChange={(e) => setSelectedSection(e.target.value)}
-        >
-          <option value="">All Sections</option>
-          {sections.map((section) => (
-            <option key={section} value={section}>
-              {section}
-            </option>
-          ))}
-        </select>
+          {selectedGrade && (
+            <select
+              value={selectedSection}
+              onChange={(e) => setSelectedSection(e.target.value)}
+            >
+              <option value="">All Sections</option>
+              {sections.map((section) => (
+                <option key={section} value={section}>
+                  {section}
+                </option>
+              ))}
+            </select>
+          )}
+        </>
       )}
 
       <select

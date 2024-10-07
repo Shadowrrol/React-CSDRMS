@@ -1,44 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import AddRecordModal from './AddRecordModal'; // Import AddRecordModal component
+import RecordFilter from './RecordFilter'; // Import RecordFilter component
+import ImportModal from './ImportModal'; // Import ImportModal component
 import styles from './ViewStudentRecord.module.css'; // Importing CSS module
 
-const ViewStudentRecord = () => {
-  const authToken = localStorage.getItem('authToken');
-  const loggedInUser = authToken ? JSON.parse(authToken) : null;
-
-  const [students, setStudents] = useState([]); // Hold all students
+const ViewStudentRecord = ({ loggedInUser, schoolYears, grades, students, setStudents }) => {
   const [filteredStudents, setFilteredStudents] = useState([]); // For filtered search results
-  const [searchTerm, setSearchTerm] = useState(''); // Hold the search term
+  const [searchQuery, setSearchQuery] = useState(''); // Hold the search term
   const [selectedStudent, setSelectedStudent] = useState(null); // Hold the selected student
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [schoolYears, setSchoolYears] = useState([]);
   const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
-  const [selectedWeek, setSelectedWeek] = useState(''); // State for the selected week
-
-  const months = [
-    { value: '01', label: 'January' },
-    { value: '02', label: 'February' },
-    { value: '03', label: 'March' },
-    { value: '04', label: 'April' },
-    { value: '05', label: 'May' },
-    { value: '06', label: 'June' },
-    { value: '07', label: 'July' },
-    { value: '08', label: 'August' },
-    { value: '09', label: 'September' },
-    { value: '10', label: 'October' },
-    { value: '11', label: 'November' },
-    { value: '12', label: 'December' },
-  ];
-
-  const weeks = [
-    { value: '1', label: 'Week 1' },
-    { value: '2', label: 'Week 2' },
-    { value: '3', label: 'Week 3' },
-    { value: '4', label: 'Week 4' },
-    { value: '5', label: 'Week 5' },
-  ];
+  const [selectedWeek, setSelectedWeek] = useState('');
+  const [showAddRecordModal, setShowAddRecordModal] = useState(false); // Modal visibility state
+  const [showImportModal, setShowImportModal] = useState(false); // Control ImportModal visibility
 
   const monitoredRecordsList = [
     'Absent',
@@ -51,36 +28,20 @@ const ViewStudentRecord = () => {
     'Sanction',
   ];
 
-  // Fetch all students when the component mounts
   useEffect(() => {
-    fetchAllStudents();
-    if (loggedInUser?.userType !== 3) {
-      fetchSchoolYears(); // Only fetch school years if userType !== 3
+    if (searchQuery === '') {
+      setFilteredStudents([]); // Show no students when search query is empty
+    } else {
+      const lowercasedSearchTerm = searchQuery.toLowerCase();
+      const filtered = students.filter(
+        (student) =>
+          student.name.toLowerCase().includes(lowercasedSearchTerm) ||
+          student.sid.toLowerCase().includes(lowercasedSearchTerm)
+      );
+      setFilteredStudents(filtered);
     }
-  }, []);
+  }, [searchQuery, students]);
 
-  // Fetch all current students from the API
-  const fetchAllStudents = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
-      setStudents(response.data);
-      setFilteredStudents(response.data); // By default, show all students
-    } catch (error) {
-      console.error('Error fetching students:', error);
-    }
-  };
-
-  // Fetch school years from the API (only for non-adviser users)
-  const fetchSchoolYears = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/schoolYear/getAllSchoolYears');
-      setSchoolYears(response.data);
-    } catch (error) {
-      console.error('Error fetching school years:', error);
-    }
-  };
-
-  // Fetch student records based on the selected student
   const fetchStudentRecords = async (sid) => {
     setLoading(true);
     try {
@@ -93,31 +54,16 @@ const ViewStudentRecord = () => {
     }
   };
 
-  // Handle search input change
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-
-    // Filter students by name
-    const filtered = students.filter((student) =>
-      student.name.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredStudents(filtered);
-  };
-
-  // Handle student selection
   const handleStudentSelect = (student) => {
     setSelectedStudent(student);
     fetchStudentRecords(student.sid); // Fetch records for the selected student
   };
 
-  // Helper function to calculate the week number of a date
   const getWeekNumber = (date) => {
     const dayOfMonth = date.getDate();
     return Math.ceil(dayOfMonth / 7);
   };
 
-  // Filter the records by selected school year, month, and week
   const filteredRecords = records.filter((record) => {
     const recordMonth = new Date(record.record_date).getMonth() + 1;
     const formattedMonth = recordMonth < 10 ? `0${recordMonth}` : `${recordMonth}`;
@@ -131,7 +77,6 @@ const ViewStudentRecord = () => {
     );
   });
 
-  // Count the frequency of each monitored record
   const countFrequency = () => {
     const frequencies = monitoredRecordsList.reduce((acc, record) => {
       acc[record] = 0; // Initialize each monitored record with 0
@@ -154,16 +99,16 @@ const ViewStudentRecord = () => {
 
       {/* Search Bar for Students */}
       <div className={styles['search-container']}>
-        <label htmlFor="studentSearch">Search Student by Name:</label>
+        <label htmlFor="studentSearch">Search Student by Name or ID:</label>
         <input
           type="text"
           id="studentSearch"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder="Enter student name"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Enter student name or ID"
         />
-        {/* Display student list if not loading */}
-        {filteredStudents.length > 0 && (
+        {/* Only show the student list if the searchQuery is not empty and filtered students exist */}
+        {searchQuery && filteredStudents.length > 0 && (
           <ul className={styles['student-list']}>
             {filteredStudents.map((student) => (
               <li
@@ -171,12 +116,30 @@ const ViewStudentRecord = () => {
                 onClick={() => handleStudentSelect(student)}
                 className={styles['student-item']}
               >
-                {student.name}
+                {student.name} ({student.sid})
               </li>
             ))}
           </ul>
         )}
       </div>
+
+      {/* Add Record Button */}
+      {selectedStudent && loggedInUser?.userType === 1 && (
+        <button
+          className={styles['add-record-button']}
+          onClick={() => setShowAddRecordModal(true)}
+        >
+          Add Record
+        </button>
+      )}
+
+      {/* Add Record Modal */}
+      {showAddRecordModal && (
+        <AddRecordModal
+          student={selectedStudent}
+          onClose={() => setShowAddRecordModal(false)}
+        />
+      )}
 
       {/* Display selected student details */}
       {selectedStudent && (
@@ -188,69 +151,29 @@ const ViewStudentRecord = () => {
         </div>
       )}
 
-      {/* Filter Section */}
+      {/* Use RecordFilter component to filter by school year, month, week */}
       {selectedStudent && (
-        <div className={styles['filter-container']}>
-          {loggedInUser?.userType !== 3 && (
-            <>
-              <label htmlFor="schoolYearFilter">Filter by School Year:</label>
-              <select
-                id="schoolYearFilter"
-                value={selectedSchoolYear}
-                onChange={(e) => setSelectedSchoolYear(e.target.value)}
-              >
-                <option value="">All School Years</option>
-                {schoolYears.map((year) => (
-                  <option key={year.schoolYear_ID} value={year.schoolYear}>
-                    {year.schoolYear}
-                  </option>
-                ))}
-              </select>
-            </>
-          )}
-
-          <label htmlFor="monthFilter" style={{ marginLeft: '20px' }}>Filter by Month:</label>
-          <select
-            id="monthFilter"
-            value={selectedMonth}
-            onChange={(e) => {
-              setSelectedMonth(e.target.value);
-              setSelectedWeek(''); // Reset week filter when month changes
-            }}
-          >
-            <option value="">All Months</option>
-            {months.map((month) => (
-              <option key={month.value} value={month.value}>
-                {month.label}
-              </option>
-            ))}
-          </select>
-
-          {selectedMonth && (
-            <>
-              <label htmlFor="weekFilter" style={{ marginLeft: '20px' }}>Filter by Week:</label>
-              <select
-                id="weekFilter"
-                value={selectedWeek}
-                onChange={(e) => setSelectedWeek(e.target.value)}
-              >
-                <option value="">All Weeks</option>
-                {weeks.map((week) => (
-                  <option key={week.value} value={week.value}>
-                    {week.label}
-                  </option>
-                ))}
-              </select>
-            </>
-          )}
-        </div>
+        <RecordFilter
+          schoolYears={schoolYears}
+          grades={grades}
+          loggedInUser={loggedInUser}
+          selectedSchoolYear={selectedSchoolYear}
+          setSelectedSchoolYear={setSelectedSchoolYear}
+          selectedGrade={null} // Pass null or undefined since we don't want grade filter
+          setSelectedGrade={() => {}} // Empty setter for grade
+          selectedSection={null} // Pass null or undefined since we don't want section filter
+          setSelectedSection={() => {}} // Empty setter for section
+          selectedMonth={selectedMonth}
+          setSelectedMonth={setSelectedMonth}
+          selectedWeek={selectedWeek}
+          setSelectedWeek={setSelectedWeek}
+          showGradeAndSection={false} // Hide grade and section filters
+        />
       )}
 
-      {loading ? (
-        <p>Loading student records...</p>
-      ) : (
+      {/* Display records if student is selected */}
+      {selectedStudent && (
         <>
-          {/* Frequency Table */}
           <h3 className={styles['view-student-record-subheader']}>Total Frequency of Monitored Records</h3>
           <table className={styles['view-student-record-table']}>
             <thead>
@@ -269,7 +192,6 @@ const ViewStudentRecord = () => {
             </tbody>
           </table>
 
-          {/* Detailed Records Table */}
           <h3 className={styles['view-student-record-subheader']}>Detailed Records</h3>
           <table className={styles['view-student-record-table']}>
             <thead>
@@ -298,6 +220,21 @@ const ViewStudentRecord = () => {
             </tbody>
           </table>
         </>
+      )}
+
+      {/* Button to open Import Modal */}
+      {loggedInUser?.userType !== 3 && (
+        <button onClick={() => setShowImportModal(true)} className={styles['import-button']}>
+          Import Student Data
+        </button>
+      )}
+
+      {/* Import Modal */}
+      {showImportModal && ( // Conditionally render ImportModal based on showImportModal state
+        <ImportModal
+          onClose={() => setShowImportModal(false)}
+          schoolYears={schoolYears}
+        />
       )}
     </div>
   );
