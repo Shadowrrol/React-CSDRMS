@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import styles from './ViewStudentRecord.module.css'; // Importing CSS module
 
@@ -7,10 +6,12 @@ const ViewStudentRecord = () => {
   const authToken = localStorage.getItem('authToken');
   const loggedInUser = authToken ? JSON.parse(authToken) : null;
 
-  const { id } = useParams(); // Get the student ID from the URL
+  const [students, setStudents] = useState([]); // Hold all students
+  const [filteredStudents, setFilteredStudents] = useState([]); // For filtered search results
+  const [searchTerm, setSearchTerm] = useState(''); // Hold the search term
+  const [selectedStudent, setSelectedStudent] = useState(null); // Hold the selected student
   const [records, setRecords] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [student, setStudent] = useState(null); // State to hold student details
+  const [loading, setLoading] = useState(false);
   const [schoolYears, setSchoolYears] = useState([]);
   const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
@@ -36,7 +37,7 @@ const ViewStudentRecord = () => {
     { value: '2', label: 'Week 2' },
     { value: '3', label: 'Week 3' },
     { value: '4', label: 'Week 4' },
-    { value: '5', label: 'Week 5' }, // In case some months have a 5th week
+    { value: '5', label: 'Week 5' },
   ];
 
   const monitoredRecordsList = [
@@ -50,38 +51,36 @@ const ViewStudentRecord = () => {
     'Sanction',
   ];
 
-  // Fetch student details on mount
+  // Fetch all students when the component mounts
   useEffect(() => {
-    fetchStudentDetails();
+    fetchAllStudents();
     if (loggedInUser?.userType !== 3) {
       fetchSchoolYears(); // Only fetch school years if userType !== 3
     }
   }, []);
 
-  // Fetch student details from the API
-  const fetchStudentDetails = async () => {
+  // Fetch all current students from the API
+  const fetchAllStudents = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/student/getCurrentStudent/${id}`);
-      setStudent(response.data); // Set the student data to the state
+      const response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
+      setStudents(response.data);
+      setFilteredStudents(response.data); // By default, show all students
     } catch (error) {
-      console.error('Error fetching student details:', error);
+      console.error('Error fetching students:', error);
     }
   };
 
-  // Fetch student records when student details (specifically student.sid) are available
-  useEffect(() => {
-    if (student && student.sid) {
-      if (loggedInUser?.userType === 3) {
-        // Fetch records for userType === 3 (Adviser)
-        fetchStudentRecordsByAdviser(student.sid, loggedInUser.section);
-      } else {
-        // Fetch regular student records
-        fetchStudentRecords(student.sid);
-      }
+  // Fetch school years from the API (only for non-adviser users)
+  const fetchSchoolYears = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/schoolYear/getAllSchoolYears');
+      setSchoolYears(response.data);
+    } catch (error) {
+      console.error('Error fetching school years:', error);
     }
-  }, [student]);
+  };
 
-  // Fetch student records for general users from the API
+  // Fetch student records based on the selected student
   const fetchStudentRecords = async (sid) => {
     setLoading(true);
     try {
@@ -94,33 +93,22 @@ const ViewStudentRecord = () => {
     }
   };
 
-  // Fetch student records by adviser (for userType 3)
-  const fetchStudentRecordsByAdviser = async (sid, section) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`http://localhost:8080/student-record/getStudentRecordsByAdviser`, {
-        params: {
-          sid: sid,
-          section: section,
-          schoolYear: loggedInUser.schoolYear, // Assuming loggedInUser has schoolYear info
-        },
-      });
-      setRecords(response.data);
-    } catch (error) {
-      console.error('Error fetching records by adviser:', error);
-    } finally {
-      setLoading(false);
-    }
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    // Filter students by name
+    const filtered = students.filter((student) =>
+      student.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredStudents(filtered);
   };
 
-  // Fetch school years from the API (only for non-adviser users)
-  const fetchSchoolYears = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/schoolYear/getAllSchoolYears');
-      setSchoolYears(response.data);
-    } catch (error) {
-      console.error('Error fetching school years:', error);
-    }
+  // Handle student selection
+  const handleStudentSelect = (student) => {
+    setSelectedStudent(student);
+    fetchStudentRecords(student.sid); // Fetch records for the selected student
   };
 
   // Helper function to calculate the week number of a date
@@ -164,81 +152,105 @@ const ViewStudentRecord = () => {
     <div className={styles['view-student-record-wrapper']}>
       <h2 className={styles['view-student-record-header']}>Student Record Overview</h2>
 
-      {/* Display Student Details */}
-      {student ? (
+      {/* Search Bar for Students */}
+      <div className={styles['search-container']}>
+        <label htmlFor="studentSearch">Search Student by Name:</label>
+        <input
+          type="text"
+          id="studentSearch"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Enter student name"
+        />
+        {/* Display student list if not loading */}
+        {filteredStudents.length > 0 && (
+          <ul className={styles['student-list']}>
+            {filteredStudents.map((student) => (
+              <li
+                key={student.sid}
+                onClick={() => handleStudentSelect(student)}
+                className={styles['student-item']}
+              >
+                {student.name}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Display selected student details */}
+      {selectedStudent && (
         <div className={styles['student-details']}>
-          <p><strong>Name:</strong> {student.name} </p>
-          <p><strong>Grade:</strong> {student.grade}</p>
-          <p><strong>Section:</strong> {student.section}</p>
-          <p><strong>Gender:</strong> {student.gender}</p>
+          <p><strong>Name:</strong> {selectedStudent.name}</p>
+          <p><strong>Grade:</strong> {selectedStudent.grade}</p>
+          <p><strong>Section:</strong> {selectedStudent.section}</p>
+          <p><strong>Gender:</strong> {selectedStudent.gender}</p>
         </div>
-      ) : (
-        <p>Loading student details...</p>
       )}
 
       {/* Filter Section */}
-      <div className={styles['filter-container']}>
-        {/* Hide the school year filter for userType 3 */}
-        {loggedInUser?.userType !== 3 && (
-          <>
-            <label htmlFor="schoolYearFilter">Filter by School Year:</label>
-            <select
-              id="schoolYearFilter"
-              value={selectedSchoolYear}
-              onChange={(e) => setSelectedSchoolYear(e.target.value)}
-            >
-              <option value="">All School Years</option>
-              {schoolYears.map((year) => (
-                <option key={year.schoolYear_ID} value={year.schoolYear}>
-                  {year.schoolYear}
-                </option>
-              ))}
-            </select>
-          </>
-        )}
+      {selectedStudent && (
+        <div className={styles['filter-container']}>
+          {loggedInUser?.userType !== 3 && (
+            <>
+              <label htmlFor="schoolYearFilter">Filter by School Year:</label>
+              <select
+                id="schoolYearFilter"
+                value={selectedSchoolYear}
+                onChange={(e) => setSelectedSchoolYear(e.target.value)}
+              >
+                <option value="">All School Years</option>
+                {schoolYears.map((year) => (
+                  <option key={year.schoolYear_ID} value={year.schoolYear}>
+                    {year.schoolYear}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
 
-        <label htmlFor="monthFilter" style={{ marginLeft: '20px' }}>Filter by Month:</label>
-        <select
-          id="monthFilter"
-          value={selectedMonth}
-          onChange={(e) => {
-            setSelectedMonth(e.target.value);
-            setSelectedWeek(''); // Reset week filter when month changes
-          }}
-        >
-          <option value="">All Months</option>
-          {months.map((month) => (
-            <option key={month.value} value={month.value}>
-              {month.label}
-            </option>
-          ))}
-        </select>
+          <label htmlFor="monthFilter" style={{ marginLeft: '20px' }}>Filter by Month:</label>
+          <select
+            id="monthFilter"
+            value={selectedMonth}
+            onChange={(e) => {
+              setSelectedMonth(e.target.value);
+              setSelectedWeek(''); // Reset week filter when month changes
+            }}
+          >
+            <option value="">All Months</option>
+            {months.map((month) => (
+              <option key={month.value} value={month.value}>
+                {month.label}
+              </option>
+            ))}
+          </select>
 
-        {/* Week filter: Only show if a month is selected */}
-        {selectedMonth && (
-          <>
-            <label htmlFor="weekFilter" style={{ marginLeft: '20px' }}>Filter by Week:</label>
-            <select
-              id="weekFilter"
-              value={selectedWeek}
-              onChange={(e) => setSelectedWeek(e.target.value)}
-            >
-              <option value="">All Weeks</option>
-              {weeks.map((week) => (
-                <option key={week.value} value={week.value}>
-                  {week.label}
-                </option>
-              ))}
-            </select>
-          </>
-        )}
-      </div>
+          {selectedMonth && (
+            <>
+              <label htmlFor="weekFilter" style={{ marginLeft: '20px' }}>Filter by Week:</label>
+              <select
+                id="weekFilter"
+                value={selectedWeek}
+                onChange={(e) => setSelectedWeek(e.target.value)}
+              >
+                <option value="">All Weeks</option>
+                {weeks.map((week) => (
+                  <option key={week.value} value={week.value}>
+                    {week.label}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
+        </div>
+      )}
 
       {loading ? (
         <p>Loading student records...</p>
       ) : (
         <>
-          {/* Table for Total Frequency of Monitored Records */}
+          {/* Frequency Table */}
           <h3 className={styles['view-student-record-subheader']}>Total Frequency of Monitored Records</h3>
           <table className={styles['view-student-record-table']}>
             <thead>
@@ -257,7 +269,7 @@ const ViewStudentRecord = () => {
             </tbody>
           </table>
 
-          {/* Table for Individual Records */}
+          {/* Detailed Records Table */}
           <h3 className={styles['view-student-record-subheader']}>Detailed Records</h3>
           <table className={styles['view-student-record-table']}>
             <thead>

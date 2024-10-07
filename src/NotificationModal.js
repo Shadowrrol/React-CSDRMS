@@ -65,7 +65,7 @@ const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refres
                 <strong>Complaint:</strong> {report.complaint}<br />
                 <strong>Complainant:</strong> {report.complainant}<br />
                 <strong>Student:</strong> {report.student.name}<br />
-                <strong>Viewed:</strong> {report.viewedByAdviser || report.viewedBySso ? 'Yes' : 'No'}
+                
               </li>
             ))}
           </ul>
