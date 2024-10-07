@@ -54,7 +54,7 @@ const AddStudentRecord = () => {
         document.title = "Add Record";
         const fetchStudent = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/student/getCurrentStudent/${sid}`);
+                const response = await fetch(`https://spring-csdrms.onrender.com/student/getCurrentStudent/${sid}`);
                 if (response.ok) {
                     const data = await response.json();
                     setStudent(data);
@@ -97,7 +97,7 @@ const AddStudentRecord = () => {
         e.preventDefault();
 
         const newRecord = { ...record };  // `id` is already included in the `report` state
-        const response = await fetch('http://localhost:8080/student-record/insertRecord', {
+        const response = await fetch('https://spring-csdrms.onrender.com/student-record/insertRecord', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

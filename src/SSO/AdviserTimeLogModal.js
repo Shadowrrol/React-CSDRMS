@@ -16,7 +16,7 @@ const AdviserTimeLogModal = ({ adviser, onClose }) => {
     useEffect(() => {
         const fetchAdviserTimeLogs = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/time-log/getAllTimelogsByAdviser/${adviser.uid}`);
+                const response = await axios.get(`https://spring-csdrms.onrender.com/time-log/getAllTimelogsByAdviser/${adviser.uid}`);
                 setAdviserTimeLogs(response.data);
                 setLoading(false);
             } catch (err) {
