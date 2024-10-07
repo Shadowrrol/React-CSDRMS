@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import navStyles from './Navigation.module.css';
 import tableStyles from './GlobalTable.module.css';
-import Navigation from './Navigation'; // Importing the updated Navigation component
+import Navigation from './Navigation';
 import ReportModal from './ReportModal';
-import EditReportModal from './EditReportModal'; // Importing the EditReportModal component
+import EditReportModal from './EditReportModal';
 import AddSuspensionModal from './SSO/AddSuspensionModal';
 import styles from './Report.module.css';
 
@@ -15,17 +15,17 @@ const Reports = () => {
   const navigate = useNavigate();
 
   const [reports, setReports] = useState([]);
-  const [suspensions, setSuspensions] = useState([]); // Store all suspensions here
+  const [suspensions, setSuspensions] = useState([]);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showSuspensionModal, setShowSuspensionModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false); // State for Edit Report Modal
+  const [showEditModal, setShowEditModal] = useState(false);
   const [selectedReportId, setSelectedReportId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedReportStatus, setSelectedReportStatus] = useState({ completed: false, suspended: false });
 
   useEffect(() => {
     fetchReports();
-    fetchSuspensions(); // Fetch all suspensions once
+    fetchSuspensions();
   }, []);
 
   useEffect(() => {
@@ -126,13 +126,11 @@ const Reports = () => {
     });
   };
 
-  // Handle opening the edit modal
   const handleEdit = (reportId) => {
     setSelectedReportId(reportId);
     setShowEditModal(true);
   };
 
-  // Handle viewing the report and redirecting to ViewReport.js
   const handleViewReport = (reportId) => {
     navigate(`/view-report/${reportId}`);
   };
@@ -165,7 +163,11 @@ const Reports = () => {
               </thead>
               <tbody>
                 {reports.map((report) => (
-                  <tr key={report.reportId} onClick={() => handleRowClick(report)}>
+                  <tr 
+                    key={report.reportId} 
+                    onClick={() => handleRowClick(report)}
+                    className={selectedReportId === report.reportId ? tableStyles['selected-row'] : ''} // Apply the selected-row class conditionally
+                  >
                     <td>{report.date}</td>
                     <td>{report.time}</td>
                     <td>{report.complaint}</td>
@@ -186,15 +188,15 @@ const Reports = () => {
 
         <div className={styles.actionButtons}>
           <button className={styles['report-action-button']} onClick={toggleReportModal}>
-            Create Report
+            Create 
           </button>
           <button
-                className={styles['report-action-button']}
-                onClick={() => handleEdit(selectedReportId)}
-                disabled={!selectedReportId} // Only enable if a report is selected
-              >
-                Edit Report
-              </button>
+            className={styles['report-action-button']}
+            onClick={() => handleEdit(selectedReportId)}
+            disabled={!selectedReportId}
+          >
+            Edit 
+          </button>
           {loggedInUser?.userType === 1 && (
             <>
               <button
@@ -211,7 +213,6 @@ const Reports = () => {
               >
                 {selectedReportStatus.suspended ? 'Suspended' : 'Add Suspension'}
               </button>
-             
             </>
           )}
         </div>

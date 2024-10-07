@@ -34,7 +34,8 @@
 }
 
 .global-table td {
-    border: 1px solid #ddd;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 
 .global-table tr:hover {
@@ -44,4 +45,9 @@
 .global-table td {
     text-align: center; /* Center align table data */
     cursor: pointer; /* Pointer cursor for rows */
+}
+.selected-row {
+    background-color: #e0e0e0 !important;
+    color: #8A252C; /* Dark red text color for selected row */
+    font-weight: bold;
 }

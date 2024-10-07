@@ -74,11 +74,13 @@
 
 /* Chart Styles */
 .chart {
+  max-width: 100%;
   margin-top: 30px; /* Space above the chart */
-  padding: 20px; /* Padding around the chart for better spacing */
+  padding: 50px; /* Padding around the chart for better spacing */
   border: 1px solid #ddd; /* Optional: border around the chart */
   border-radius: 8px; /* Rounded corners for the chart */
   background-color: #f9f9f9; /* Light background for contrast */
+  display: flex;
 }
 
 .chartWrapper {
@@ -90,10 +92,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.chart{
-  width: 100%;
 }
 
 /* Table Styles */

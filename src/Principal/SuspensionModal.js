@@ -27,7 +27,7 @@ const SuspensionModal = ({ isOpen, onClose, suspension }) => {
 
           <p>
             I would like to submit the recommendation for the suspension of 
-            <strong> {suspension.reportEntity.student.firstname} {suspension.reportEntity.student.lastname}</strong>, 
+            <strong> {suspension.reportEntity.student.name} </strong> 
             of section <strong>{suspension.reportEntity.student.section}</strong> for 
             <strong> {suspension.days}</strong> days, starting 
             <strong> {suspension.startDate}</strong> until 

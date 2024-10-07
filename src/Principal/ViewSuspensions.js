@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import navStyles from "../Navigation.module.css"; // Import CSS module
+import navStyles from "../Navigation.module.css"; // Import CSS module for Navigation
+import tableStyles from "../GlobalTable.module.css"; // Import GlobalTable CSS module
 import Navigation from '../Navigation'; // Import the Navigation component
-import Button from "@mui/material/Button";
 import SuspensionModal from "./SuspensionModal"; // Import the modal component
+import styles from "./ViewSuspensions.module.css"; // Import GlobalTable CSS module
 
 const ViewSuspensions = () => {
   const authToken = localStorage.getItem('authToken');
@@ -14,23 +14,10 @@ const ViewSuspensions = () => {
   const [error, setError] = useState(null);
   const [selectedSuspension, setSelectedSuspension] = useState(null); // State to store the selected suspension
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchSuspensions();
   }, []);
-
-  const createSidebarLink = (to, text, IconComponent) => (
-    <Link to={to} className={navStyles['styled-link']}>
-        <IconComponent className={navStyles.icon} />
-        <span className={navStyles['link-text']}>{text}</span>
-    </Link>
-  );
-
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    navigate("/");
-  };
 
   const fetchSuspensions = async () => {
     setLoading(true);
@@ -46,9 +33,13 @@ const ViewSuspensions = () => {
     }
   };
 
-  // Open the modal and set the selected suspension
-  const handleViewClick = (suspension) => {
+  // Handle row click to select suspension
+  const handleRowClick = (suspension) => {
     setSelectedSuspension(suspension);
+  };
+
+  // Open the modal and view the selected suspension
+  const handleViewClick = () => {
     setIsModalOpen(true);
   };
 
@@ -61,52 +52,62 @@ const ViewSuspensions = () => {
         {loading && <p>Loading suspensions...</p>}
         {error && <p>{error}</p>}
         {!loading && !error && (
-          <table>
-            <thead>
-              <tr>
-                <th>Date Submitted</th>
-                <th>Number of Days</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Return Date</th>
-                <th>Report ID</th>
-                <th>Complaint</th>
-                <th>Student</th>
-                <th>Adviser</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {suspensions.length > 0 ? (
-                suspensions.map((suspension) => (
-                  <tr key={suspension.suspensionId}>
-                    <td>{suspension.dateSubmitted}</td>
-                    <td>{suspension.days}</td>
-                    <td>{suspension.startDate}</td>
-                    <td>{suspension.endDate}</td>
-                    <td>{suspension.returnDate}</td>
-                    <td>{suspension.reportEntity.reportId}</td>
-                    <td>{suspension.reportEntity.complaint}</td>
-                    <td>
-                      {suspension.reportEntity.student.firstname} {suspension.reportEntity.student.lastname}
-                    </td>
-                    <td>
-                      {suspension.reportEntity.adviser.firstname} {suspension.reportEntity.adviser.lastname}
-                    </td>
-                    <td>
-                      <Button variant="contained" onClick={() => handleViewClick(suspension)}>
-                        View
-                      </Button>
-                    </td>
+          <>
+            <div className={tableStyles['table-container']}>
+              <table className={tableStyles['global-table']}>
+                <thead>
+                  <tr>
+                    <th>Report ID</th>
+                    <th>Student</th>
+                    <th>Adviser</th>
+                    <th>Date Submitted</th>
+                    <th>Suspended</th>
+                    {/* <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Return Date</th>
+                    <th>Complaint</th> */}
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="10">No suspensions found.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {suspensions.length > 0 ? (
+                    suspensions.map((suspension) => (
+                      <tr 
+                        key={suspension.suspensionId} 
+                        onClick={() => handleRowClick(suspension)}
+                        className={selectedSuspension?.suspensionId === suspension.suspensionId ? tableStyles['selected-row'] : ''}
+                      >
+                        <td>{suspension.reportEntity.reportId}</td>  
+                        <td>{suspension.reportEntity.student.name}</td>
+                        <td>{suspension.reportEntity.adviser.firstname} {suspension.reportEntity.adviser.lastname}</td>                      
+                        <td>{suspension.dateSubmitted}</td>
+                        <td>{suspension.days} Days</td>
+                        {/* <td>{suspension.startDate}</td>
+                        <td>{suspension.endDate}</td>
+                        <td>{suspension.returnDate}</td>
+                        <td>{suspension.reportEntity.complaint}</td> */}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5">No suspensions found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* "View" button below the table */}
+            <div className={styles["suspension-action-buttons"]}>
+              <button 
+                variant="contained" 
+                onClick={handleViewClick} 
+                className={styles['suspension-button']} 
+                disabled={!selectedSuspension} // Disable when no row is selected
+              >
+                View
+              </button>
+            </div>
+          </>
         )}
 
         {/* Suspension Modal */}
