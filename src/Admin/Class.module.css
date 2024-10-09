@@ -150,6 +150,7 @@
   display: flex;
   gap: 8px;
   justify-content: center;
+  margin-top: 5px;
 }
 
 .button {

@@ -229,8 +229,10 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                             </div>
                         </>
                     )}
-                    <button type="submit" className={formStyles['global-button']}>Register</button>
                 </form>
+                <div className={formStyles['global-buttonGroup']}>
+                    <button type="submit" className={formStyles['global-button']}>Register</button>
+                </div>
             </div>
         </div>,
         document.body

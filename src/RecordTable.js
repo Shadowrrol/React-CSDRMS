@@ -84,8 +84,7 @@ const RecordTable = ({ records, schoolYears, grades }) => {
   return (
     <div className={styles.container}>
       <div className={styles.TitleContainer}>
-        <div className={styles['h1-title']}>Student Records</div>
-        <h2 className={styles.RecordTitle}> - Table Overview</h2> 
+        <h2 className={styles.RecordTitle}>Table Overview</h2> 
       </div>
 
       {/* Using RecordFilter to handle all filter logic */}

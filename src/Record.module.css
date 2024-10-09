@@ -1,6 +1,7 @@
 /* Content title */
 .h1-title {
-  text-align: center;
+  text-align: left;
+  margin-top: 20px;
   margin-bottom: 20px;
   font-size: 28px;
   color: #81343a;
@@ -18,6 +19,21 @@
 .TitleContainer {
   display: flex; /* Use flexbox */
   align-items: center; /* Align titles vertically */
+}
+
+.triple-container {
+  display: flex;
+  gap: 100px; /* Adds space between the containers */
+  margin-bottom: 40px;
+}
+
+.details-container,
+.search-container,
+.buttons-container {
+  padding: 30px; /* Adds some padding inside each container */
+  border: 2px solid #8A252C;
+  border-radius: 20px; /* Optional: Slightly rounds the corners of the container */
+  background-color: #f9f1f2; /* Optional: Light background color */
 }
 
 /* Filter Styles */
@@ -43,49 +59,22 @@
 }
 
 .filterContainer {
-  margin-bottom: 20px;
-}
-
-.switchViewButton {
-  background-color: #8A252C;; /* Button color */
-  color: #fff; /* White text color */
-  border: none; /* Remove button border */
-  border-radius: 20px; /* Add border radius to button */
-  padding: 12px 20px; /* Increase padding for better touch targets */
-  font-size: 16px; /* Increase font size for better readability */
-  cursor: pointer; /* Show pointer cursor on hover */
-  margin: 0 auto; /* Center the button horizontally */
-  display: flex;
-  transition: transform 0.3s ease, background-color 0.3s ease-in-out;
-  animation: fadeInLeft 0.8s ease-in-out;
-  text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
   margin-top: 20px;
-  font-weight: bold;
-}
-
-.switchViewButton:hover {
-  background-color: #6d3f3e; 
-  transform: scale(1.05); /* Slightly enlarge on hover */ 
-}
-
-.switchViewButton:focus {
-  outline: none;
+  margin-bottom: 20px;
 }
 
 /* Chart Styles */
 .chart {
-  max-width: 100%;
-  margin-top: 30px; /* Space above the chart */
   padding: 50px; /* Padding around the chart for better spacing */
-  border: 1px solid #ddd; /* Optional: border around the chart */
+  border: 2px solid #8A252C; /* Optional: border around the chart */
   border-radius: 8px; /* Rounded corners for the chart */
   background-color: #f9f9f9; /* Light background for contrast */
-  display: flex;
 }
 
 .chartWrapper {
   margin-top: 30px;
   max-width: 100%;
+  max-height: 95%;
 }
 
 .chartContainer {
@@ -94,29 +83,104 @@
   align-items: center;
 }
 
-/* Table Styles */
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
 
-.table th,
-.table td {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-.table th {
-  background-color: #f4f4f4;
+/* Header styles */
+.view-student-record-header {
+  margin-bottom: 15px;
+  font-size: 24px;
   font-weight: bold;
 }
 
-.table tr:nth-child(even) {
-  background-color: #f9f9f9;
+.view-student-record-subheader {
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: bold;
 }
 
-.table tr:hover {
-  background-color: #f1f1f1;
+/* Styles for Radio Button Wrapper */
+.view-wrapper {
+  --font-color-dark: #8A252C;
+  --font-color-light: #fff;
+  --bg-color: #fff;
+  --main-color: #8A252C;
+  --secondary-color: #a43a3fbd;
+  position: relative;
+  width: 250px;
+  height: 36px;
+  background-color: var(--bg-color);
+  border: 2px solid var(--main-color);
+  border-radius: 34px;
+  display: flex;
+  align-items: top;  
+  flex-direction: row;
+  box-shadow: 4px 4px var(--main-color);
+  font-size: 14px;
+  margin-left: 75px;
 }
 
+.view-option {
+  margin-right: 5px;
+  width: 80.5px;
+  height: 28px;
+  position: relative;
+  top: 2px;
+  left: 2px;
+  border-radius: 34px;
+  transition: 0.25s cubic-bezier(0, 0, 0, 1);
+}
+
+.view-option:last-child {
+  margin-right: 4px;
+}
+
+.view-option:hover {
+  background-color: var(--secondary-color);
+}
+
+.view-option:hover .view-span {
+  color: var(--font-color-light);
+}
+
+.view-input {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  appearance: none;
+  cursor: pointer;
+  border: none;
+}
+
+.view-input:focus, .view-input:active {
+  outline: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.view-btn {
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.view-btn:focus, .view-btn:active {
+  outline: none;
+  box-shadow: none; /* Prevent any shadow when clicked */
+}
+.view-span {
+  color: var(--font-color-dark);
+}
+
+.view-input:checked + .view-btn {
+  background-color: var(--main-color);
+  transition: 0.2s cubic-bezier(0, 0, 0, 1);
+}
+
+.view-input:checked + .view-btn .view-span {
+  color: var(--font-color-light);
+  transition: 0.25s cubic-bezier(0, 0, 0, 1);
+}

@@ -1,7 +1,12 @@
 .table-container {
     max-height: 400px; /* Adjust height as needed */
-    max-width: 100%;
     overflow-y: auto; /* Ensure horizontal scrolling for smaller screens */
+    border: 2px solid #8A252C;
+}
+
+.table-container-half {
+    max-height: 600px; /* Adjust height as needed */
+    max-width: 25%;
     border: 2px solid #8A252C;
 }
 
@@ -11,10 +16,16 @@
     table-layout: fixed; /* Ensures consistent cell width */
 }
 
-.global-table thead {
+.global-table thead th {
     position: sticky; /* Sticky header */
-    top: 0; /* Fixed to the top */
+    top: 0; /* Stick to the top */
     z-index: 1; /* Ensure header stays on top of scrolling body */
+    background-color: #8A252C; /* Keep background color to prevent overlapping with content */
+    color: white; /* White text for headers */
+    text-shadow: 3px 3px 5px #000;  /* Slight shadow for text */
+    font-weight: 600;
+    border-left: none;
+    border: 0.5px solid #8A252C;
 }
 
 .global-table th, .global-table td {
@@ -22,15 +33,6 @@
     text-align: center;
     font-size: 16px; /* Larger font size for readability */
     border-bottom: 1px solid #ddd;
-}
-
-.global-table th {
-    background-color: #8A252C; /* Admin dashboard header color */
-    color: white; /* White text for headers */
-    text-shadow: 3px 3px 5px #000;  /* Slight shadow for all text */
-    font-weight: 600;
-    border-left: none;
-    border: 0.5px solid #8A252C;  
 }
 
 .global-table td {

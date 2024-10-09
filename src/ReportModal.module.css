@@ -35,7 +35,6 @@
 /* Input and Dropdown Styles */
 .report-container {
     margin-bottom: 5px;
-    justify-content: space-between;
 }
 
 .searchWrapper {
@@ -140,7 +139,7 @@
 .report-modal-textarea {
     width: 100%;
     padding: 12px;
-    font-size: 14px;
+    font-size: 16px;
     border-radius: 5px; /* Match the border-radius with the input */
     border: 1px solid #ccc; /* Match the border style with the input */
     margin-bottom: 10px; /* Add space below */

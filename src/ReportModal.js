@@ -110,46 +110,46 @@ const ReportModal = ({ onClose, refreshReports }) => {
 
         {/* Student Search and Select Field */}
         <div className={styles['report-container']}>
-            <div className={styles.searchWrapper}>
-                <div className={styles['report-group']}>
-                    <label>Student: </label>
-                    <input  
-                    className={styles['report-input']}
-                    type="text"
-                    placeholder="Search student by name or ID"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    disabled={!!newReport.studentId} // Disable input if a student is selected
-                    />
+          <div className={styles.searchWrapper}>
+            <div className={styles['report-group']}>
+              <label>Student: </label>
+              <input  
+              className={styles['report-input']}
+              type="text"
+              placeholder="Search student by name or ID"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              disabled={!!newReport.studentId} // Disable input if a student is selected
+              />
 
-                    {/* Show "X" button when a student is selected */}
-                    {newReport.studentId && (
-                    <button className={styles.clearButton} onClick={handleClearSelection}>
-                      ✕
-                    </button>
-                    )}
-                </div>
+              {/* Show "X" button when a student is selected */}
+              {newReport.studentId && (
+              <button className={styles.clearButton} onClick={handleClearSelection}>
+                ✕
+              </button>
+              )}
             </div>
+          </div>
 
-            {/* Only show dropdown and messages when no student is selected */}
-            {!newReport.studentId && (
-              <div>
-                {/* Show filtered students only when search query is not empty */}
-                {searchQuery && filteredStudents.length > 0 ? (
-                  <ul className={styles.dropdown}>
-                    {filteredStudents.map((student) => (
-                      <li key={student.id}
-                      onClick={() => handleSelectStudent(student)}
-                      className={styles.dropdownItem}>
-                        {student.name} ({student.sid})
-                      </li>
-                    ))}
-                  </ul>
-                ) : searchQuery && filteredStudents.length === 0 ? (
-                  <p className={styles.dropdown}>No students found.</p>
-                ) : null }
-              </div>
-            )}
+          {/* Only show dropdown and messages when no student is selected */}
+          {!newReport.studentId && (
+            <div>
+              {/* Show filtered students only when search query is not empty */}
+              {searchQuery && filteredStudents.length > 0 ? (
+                <ul className={styles.dropdown}>
+                  {filteredStudents.map((student) => (
+                    <li key={student.id}
+                    onClick={() => handleSelectStudent(student)}
+                    className={styles.dropdownItem}>
+                      {student.name} ({student.sid})
+                    </li>
+                  ))}
+                </ul>
+              ) : searchQuery && filteredStudents.length === 0 ? (
+                <p className={styles.dropdown}>No students found.</p>
+              ) : null }
+            </div>
+          )}
         </div>
 
         {/* Complaint Field */}

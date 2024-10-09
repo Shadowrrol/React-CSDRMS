@@ -94,26 +94,23 @@ const RecordAnalytics = ({ records, schoolYears, grades }) => {
 
   return (
     <>
-        <div className={styles.TitleContainer}>
-          <div className={styles['h1-title']}>Student Records</div>
-          <h2 className={styles.RecordTitle}> - Analytics Overview</h2> 
-        </div>
+      <h2 className={styles.RecordTitle}> Analytics Overview</h2> 
 
-        <RecordFilter
-          schoolYears={schoolYears}
-          grades={grades}
-          loggedInUser={loggedInUser}
-          selectedSchoolYear={selectedSchoolYear}
-          setSelectedSchoolYear={setSelectedSchoolYear}
-          selectedGrade={selectedGrade}
-          setSelectedGrade={setSelectedGrade}
-          selectedSection={selectedSection}
-          setSelectedSection={setSelectedSection}  
-          selectedMonth={selectedMonth}
-          setSelectedMonth={setSelectedMonth}
-          selectedWeek={selectedWeek}
-          setSelectedWeek={setSelectedWeek}
-        />
+      <RecordFilter
+        schoolYears={schoolYears}
+        grades={grades}
+        loggedInUser={loggedInUser}
+        selectedSchoolYear={selectedSchoolYear}
+        setSelectedSchoolYear={setSelectedSchoolYear}
+        selectedGrade={selectedGrade}
+        setSelectedGrade={setSelectedGrade}
+        selectedSection={selectedSection}
+        setSelectedSection={setSelectedSection}  
+        selectedMonth={selectedMonth}
+        setSelectedMonth={setSelectedMonth}
+        selectedWeek={selectedWeek}
+        setSelectedWeek={setSelectedWeek}
+      />
 
       <div className={styles.chartWrapper}>
         <Line data={lineChartData} options={lineChartOptions} className={styles.chart} />

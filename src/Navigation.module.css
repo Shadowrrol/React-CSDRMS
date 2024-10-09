@@ -146,6 +146,7 @@ body{
     margin-left: 175px;
     box-sizing: border-box;
     transition: margin-left 0.3s ease; /* Smooth transition for margin-left change */
+    overflow-y: auto;
 }
 
 /* Logout Button Styling */
@@ -175,9 +176,14 @@ body{
     cursor: pointer;
     color: white;
     font-size: 1.5rem; /* Adjust the size of the bell icon */
-  }
-  
-  .badge {
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.notification-icon:hover {
+    transform: scale(1.20);
+}
+
+.badge {
     position: absolute;
     top: -5px;
     right: -10px;
@@ -187,7 +193,7 @@ body{
     padding: 2px 6px;
     font-size: 0.8rem;
     font-weight: bold;
-  }
+}
 
 /* Animation Definitions */
 @keyframes fadeIn {

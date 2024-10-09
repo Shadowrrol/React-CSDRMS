@@ -27,7 +27,8 @@ h2 {
     font-size: 24px;
     font-weight: bold;
     color: #000;
-    margin-bottom: 16px;
+    margin-top: 15px;
+    margin-bottom: 15px;
     text-shadow: 1px 1px 3px #ccc;  /* Slight shadow for all text */
 }
 

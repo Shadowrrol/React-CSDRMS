@@ -7,7 +7,6 @@ import Notification from './Notification';
 import Record from './Record';
 import Report from './Report';
 import ViewReport from './ViewReport'; 
-import ViewStudentRecord from './ViewStudentRecord';
 
 import Feedback from './SSO/Feedback';
 import Case from './SSO/Case';
@@ -23,7 +22,6 @@ import ViewSuspensions from './Principal/ViewSuspensions';
 import Followup from './Adviser/Followup';
 import AddStudent from './Adviser/AddStudent';
 import UpdateStudent from './Adviser/UpdateStudent';
-import AdvivserCase from './Adviser/AdviserCase';
 import UpdateAccount from './UpdateAccount';
 
 import AdminDashboard from './Admin/AdminDashboard';
@@ -47,7 +45,6 @@ function App() {
           {loggedInUser && (
             <>
              <Route path="/record" element={<Record />} />
-             <Route path="/view-student-record" element={<ViewStudentRecord />} />
              <Route path="/UpdateAccount" element={<UpdateAccount />} /> 
             </>
 
