@@ -1,15 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { AuthContext } from '../AuthContext'; // Adjust the path as needed
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Profile icon
+import UpdateAccountModal from '../Admin/UpdateAccountModal'; // Import the UpdateAccountModal
+import styles from './MenuPopupState.module.css'; // Import the CSS module
 
 const MenuPopupState = () => {
+    const authToken = localStorage.getItem('authToken');
+    const loggedInUser = authToken ? JSON.parse(authToken) : null;
     const navigate = useNavigate();
-    const { loggedInUser } = useContext(AuthContext);
+    const [isModalOpen, setModalOpen] = useState(false); // State for modal visibility
 
     // Check if the user is logged in
     if (!loggedInUser) {
@@ -19,67 +23,68 @@ const MenuPopupState = () => {
     }
 
     const user = loggedInUser;
+    const { uid } = user;
 
-    console.log('Current user:', user); // Log the current user object
-    if (!user.uid) {  // Check for uid instead of userId
-        console.error('User ID is undefined', user); // Log if uid is missing
-        return null; // Prevent further execution if uid is not defined
-    }
-
-    // Safely set userTypeLabel, falling back for lastName if undefined
+    // User type label for display purposes
     const userTypeLabel = `${user.lastname || 'User'} ${user.userType === 1 ? " | SSO Officer" : 
                                            user.userType === 2 ? " | Principal" : 
                                            user.userType === 3 ? " | Adviser" : 
-                                           user.userType === 4 ? " | Admin" : ""}`;
+                                           user.userType === 4 ? " | Admin" : " | User"}`;
 
-    const handleLogout = async (popupState) => {
-        console.log("Logout button clicked");
-        const logoutTime = new Date().toISOString();
+    // Handle user logout and remove auth token
+    const handleLogout = async () => {
+        const userType = user.userType;
 
-        if (!user.uid) {  // Check for uid instead of userId
-            console.error('User ID is undefined');
+        if (userType !== 3) {
+            localStorage.removeItem('authToken');
+            navigate('/');
             return;
         }
 
         try {
-            // Fetch timeLogId using uid
-            const response = await axios.get(`http://localhost:8080/time-log/getLatestLog/${user.uid}`);
-            const timeLogId = response.data.timelog_id;
+            const logoutTime = new Date().toISOString();
+            const response = await axios.get(`http://localhost:8080/time-log/getLatestLog/${uid}`);
+            const { timelog_id: timelogId } = response.data;
 
-            // Send logout time to backend
             await axios.post('http://localhost:8080/time-log/logout', {
-                timelogId: timeLogId,
+                timelogId,
                 logoutTime,
             });
 
-            // Clear tokens and navigate to login
             localStorage.removeItem('authToken');
-            popupState.close(); // Close the popup menu
             navigate('/');
         } catch (error) {
-            console.error('Error logging out', error.response ? error.response.data : error.message);
+            console.error('Error logging out', error);
         }
     };
 
+    // Open profile update modal
     const handleProfileClick = () => {
-        navigate(`/UpdateAccount`, { state: { user } });
+        setModalOpen(true); // Open the modal
+        
+    };
+
+    // Close profile update modal
+    const handleModalClose = () => {
+        setModalOpen(false); // Close the modal c h ec k p o i n t
+        
     };
 
     return (
         <PopupState variant="popover" popupId="demo-popup-menu">
             {(popupState) => (
                 <React.Fragment>
-                    <Button
-                        variant="contained"
+                    <IconButton
                         {...bindTrigger(popupState)}
-                        style={{ backgroundColor: '#ffc800', color: 'black', width: '100%' }}
+                        className={styles.profileIconButton}     
                     >
-                        {userTypeLabel}
-                    </Button>
+                        <AccountCircleIcon className={styles.accountCircleIcon}/>
+                    </IconButton>
                     <Menu {...bindMenu(popupState)}>
                         <MenuItem onClick={handleProfileClick}>Update Account</MenuItem>
-                        <MenuItem onClick={() => handleLogout(popupState)}>Logout</MenuItem>
+                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
                     </Menu>
+                    <UpdateAccountModal isOpen={isModalOpen} onClose={handleModalClose} user={user}  /> {/* Include the modal */}
                 </React.Fragment>
             )}
         </PopupState>

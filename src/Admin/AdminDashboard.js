@@ -30,7 +30,7 @@ const AdminDashboard = () => {
 
     document.title = "Admin | Dashboard";
     fetchUsers();
-  }, [authToken, loggedInUser, navigate]);
+  }, []);
 
   const fetchUsers = async () => {
     try {

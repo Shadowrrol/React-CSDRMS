@@ -5,6 +5,9 @@ import styles from './RegisterUserModal.module.css';
 import styles1 from '../GlobalForm.module.css';
 
 const UpdateAccountModal = ({ isOpen, onClose, user }) => {
+    const authToken = localStorage.getItem('authToken');
+    const loggedInUser = authToken ? JSON.parse(authToken) : null;
+
     const [userType, setUserType] = useState(null);
     const [updatedUser, setUpdatedUser] = useState({
         username: '',
@@ -41,17 +44,32 @@ const UpdateAccountModal = ({ isOpen, onClose, user }) => {
     };
 
     const handleUpdate = () => {
+        const updatedData = { ...updatedUser };
+    
+        // If the password field is empty, remove it from the object to avoid updating
+        if (updatedData.password === '') {
+            delete updatedData.password;
+        }
+    
         const endpoint = updatedUser.userType === 1 ? 'updateSSO' :
                          updatedUser.userType === 2 ? 'updatePrincipal' :
                          updatedUser.userType === 3 ? 'updateAdviser' :
-                         updatedUser.userType === 4 ? 'updateAdmin' : '';
-
+                         updatedUser.userType === 4 ? 'updateAdmin' :
+                         updatedUser.userType === 5 ? 'updateTeacher' :    // Teacher role
+                         updatedUser.userType === 6 ? 'updateGuidance' : '';  // Guidance role
+    
         if (endpoint) {
-            axios.put(`http://localhost:8080/user/${endpoint}`, updatedUser)
+            axios.put(`http://localhost:8080/user/${endpoint}`, updatedData)
                 .then(response => {
                     console.log(response.data);
-                    alert('Account Successfully Updated.');
+                    alert('Account Successfully Updated');
+    
+                    if (updatedUser.username === loggedInUser.username) {
+                        localStorage.setItem('authToken', JSON.stringify(updatedUser));
+                    }
+                    
                     onClose(); // Close the modal
+                    window.location.reload();
                 })
                 .catch(error => {
                     console.error('Error updating user:', error);
@@ -59,6 +77,8 @@ const UpdateAccountModal = ({ isOpen, onClose, user }) => {
                 });
         }
     };
+    
+
 
     if (!isOpen) return null;
 

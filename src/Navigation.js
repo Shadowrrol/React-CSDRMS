@@ -12,18 +12,15 @@ import navStyles from './Navigation.module.css'; // CSS for Navigation
 import JHSLogo from './image-sso-yellow.png';
 import axios from 'axios';
 import NotificationModal from './NotificationModal'; // Import NotificationModal
+import MenuPopupState from './components/MenuPopupState'; 
 
 const Navigation = ({ loggedInUser }) => {
+  const { uid } = loggedInUser;
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState(0); // To store the count of unviewed notifications
   const [allReports, setAllReports] = useState([]); // To store all reports
   const [allSuspensions, setAllSuspensions] = useState([]); // To store all suspensions
   const [showNotificationModal, setShowNotificationModal] = useState(false); // State to control modal visibility
-
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    navigate('/');
-  };
 
   const createSidebarLink = (to, text, IconComponent) => (
     <Link to={to} className={navStyles['styled-link']}>
@@ -173,10 +170,7 @@ const Navigation = ({ loggedInUser }) => {
               {notifications > 0 && <span className={navStyles.badge}>{notifications}</span>} {/* Show badge if there are unviewed notifications */}
             </div>
 
-            {/* Logout Button */}
-            <button className={navStyles.logoutbtn} onClick={handleLogout}>
-                <Logout />
-            </button>
+            <MenuPopupState />
         </header>
 
         {/* Render Notification Modal */}
