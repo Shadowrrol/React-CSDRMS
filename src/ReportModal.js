@@ -20,22 +20,8 @@ const ReportModal = ({ onClose, refreshReports }) => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        let response;
-        
-        // Check if usertype is 3 (Adviser)
-        if (loggedInUser?.userType === 3) {
-          // Fetch students by adviser's section and school year
-          response = await axios.get('http://localhost:8080/student/getAllStudentsByAdviser', {
-            params: {
-              section: loggedInUser.section, // Pass section from logged in user
-              schoolYear: loggedInUser.schoolYear, // Pass schoolYear from logged in user
-            },
-          });
-        } else {
-          // Default API call for other user types
-          response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
-        }
-
+        // Always fetch the default API for current students
+        const response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
         setStudents(response.data); // Set fetched students
       } catch (error) {
         console.error('Error fetching students:', error);
@@ -68,25 +54,28 @@ const ReportModal = ({ onClose, refreshReports }) => {
     setNewReport({ ...newReport, [e.target.name]: e.target.value });
   };
 
-  // Handle creating a new report
-  const handleCreateReport = async () => {
-    try {
-      // Automatically set date, time, and complainant from logged-in user
-      const reportData = {
-        ...newReport,
-        date: new Date().toISOString().split('T')[0], // Automatically set today's date
-        time: new Date().toLocaleTimeString(), // Automatically set current time
-        complainant: loggedInUser.username, // Set the logged-in user's username as the complainant
-        encoder: loggedInUser.firstname + ' ' + loggedInUser.lastname,
-      };
+ // Handle creating a new report
+const handleCreateReport = async () => {
+  try {
+    // Automatically set date, time, and complainant from logged-in user
+    const reportData = {
+      ...newReport,
+      date: new Date().toISOString().split('T')[0], // Automatically set today's date
+      time: new Date().toLocaleTimeString(), // Automatically set current time
+      complainant: loggedInUser.username, // Set the logged-in user's username as the complainant
+      encoder: loggedInUser.firstname + ' ' + loggedInUser.lastname,
+      viewedByAdviser: loggedInUser.userType === 3 && loggedInUser.section === newReport.section, // Set viewedByAdviser to true if user is Adviser for the student
+      viewedBySso: loggedInUser.userType === 1,      // Set viewedBySso to true if user is SSO
+    };
 
-      await axios.post('http://localhost:8080/report/insertReport', reportData);
-      refreshReports(); // Refresh the reports list after submission
-      onClose(); // Close the modal after submission
-    } catch (error) {
-      console.error('Error creating report:', error);
-    }
-  };
+    await axios.post('http://localhost:8080/report/insertReport', reportData);
+    refreshReports(); // Refresh the reports list after submission
+    onClose(); // Close the modal after submission
+  } catch (error) {
+    console.error('Error creating report:', error);
+  }
+};
+
 
   // Handle student selection
   const handleSelectStudent = (student) => {
@@ -163,7 +152,6 @@ const ReportModal = ({ onClose, refreshReports }) => {
             onChange={handleInputChange}
         />
         </div>
-
 
         <div className={styles['report-buttonGroup']}>
           <button onClick={handleCreateReport} className={styles['report-button']}>Create</button>

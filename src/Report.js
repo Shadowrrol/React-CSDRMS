@@ -32,7 +32,28 @@ const Reports = () => {
     if (!authToken) {
       navigate('/login');
     }
-  }, [authToken, navigate]);
+  
+    // Mark reports as viewed based on user type
+    const markReportsAsViewed = async () => {
+      try {
+        if (loggedInUser?.userType === 1) {
+          // Mark as viewed for SSO
+          await axios.post('http://localhost:8080/report/markAsViewedForSso');
+        } else if (loggedInUser?.userType === 3) {
+          // Mark as viewed for Adviser
+          await axios.post('http://localhost:8080/report/markAsViewedForAdviser', {
+            section: loggedInUser.section,
+            schoolYear: loggedInUser.schoolYear,
+          });
+        }
+      } catch (error) {
+        console.error('Error marking reports as viewed:', error);
+      }
+    };
+  
+    markReportsAsViewed();
+  }, [authToken, loggedInUser, navigate]);
+  
 
   const fetchSuspensions = async () => {
     try {
@@ -54,9 +75,10 @@ const Reports = () => {
           params: {
             section: loggedInUser.section,
             schoolYear: loggedInUser.schoolYear,
+            complainant: loggedInUser.username,
           },
         });
-      } else if (loggedInUser?.userType === 5 || loggedInUser?.userType === 6) {
+      } else if (loggedInUser?.userType === 2 || loggedInUser?.userType === 5 || loggedInUser?.userType === 6) {
         response = await axios.get('http://localhost:8080/report/getAllReportsByComplainant', {
           params: {
             complainant: loggedInUser.username,
@@ -166,12 +188,24 @@ const Reports = () => {
                   <tr 
                     key={report.reportId} 
                     onClick={() => handleRowClick(report)}
-                    className={selectedReportId === report.reportId ? tableStyles['selected-row'] : ''} // Apply the selected-row class conditionally
+                    className={selectedReportId === report.reportId ? tableStyles['selected-row'] : ''}
                   >
                     <td>{report.date}</td>
                     <td>{report.time}</td>
                     <td>{report.complaint}</td>
-                    <td>{report.complainant}</td>
+                    <td>
+                          {report.ssoComplainant 
+                            ? `${report.ssoComplainant.firstname} ${report.ssoComplainant.lastname}`
+                            : report.principalComplainant
+                            ? `${report.principalComplainant.firstname} ${report.principalComplainant.lastname}` 
+                            : report.adviserComplainant 
+                              ? `${report.adviserComplainant.firstname} ${report.adviserComplainant.lastname}` 
+                              : report.teacherComplainant 
+                                ? `${report.teacherComplainant.firstname} ${report.teacherComplainant.lastname}` 
+                                : report.guidanceComplainant 
+                                  ? `${report.guidanceComplainant.firstname} ${report.guidanceComplainant.lastname}` 
+                                  : 'N/A'} {/* Display 'N/A' if no complainant is found */}
+                        </td>
                     <td>{report.student.name}</td>
                     <td>{report.adviser.firstname} {report.adviser.lastname}</td>
                     <td>{report.encoder}</td>
@@ -182,6 +216,7 @@ const Reports = () => {
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
         )}

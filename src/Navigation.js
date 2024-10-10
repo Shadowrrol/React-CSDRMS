@@ -67,7 +67,8 @@ const Navigation = ({ loggedInUser }) => {
           const reportsResponse = await axios.get('http://localhost:8080/report/getAllReportsForAdviser', {
             params: {
               section: loggedInUser.section,
-              schoolYear: loggedInUser.schoolYear
+              schoolYear: loggedInUser.schoolYear,
+              complainant: loggedInUser.username
             }
           });
 
@@ -82,7 +83,12 @@ const Navigation = ({ loggedInUser }) => {
           setAllSuspensions(suspensionsResponse.data);
 
           // Filter unviewed reports and suspensions
-          const unviewedReports = reportsResponse.data.filter((report) => !report.viewedByAdviser);
+          const unviewedReports = reportsResponse.data.filter(
+            (report) =>
+              report.student.section === loggedInUser.section &&
+              report.student.schoolYear === loggedInUser.schoolYear &&
+              !report.viewedByAdviser
+          );
           const unviewedSuspensions = suspensionsResponse.data.filter((suspension) => !suspension.viewedByAdviser);
 
           unviewedReportsCount = unviewedReports.length;

@@ -3,7 +3,6 @@ import axios from 'axios';
 import styles from './NotificationModal.module.css';
 
 const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refreshNotifications }) => {
-
   // Automatically mark notifications as viewed when modal opens
   useEffect(() => {
     const markNotificationsAsViewed = async () => {
@@ -40,7 +39,6 @@ const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refres
 
         // Refresh notifications after marking them as viewed
         refreshNotifications();
-
       } catch (error) {
         console.error('Error marking notifications as viewed:', error);
       }
@@ -60,33 +58,39 @@ const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refres
         <h3 className={styles['notification-modal-section-title']}>Reports</h3>
         {reports.length > 0 ? (
           <ul className={styles['notification-modal-list']}>
-            {reports.map((report) => (
-              <li key={report.reportId} className={styles['notification-modal-list-item']}>
-                <strong>Complaint:</strong> {report.complaint}<br />
-                <strong>Complainant:</strong> {report.complainant}<br />
-                <strong>Student:</strong> {report.student.name}<br />
-                
-              </li>
-            ))}
+            {reports
+              .filter(report => report.complainant !== loggedInUser?.username) // Filter out reports by the logged-in complainant
+              .map((report) => (
+                <li key={report.reportId} className={styles['notification-modal-list-item']}>
+                  <strong>Complaint:</strong> {report.complaint}<br />
+                  <strong>Complainant:</strong> {report.complainant}<br />
+                  <strong>Student:</strong> {report.student.name}<br />
+                </li>
+              ))}
           </ul>
         ) : (
           <p className={styles['notification-modal-empty-message']}>No reports available.</p>
         )}
 
-        <h3 className={styles['notification-modal-section-title']}>Suspensions</h3>
-        {suspensions.length > 0 ? (
-          <ul className={styles['notification-modal-list']}>
-            {suspensions.map((suspension) => (
-              <li key={suspension.suspensionId} className={styles['notification-modal-list-item']}>
-                <strong>Start Date:</strong> {suspension.startDate}<br />
-                <strong>End Date:</strong> {suspension.endDate}<br />
-                <strong>Viewed:</strong> {suspension.viewedByAdviser || suspension.viewedBySso || suspension.viewedByPrincipal ? 'Yes' : 'No'}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className={styles['notification-modal-empty-message']}>No suspensions available.</p>
-        )}
+      {loggedInUser?.userType !== 1 && (
+        <>
+          <h3 className={styles['notification-modal-section-title']}>Suspensions</h3>
+          {suspensions.length > 0 ? (
+            <ul className={styles['notification-modal-list']}>
+              {suspensions.map((suspension) => (
+                <li key={suspension.suspensionId} className={styles['notification-modal-list-item']}>
+                  <strong>Start Date:</strong> {suspension.startDate}<br />
+                  <strong>End Date:</strong> {suspension.endDate}<br />
+                  <strong>Viewed:</strong> {suspension.viewedByAdviser || suspension.viewedBySso || suspension.viewedByPrincipal ? 'Yes' : 'No'}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className={styles['notification-modal-empty-message']}>No suspensions available.</p>
+          )}
+        </>
+      )}
+
       </div>
     </div>
   );

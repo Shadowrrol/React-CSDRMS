@@ -3,6 +3,9 @@ import axios from 'axios';
 import styles from '../ReportModal.module.css'; // Importing the CSS file
 
 const AddSuspensionModal = ({ onClose, reportId, refreshReports, refreshSuspensions }) => {
+  const authToken = localStorage.getItem("authToken");
+  const loggedInUser = authToken ? JSON.parse(authToken) : null;
+
   const [suspensionData, setSuspensionData] = useState({
     days: '',
     startDate: '',
@@ -22,6 +25,8 @@ const AddSuspensionModal = ({ onClose, reportId, refreshReports, refreshSuspensi
         ...suspensionData,
         reportId, // Use the reportId passed as a prop
         dateSubmitted: new Date().toISOString().split('T')[0], // Set the current date
+        viewedBySso: loggedInUser.userType === 1,
+
       };
 
       await axios.post('http://localhost:8080/suspension/insertSuspension', suspensionPayload);
