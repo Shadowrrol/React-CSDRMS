@@ -3,11 +3,11 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Profile icon
+import IconButton from '@mui/material/IconButton'; // Profile icon
 import UpdateAccountModal from '../Admin/UpdateAccountModal'; // Import the UpdateAccountModal
-import styles from './MenuPopupState.module.css'; // Import the CSS module
+import navStyles from '../Navigation.module.css'; // Import the CSS module
 
 const MenuPopupState = () => {
     const authToken = localStorage.getItem('authToken');
@@ -75,10 +75,9 @@ const MenuPopupState = () => {
             {(popupState) => (
                 <React.Fragment>
                     <IconButton
-                        {...bindTrigger(popupState)}
-                        className={styles.profileIconButton}     
+                        {...bindTrigger(popupState)} 
                     >
-                        <AccountCircleIcon className={styles.accountCircleIcon}/>
+                        <AccountCircleIcon className={navStyles['header-icon']} />
                     </IconButton>
                     <Menu {...bindMenu(popupState)}>
                         <MenuItem onClick={handleProfileClick}>Update Account</MenuItem>

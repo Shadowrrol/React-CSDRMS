@@ -121,7 +121,7 @@ const TimeLog = () => {
                             onClick={openModal} 
                             disabled={!selectedAdviser}
                         >
-                            View Logs
+                            View
                         </button>
                     </div>
                         

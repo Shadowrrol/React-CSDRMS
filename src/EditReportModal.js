@@ -120,25 +120,28 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
         <h2>Edit Report</h2>
 
         <form onSubmit={handleSubmit}>
-            {/* Student Search and Select Field */}
+          {/* Student Search and Select Field */}
           <label>Student:</label>
           <div className={styles['edit-report-group']}>
-            <input
-              type="text"
-              placeholder="Search student by name or ID"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              disabled={!!reportData.studentId} // Disable input if a student is selected
-              required
-            />
-
-            {/* Show "X" button when a student is selected */}
-            {reportData.studentId && (
-              <button className={styles.clearButton} onClick={handleClearSelection}>
-                ✕
-              </button>
-            )}
+            <div style={{ position: 'relative', width: '100%' }}>
+              <input
+                type="text"
+                placeholder="Search student by name or ID"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                disabled={!!reportData.studentId} // Disable input if a student is selected
+                required
+              />
+              
+              {/* Show "X" button inside the input when a student is selected */}
+              {reportData.studentId && (
+                <button className={styles.clearButton} onClick={handleClearSelection}>
+                  ✕
+                </button>
+              )}
+            </div>
           </div>
+
 
           {/* Only show dropdown and messages when no student is selected */}
           {!reportData.studentId && (
@@ -190,10 +193,11 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
             required
           />
 
+          <div className={styles['edit-buttonGroup']}>
+            <button className={styles['edit-report-button']} type="submit">Update Report</button>
+            <button  onClick={onClose} className={`${styles['edit-report-button']} ${styles['edit-report-button-cancel']}`}>Cancel</button>
+          </div>
 
-          
-          <button className={styles['edit-report-button']} type="submit">Update Report</button>
-          <button  onClick={onClose} className={`${styles['edit-report-button']} ${styles['edit-report-button-cancel']}`}>Cancel</button>
         </form>
 
         

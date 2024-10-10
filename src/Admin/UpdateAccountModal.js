@@ -124,7 +124,9 @@ const UpdateAccountModal = ({ isOpen, onClose, user }) => {
                             </div>
                         </div>
                     )}
-                    <button type="button" className={styles1['global-button']} onClick={handleUpdate}>Update Account</button>
+                    <div className={styles1['global-buttonGroup']}>
+                        <button type="button" className={styles1['global-button']} onClick={handleUpdate}>Update</button>
+                    </div>
                 </form>
             </div>
         </div>,

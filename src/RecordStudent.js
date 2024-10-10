@@ -104,13 +104,40 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
         {/* Display selected student details */}
         <div className={styles['details-container']}>
           <label>Details: </label>
-          <div><strong>ID Number:</strong> {selectedStudent?.sid || 'N/A'}</div>
-          <div><strong>Name:</strong> {selectedStudent?.name || 'N/A'}</div>
-          <div><strong>Grade:</strong> {selectedStudent?.grade || 'N/A'}</div>
-          <div><strong>Section:</strong> {selectedStudent?.section || 'N/A'}</div>
-          <div><strong>Gender:</strong> {selectedStudent?.gender || 'N/A'}</div>
-          {/*<div><strong>Adviser:</strong> {selectedStudent?.adviser || 'N/A'}</div> */}
-        </div>
+          <table className={styles['details-table']}>
+            <tbody>
+              <tr>
+                <td><strong>ID Number</strong></td>
+                <td><strong>:</strong></td>
+                <td>{selectedStudent?.sid || 'N/A'}</td>
+              </tr>
+              <tr>
+                <td><strong>Name</strong></td>
+                <td><strong>:</strong></td>
+                <td>{selectedStudent?.name || 'N/A'}</td>
+              </tr>
+              <tr>
+                <td><strong>Grade</strong></td>
+                <td><strong>:</strong></td>
+                <td>{selectedStudent?.grade || 'N/A'}</td>
+              </tr>
+              <tr>
+                <td><strong>Section</strong></td>
+                <td><strong>:</strong></td>
+                <td>{selectedStudent?.section || 'N/A'}</td>
+              </tr>
+              <tr>
+                <td><strong>Gender</strong></td>
+                <td><strong>:</strong></td>
+                <td>{selectedStudent?.gender || 'N/A'}</td>
+              </tr>
+              {/*<tr>
+                <td><strong>Adviser:</strong></td>
+                <td>{selectedStudent?.adviser || 'N/A'}</td>
+              </tr> */}
+            </tbody>
+          </table>
+        </div>    
 
         {/* Search Bar for Students */}
         <div className={styles['search-container']}>
@@ -129,7 +156,7 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
                 <ul className={formStyles['global-dropdown']}>
                   {filteredStudents.map((student) => (
                     <li
-                      key={student.sid}
+                      key={student.sid} 
                       onClick={() => handleStudentSelect(student)}
                       className={formStyles['global-dropdown-item']}>
                       {student.name} ({student.sid})
@@ -141,12 +168,32 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
               )}
             </div>
           )}
+          
+          {/* Use RecordFilter component to filter by school year, month, week */}
+          <div className={styles['filter-container']}>
+            {selectedStudent && (
+              <RecordFilter
+                schoolYears={schoolYears}
+                grades={grades}
+                loggedInUser={loggedInUser}
+                selectedSchoolYear={selectedSchoolYear}
+                setSelectedSchoolYear={setSelectedSchoolYear}
+                selectedGrade={null} // Pass null or undefined since we don't want grade filter
+                setSelectedGrade={() => {}} // Empty setter for grade
+                selectedSection={null} // Pass null or undefined since we don't want section filter
+                setSelectedSection={() => {}} // Empty setter for section
+                selectedMonth={selectedMonth}
+                setSelectedMonth={setSelectedMonth}
+                selectedWeek={selectedWeek}
+                setSelectedWeek={setSelectedWeek}
+                showGradeAndSection={false} // Hide grade and section filters
+              />
+            )}    
+          </div>      
         </div>
-
-        {/* Button Groups */}
-        <div className={styles['buttons-container']}>
-          <label>Action Buttons: </label>
-          <div className={formStyles['global-buttonGroup']}>
+        
+        <div className={styles['action-container']}>
+          <div className={styles['action-button-group']}>
             {/* Import Modal */}
             {showImportModal && ( // Conditionally render ImportModal based on showImportModal state
               <ImportModal
@@ -157,17 +204,20 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
             {/* Button to open Import Modal */}
             {loggedInUser?.userType !== 3 && (
               <button onClick={() => setShowImportModal(true)} className={formStyles['global-button']}>
-                Import Student Data
+                Import Students
               </button>
-            )} 
+            )}       
+          </div>  
 
-             {/* Add Record Modal */}
-             {showAddRecordModal && (
-              <AddRecordModal
-                student={selectedStudent}
-                onClose={() => setShowAddRecordModal(false)}
-              />
+          <div className={styles['action-button-group']}>
+            {/* Add Record Modal */}
+            {showAddRecordModal && (
+            <AddRecordModal
+              student={selectedStudent}
+              onClose={() => setShowAddRecordModal(false)}
+            />
             )}        
+            
             {/* Add Record Button */}
             {selectedStudent && loggedInUser?.userType === 1 && (
               <button
@@ -176,31 +226,10 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
               >
                 Add Record
               </button>
-            )}           
-          </div>
-        </div>
-      </div>
-
-      {/* Use RecordFilter component to filter by school year, month, week */}
-      {selectedStudent && (
-        <RecordFilter
-          schoolYears={schoolYears}
-          grades={grades}
-          loggedInUser={loggedInUser}
-          selectedSchoolYear={selectedSchoolYear}
-          setSelectedSchoolYear={setSelectedSchoolYear}
-          selectedGrade={null} // Pass null or undefined since we don't want grade filter
-          setSelectedGrade={() => {}} // Empty setter for grade
-          selectedSection={null} // Pass null or undefined since we don't want section filter
-          setSelectedSection={() => {}} // Empty setter for section
-          selectedMonth={selectedMonth}
-          setSelectedMonth={setSelectedMonth}
-          selectedWeek={selectedWeek}
-          setSelectedWeek={setSelectedWeek}
-          showGradeAndSection={false} // Hide grade and section filters
-        />
-      )}
-
+            )}    
+          </div>      
+        </div>      
+      </div>        
       {/* Display records if student is selected */}
       {selectedStudent && (
         <>
@@ -224,7 +253,7 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
             </table>
           </div>
 
-          <h2>Detailed Records</h2>
+          <h2 style={{ marginTop: '40px' }}>Detailed Records</h2>
           <div className={tableStyles['table-container']}>
 
             <table className={tableStyles['global-table']}>
@@ -253,7 +282,7 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
                 ))}
               </tbody>
             </table>
-          </div>
+          </div>            
         </>
       )}
     </>

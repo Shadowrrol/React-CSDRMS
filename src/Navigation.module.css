@@ -149,38 +149,23 @@ body{
     overflow-y: auto;
 }
 
-/* Logout Button Styling */
-.logoutbtn {
-    background-color: #8A252C; /* Same background as the sidebar */
-    color: #fff; /* White text */
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    transition: background-color 0.3s;
+.header-wrapper {
     display: flex;
-    align-items: center;
-}
-
-.logoutbtn:hover {
-    background-color: #e8bd26; /* Change color on hover */
-    color: #000;
-    text-shadow: 1px 1px 3px #808080;  /* Slight shadow for all text */
-}
-
-.notification-icon {
-    position: relative;
+    align-items: center; /* Aligns vertically centered */
+    gap: 30px; /* Optional: Add some space between the icons */
     margin-right: 20px;
+}
+
+.header-icon {
     cursor: pointer;
     color: white;
-    font-size: 1.5rem; /* Adjust the size of the bell icon */
+    font-size: 1.7rem; /* Adjust the size of the bell icon */
     transition: background-color 0.3s, transform 0.3s;
 }
 
-.notification-icon:hover {
+.header-icon:hover {
     transform: scale(1.20);
+    background-color: #8A252C; /* Set the icon color to white */
 }
 
 .badge {

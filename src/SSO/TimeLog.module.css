@@ -106,7 +106,7 @@
     font-size: 0.85rem;
     font-weight: bold;
     cursor: pointer;
-    background-color: #4caf50;
+    background-color: #e8bd26;
     color: white;
     font-size: 14px;
     transition: background-color 0.3s, transform 0.3s;
@@ -114,7 +114,7 @@
 }
 
 .viewlogButton:hover {
-    background-color: #45a049;
+    background-color: #C69A1E;
     transform: scale(1.05);}
 
 .active .viewlogButton {

@@ -13,6 +13,7 @@ import JHSLogo from './image-sso-yellow.png';
 import axios from 'axios';
 import NotificationModal from './NotificationModal'; // Import NotificationModal
 import MenuPopupState from './components/MenuPopupState'; 
+import IconButton from '@mui/material/IconButton';
 
 const Navigation = ({ loggedInUser }) => {
   const { uid } = loggedInUser;
@@ -137,9 +138,9 @@ const Navigation = ({ loggedInUser }) => {
 
             {/* SSO - usertype 1 */}
             {loggedInUser.userType === 1 && createSidebarLink("/record", "Dashboard", AssessmentIcon)}
-            {loggedInUser.userType === 1 && createSidebarLink("/student", "Student", SchoolIcon)}
+            {/*loggedInUser.userType === 1 && createSidebarLink("/student", "Student", SchoolIcon)*/}
             {loggedInUser.userType === 1 && createSidebarLink("/timeLog", "Time Log", AccessTimeFilledIcon)}
-            {loggedInUser.userType === 1 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+            {/*loggedInUser.userType === 1 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)*/}
             {loggedInUser.userType === 1 && createSidebarLink("/report", "Report", PostAddIcon)}
 
             {/* Principal - usertype 2 */}
@@ -149,8 +150,8 @@ const Navigation = ({ loggedInUser }) => {
 
             {/* Adviser - usertype 3 */}
             {loggedInUser.userType === 3 && createSidebarLink("/record", "Dashboard", AssessmentIcon)}
-            {loggedInUser.userType === 3 && createSidebarLink("/student", "Student", SchoolIcon)}
-            {loggedInUser.userType === 3 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)}
+            {/* loggedInUser.userType === 3 && createSidebarLink("/student", "Student", SchoolIcon)*/}
+            {/*loggedInUser.userType === 3 && createSidebarLink("/notification", "Notification", NotificationsActiveIcon)*/}
             {loggedInUser.userType === 3 && createSidebarLink("/report", "Report", PostAddIcon)}            
 
             {/* Admin - usertype 4 */}
@@ -162,7 +163,7 @@ const Navigation = ({ loggedInUser }) => {
             {loggedInUser.userType === 6 && createSidebarLink("/report", "Report", PostAddIcon)}             
 
         </div>
-
+        
         {/* Header */}
         <header className={navStyles.header}>
             <div className={navStyles.JHSheaderContainer}>
@@ -170,13 +171,15 @@ const Navigation = ({ loggedInUser }) => {
                 <span className={navStyles.JHSTitle}>JHS Success Hub</span>
             </div>
 
-            {/* Notification Icon */}
-            <div className={navStyles['notification-icon']} onClick={handleNotificationClick}>
-              <NotificationsActiveIcon/>
-              {notifications > 0 && <span className={navStyles.badge}>{notifications}</span>} {/* Show badge if there are unviewed notifications */}
-            </div>
+            <div className={navStyles['header-wrapper']}>
+              {/* Notification Icon */}
+              <IconButton onClick={handleNotificationClick}>
+                <NotificationsActiveIcon className={navStyles['header-icon']}/>
+                {notifications > 0 && <span className={navStyles.badge}>{notifications}</span>} {/* Show badge if there are unviewed notifications */}
+              </IconButton>
 
-            <MenuPopupState />
+              <MenuPopupState />
+            </div>
         </header>
 
         {/* Render Notification Modal */}

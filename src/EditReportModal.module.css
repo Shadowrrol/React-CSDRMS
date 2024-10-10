@@ -5,14 +5,18 @@
     font-size: 16px;
     color: #666;
     position: absolute;
-    right: 5%;
-    top: 23%;
+    margin-bottom: 10px;
     cursor: pointer;
-    transform: scale(1.05);
     font-weight: bold;
+    position: absolute; 
+    right: 10px;
+    top: 17%;
+    transition: transform 0.3s;
 }
 
-
+.clearButton:hover {
+  transform: scale(1.30);
+}
 
 .edit-report-modal {
     position: fixed;
@@ -48,8 +52,7 @@
 
 .edit-report-modal input[type="text"],
 .edit-report-modal input[type="date"],
-.edit-report-modal input[type="time"],
-.edit-report-modal textarea {
+.edit-report-modal input[type="time"] {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
@@ -57,8 +60,34 @@
   border: 1px solid #ccc;
 }
 
+.edit-report-modal textarea {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 5px; /* Match the border-radius with the input */
+  border: 1px solid #ccc; /* Match the border style with the input */
+  margin-bottom: 10px; /* Add space below */
+  resize: vertical; /* Allow vertical resizing */
+  font-family: Arial, sans-serif;
+  transition: border-color 0.3s ease;
+  margin-left: auto;
+}
+
+.edit-report-modal textarea:focus {
+  outline: none; /* Remove default outline */
+  box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.2);
+}
+
 .edit-report-modal input[type="checkbox"] {
   margin-right: 10px;
+}
+
+.edit-buttonGroup {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
 }
 
 .edit-report-button {
@@ -113,7 +142,6 @@
 }
 
 
-/* EditReportModal.module.css */
 
 .student-list {
     list-style: none;

@@ -23,17 +23,69 @@
 
 .triple-container {
   display: flex;
-  gap: 100px; /* Adds space between the containers */
-  margin-bottom: 40px;
+  gap: 10px; /* Adds space between the containers */
+  margin-bottom: 30px;
 }
 
-.details-container,
-.search-container,
-.buttons-container {
+.details-container {
   padding: 30px; /* Adds some padding inside each container */
   border: 2px solid #8A252C;
   border-radius: 20px; /* Optional: Slightly rounds the corners of the container */
-  background-color: #f9f1f2; /* Optional: Light background color */
+  background-color: #f9f9f9; /* Optional: Light background color */
+  width: 300px;
+}
+
+.search-container {
+  margin-top: 10px;
+  padding: 10px; /* Adds some padding inside each container */
+  height: 50%;
+  width: 600px;
+}
+
+.filter-container{
+  display: fixed;
+  margin-top: 50px;
+}
+
+.action-container {
+  margin-top: 10px;
+  padding: 10px; /* Adds some padding inside each container */
+  height: 50%;
+  width: 20%;
+}
+
+.action-button-group {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  justify-content: left;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.details-table {
+  width: 100%;  
+  border-collapse: collapse;  
+  table-layout: fixed;  
+}
+
+.details-table td {
+  padding: 8px 15px;  
+}
+
+.details-table td:nth-child(1) {
+  width: 30%;  
+  text-align: center;  
+}
+
+.details-table td:nth-child(2) {
+  width: 10%; 
+  text-align: center; 
+}
+
+.details-table td:nth-child(3) {
+  width: 35%;  
+  text-align: left;  
 }
 
 /* Filter Styles */
@@ -54,13 +106,13 @@
   background-color: #fff; /* Background color */
   color: #414141;   
   margin-left: 10px;
-  width: 12%;
+  width: 21%;
   text-align: center;
 }
 
 .filterContainer {
-  margin-top: 20px;
   margin-bottom: 20px;
+  max-width: 150%;
 }
 
 /* Chart Styles */
@@ -103,7 +155,7 @@
   --font-color-light: #fff;
   --bg-color: #fff;
   --main-color: #8A252C;
-  --secondary-color: #a43a3fbd;
+  --secondary-color: #a43a3f;
   position: relative;
   width: 250px;
   height: 36px;

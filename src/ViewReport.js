@@ -57,40 +57,116 @@ const ViewReport = () => {
   return (
     <div className={navStyles.wrapper}>
       <Navigation loggedInUser={loggedInUser} />
-      <div className={navStyles.content}>
-        <h2>Report Details</h2>
-        <div className={styles['report-details']}>
-          <p><strong>Date:</strong> {report.date}</p>
-          <p><strong>Time:</strong> {report.time}</p>
-          <p><strong>Complaint:</strong> {report.complaint}</p>
-          <p><strong>Complainant:</strong> {report.complainant}</p>
-          <p><strong>Student:</strong> {report.student.name}</p>
-          <p><strong>Adviser:</strong> {report.adviser.firstname} {report.adviser.lastname}</p>
-          <p><strong>Received:</strong> {report.received ? report.received : 'Pending'}</p>
-          <p><strong>Complete:</strong> {report.complete ? 'Yes' : 'No'}</p>
-          <p><strong>Viewed by Adviser:</strong> {report.viewedByAdviser ? 'Yes' : 'No'}</p>
-          <p><strong>Viewed by SSO:</strong> {report.viewedBySso ? 'Yes' : 'No'}</p>
-        </div>
-
-        {/* Display Suspension details */}
-        
-        {suspensionLoading ? (
-          <p>Loading suspension details...</p>
-        ) : suspension ? (
-          <div className={styles['suspension-details']}>
-            <h2>Suspension details for the given Report</h2>
-            <p><strong>Date Submitted:</strong> {suspension.dateSubmitted}</p>
-            <p><strong>Days Suspended:</strong> {suspension.days}</p>
-            <p><strong>Start Date:</strong> {suspension.startDate}</p>
-            <p><strong>End Date:</strong> {suspension.endDate}</p>
-            <p><strong>Return Date:</strong> {suspension.returnDate}</p>
-            <p><strong>Viewed by Principal:</strong> {suspension.viewedByPrincipal ? 'Yes' : 'No'}</p>
-            <p><strong>Viewed by Adviser:</strong> {suspension.viewedByAdviser ? 'Yes' : 'No'}</p>
-            <p><strong>Viewed by SSO:</strong> {suspension.viewedBySso ? 'Yes' : 'No'}</p>
+      <div className={navStyles.content}>  
+        <div className={styles.tablesContainer}> {/* New container for tables */}
+          {/* Report Details Table */}
+          <div className={styles.tableWrapper}>
+            <h2>Report Details</h2>
+            <table className={styles['report-details']}>
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Student:</td>
+                  <td>{report.student.name}</td>
+                </tr>
+                <tr>
+                  <td>Adviser:</td>
+                  <td>{report.adviser.firstname} {report.adviser.lastname}</td>
+                </tr>
+                <tr>
+                  <td>Date:</td>
+                  <td>{report.date}</td>
+                </tr>
+                <tr>
+                  <td>Time:</td>
+                  <td>{report.time}</td>
+                </tr>
+                <tr>
+                  <td>Received:</td>
+                  <td>{report.received ? report.received : 'Pending'}</td>
+                </tr>
+                <tr>
+                  <td>Complaint:</td>
+                  <td>{report.complaint}</td>
+                </tr>
+                <tr>
+                  <td>Complainant:</td>
+                  <td>{report.complainant}</td>
+                </tr>
+                <tr>
+                  <td>Complete:</td>
+                  <td>{report.complete ? 'Yes' : 'No'}</td>
+                </tr>
+                <tr>
+                  <td>Viewed by Adviser:</td>
+                  <td>{report.viewedByAdviser ? 'Yes' : 'No'}</td>
+                </tr>
+                <tr>
+                  <td>Viewed by SSO:</td>
+                  <td>{report.viewedBySso ? 'Yes' : 'No'}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        ) : (
-          <p>No suspension details found for this report.</p>
-        )}
+  
+          {/* Display Suspension Details Table */}
+          <div className={styles.tableWrapper}>
+            <h2>Suspension Details</h2>
+            {suspensionLoading ? (
+              <p>Loading suspension details...</p>
+            ) : suspension ? (
+              <table className={styles['suspension-details-table']}>
+                <thead>
+                  <tr>
+                    <th>Field</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Date Submitted:</td>
+                    <td>{suspension.dateSubmitted}</td>
+                  </tr>
+                  <tr>
+                    <td>Days Suspended:</td>
+                    <td>{suspension.days}</td>
+                  </tr>
+                  <tr>
+                    <td>Start Date:</td>
+                    <td>{suspension.startDate}</td>
+                  </tr>
+                  <tr>
+                    <td>End Date:</td>
+                    <td>{suspension.endDate}</td>
+                  </tr>
+                  <tr>
+                    <td>Return Date:</td>
+                    <td>{suspension.returnDate}</td>
+                  </tr>
+                  <tr>
+                    <td>Viewed by Principal:</td>
+                    <td>{suspension.viewedByPrincipal ? 'Yes' : 'No'}</td>
+                  </tr>
+                  <tr>
+                    <td>Viewed by Adviser:</td>
+                    <td>{suspension.viewedByAdviser ? 'Yes' : 'No'}</td>
+                  </tr>
+                  <tr>
+                    <td>Viewed by SSO:</td>
+                    <td>{suspension.viewedBySso ? 'Yes' : 'No'}</td>
+                  </tr>
+                </tbody>
+              </table>
+            ) : (
+              <p>No suspension details found for this report.</p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

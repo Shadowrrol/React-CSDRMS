@@ -174,13 +174,11 @@ const Reports = () => {
                 <tr>
                   <th>Date</th>
                   <th>Time</th>
-                  <th>Complaint</th>
                   <th>Complainant</th>
                   <th>Student</th>
                   <th>Adviser</th>
                   <th>Encoder</th>
                   <th>Received</th>
-                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -192,27 +190,23 @@ const Reports = () => {
                   >
                     <td>{report.date}</td>
                     <td>{report.time}</td>
-                    <td>{report.complaint}</td>
                     <td>
-                          {report.ssoComplainant 
-                            ? `${report.ssoComplainant.firstname} ${report.ssoComplainant.lastname}`
-                            : report.principalComplainant
-                            ? `${report.principalComplainant.firstname} ${report.principalComplainant.lastname}` 
-                            : report.adviserComplainant 
-                              ? `${report.adviserComplainant.firstname} ${report.adviserComplainant.lastname}` 
-                              : report.teacherComplainant 
-                                ? `${report.teacherComplainant.firstname} ${report.teacherComplainant.lastname}` 
-                                : report.guidanceComplainant 
-                                  ? `${report.guidanceComplainant.firstname} ${report.guidanceComplainant.lastname}` 
-                                  : 'N/A'} {/* Display 'N/A' if no complainant is found */}
-                        </td>
+                      {report.ssoComplainant 
+                        ? `${report.ssoComplainant.firstname} ${report.ssoComplainant.lastname}`
+                        : report.principalComplainant
+                        ? `${report.principalComplainant.firstname} ${report.principalComplainant.lastname}` 
+                        : report.adviserComplainant 
+                          ? `${report.adviserComplainant.firstname} ${report.adviserComplainant.lastname}` 
+                          : report.teacherComplainant 
+                            ? `${report.teacherComplainant.firstname} ${report.teacherComplainant.lastname}` 
+                            : report.guidanceComplainant 
+                              ? `${report.guidanceComplainant.firstname} ${report.guidanceComplainant.lastname}` 
+                              : 'N/A'} {/* Display 'N/A' if no complainant is found */}
+                    </td>
                     <td>{report.student.name}</td>
                     <td>{report.adviser.firstname} {report.adviser.lastname}</td>
                     <td>{report.encoder}</td>
                     <td>{report.received ? report.received : 'Pending'}</td>
-                    <td>
-                      <button onClick={() => handleViewReport(report.reportId)}>View Report</button>
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -222,11 +216,18 @@ const Reports = () => {
         )}
 
         <div className={styles.actionButtons}>
-          <button className={styles['report-action-button']} onClick={toggleReportModal}>
+          <button className={`${styles['report-action-button']} ${styles['report-create-btn']}`} onClick={toggleReportModal}>
             Create 
           </button>
+          <button 
+            className={`${styles['report-action-button']} ${styles['report-view-btn']}`} 
+            onClick={() => handleViewReport(selectedReportId)} 
+            disabled={!selectedReportId} 
+          >
+            View
+          </button>
           <button
-            className={styles['report-action-button']}
+            className={`${styles['report-action-button']} ${styles['report-edit-btn']}`}
             onClick={() => handleEdit(selectedReportId)}
             disabled={!selectedReportId}
           >
@@ -242,7 +243,7 @@ const Reports = () => {
                 Complete
               </button>
               <button
-                className={styles['report-suspension-button']}
+                className={`${styles['report-action-button']} ${styles['report-suspension-btn']}`}
                 onClick={() => handleAddSuspension(selectedReportId)}
                 disabled={!selectedReportId || selectedReportStatus.suspended || selectedReportStatus.completed}
               >
