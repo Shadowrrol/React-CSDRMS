@@ -11,6 +11,7 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
   const [filteredStudents, setFilteredStudents] = useState([]); // For filtered search results
   const [searchQuery, setSearchQuery] = useState(''); // Hold the search term
   const [selectedStudent, setSelectedStudent] = useState(null); // Hold the selected student
+  const [adviser, setAdviser] = useState(null); // Hold adviser's data
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
@@ -56,9 +57,22 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
     }
   };
 
+  const fetchAdviser = async (section, schoolYear) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/user/adviser`, {
+        params: { section, schoolYear }
+      });
+      setAdviser(response.data);
+    } catch (error) {
+      console.error('Error fetching adviser:', error);
+    }
+  };
+   
+  
   const handleStudentSelect = (student) => {
     setSelectedStudent(student);
     fetchStudentRecords(student.sid); // Fetch records for the selected student
+    fetchAdviser(student.section, student.schoolYear); // Fetch adviser's info
   };
 
   const getWeekNumber = (date) => {
@@ -131,10 +145,11 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
                 <td><strong>:</strong></td>
                 <td>{selectedStudent?.gender || 'N/A'}</td>
               </tr>
-              {/*<tr>
-                <td><strong>Adviser:</strong></td>
-                <td>{selectedStudent?.adviser || 'N/A'}</td>
-              </tr> */}
+              <tr>
+                <td><strong>Adviser</strong></td>
+                <td><strong>:</strong></td>
+                <td>{adviser ? `${adviser.firstname} ${adviser.lastname}` : 'N/A'}</td>
+              </tr>
             </tbody>
           </table>
         </div>    

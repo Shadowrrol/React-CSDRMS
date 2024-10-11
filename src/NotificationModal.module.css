@@ -76,3 +76,7 @@
     background: #555;
   }
   
+  .clickable {
+    cursor: pointer;
+  }
+  
