@@ -13,7 +13,6 @@
   font-size: 24px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 20px;
 }
 
 .TitleContainer {
@@ -108,7 +107,7 @@
 }
 
 .filterContainer {
-  margin-top: 80px;
+  margin: 20px 0px;
   max-width: 100%;
 }
 

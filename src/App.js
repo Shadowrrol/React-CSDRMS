@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import BrowserRouter, Route, and Routes
 import LoginPage from './LoginPage';
 import './App.css';
-/*import Student from './Student';*/
+import Student from './Student';
 import Notification from './Notification';
 import Record from './Record';
 import Report from './Report';
@@ -88,7 +88,7 @@ function App() {
           {(loggedInUser && (loggedInUser.userType === 1 || loggedInUser.userType === 3)) && (
             <>
             <Route path="/notification" element={<Notification />} />
-            {/*<Route path="/student" element={<PrivateRoute element={<Student />} />}  />*/}
+            <Route path="/student" element={<PrivateRoute element={<Student />} />}  />
             <Route path="/add-record/:sid" element={<AddStudentRecord />} /> 
             </>
 

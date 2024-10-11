@@ -273,11 +273,8 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
             <table className={tableStyles['global-table']}>
               <thead>
                 <tr>
-                  <th>Grade</th>
-                  <th>SID</th>
                   <th>Record Date</th>
                   <th>Incident Date</th>
-                  <th>Time</th>
                   <th>Monitored Record</th>
                   <th>Remarks</th>
                 </tr>
@@ -285,11 +282,8 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
               <tbody>
                 {filteredRecords.map((record) => (
                   <tr key={record.recordId}>
-                    <td>{record.student.grade}</td>
-                    <td>{record.sid}</td>
                     <td>{record.record_date}</td>
                     <td>{record.incident_date}</td>
-                    <td>{record.time}</td>
                     <td>{record.monitored_record}</td>
                     <td>{record.remarks}</td>
                   </tr>
