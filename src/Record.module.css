@@ -23,7 +23,7 @@
 
 .triple-container {
   display: flex;
-  gap: 10px; /* Adds space between the containers */
+  gap: 100px; /* Adds space between the containers */
   margin-bottom: 30px;
 }
 
@@ -32,14 +32,12 @@
   border: 2px solid #8A252C;
   border-radius: 20px; /* Optional: Slightly rounds the corners of the container */
   background-color: #f9f9f9; /* Optional: Light background color */
-  width: 300px;
+  width: 500px;
 }
 
 .search-container {
-  margin-top: 10px;
-  padding: 10px; /* Adds some padding inside each container */
   height: 50%;
-  width: 600px;
+  width: 70%;
 }
 
 .filter-container{
@@ -47,21 +45,20 @@
   margin-top: 50px;
 }
 
-.action-container {
+/*.action-container {
   margin-top: 10px;
-  padding: 10px; /* Adds some padding inside each container */
+  padding: 10px;  
   height: 50%;
   width: 20%;
-}
+} 
 
 .action-button-group {
-  position: relative;
   display: flex;
   gap: 8px;
-  justify-content: left;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
-}
+  margin: 10px 0px;
+}*/
 
 .details-table {
   width: 100%;  
@@ -111,8 +108,8 @@
 }
 
 .filterContainer {
-  margin-bottom: 20px;
-  max-width: 150%;
+  margin-top: 80px;
+  max-width: 100%;
 }
 
 /* Chart Styles */

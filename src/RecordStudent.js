@@ -149,6 +149,41 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Enter student name or ID"
           />
+
+          {/* Import Modal */}
+          {showImportModal && ( // Conditionally render ImportModal based on showImportModal state
+            <ImportModal
+              onClose={() => setShowImportModal(false)}
+              schoolYears={schoolYears}
+            />
+          )}    
+        
+          {/* Add Record Modal */}
+          {showAddRecordModal && (
+          <AddRecordModal
+            student={selectedStudent}
+            onClose={() => setShowAddRecordModal(false)}
+          />
+          )}        
+          
+          {/* Button to open Import Modal */}
+          {loggedInUser?.userType !== 3 && (
+            <button onClick={() => setShowImportModal(true)} className={formStyles['global-button']} style={{ marginLeft: '20px' }}>
+              Import Students
+            </button>
+          )}                 
+          
+          {/* Add Record Button */}
+          {selectedStudent && loggedInUser?.userType === 1 && (
+            <button
+              className={formStyles['global-button']}
+              style={{ marginLeft: '20px' }}
+              onClick={() => setShowAddRecordModal(true)}
+            >
+              Add Record
+            </button>
+          )}    
+
           {/* Only show the student list if the searchQuery is not empty and filtered students exist */}
           {searchQuery && (
             <div>
@@ -189,47 +224,11 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
                 showGradeAndSection={false} // Hide grade and section filters
               />
             )}    
-          </div>      
-        </div>
-        
-        <div className={styles['action-container']}>
-          <div className={styles['action-button-group']}>
-            {/* Import Modal */}
-            {showImportModal && ( // Conditionally render ImportModal based on showImportModal state
-              <ImportModal
-                onClose={() => setShowImportModal(false)}
-                schoolYears={schoolYears}
-              />
-            )}    
-            {/* Button to open Import Modal */}
-            {loggedInUser?.userType !== 3 && (
-              <button onClick={() => setShowImportModal(true)} className={formStyles['global-button']}>
-                Import Students
-              </button>
-            )}       
-          </div>  
+          </div> 
+        </div>    
+      </div>   
 
-          <div className={styles['action-button-group']}>
-            {/* Add Record Modal */}
-            {showAddRecordModal && (
-            <AddRecordModal
-              student={selectedStudent}
-              onClose={() => setShowAddRecordModal(false)}
-            />
-            )}        
-            
-            {/* Add Record Button */}
-            {selectedStudent && loggedInUser?.userType === 1 && (
-              <button
-                className={formStyles['global-button']}
-                onClick={() => setShowAddRecordModal(true)}
-              >
-                Add Record
-              </button>
-            )}    
-          </div>      
-        </div>      
-      </div>        
+
       {/* Display records if student is selected */}
       {selectedStudent && (
         <>
