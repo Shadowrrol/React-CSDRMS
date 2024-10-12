@@ -67,6 +67,7 @@ const Navigation = ({ loggedInUser }) => {
           // Adviser: Fetch reports and suspensions by section and school year
           const reportsResponse = await axios.get('http://localhost:8080/report/getAllReportsForAdviser', {
             params: {
+              grade: loggedInUser.grade,
               section: loggedInUser.section,
               schoolYear: loggedInUser.schoolYear,
               complainant: loggedInUser.username
@@ -75,6 +76,7 @@ const Navigation = ({ loggedInUser }) => {
 
           const suspensionsResponse = await axios.get('http://localhost:8080/suspension/getAllSuspensionsBySectionAndSchoolYear', {
             params: {
+              grade: loggedInUser.grade,
               section: loggedInUser.section,
               schoolYear: loggedInUser.schoolYear
             }

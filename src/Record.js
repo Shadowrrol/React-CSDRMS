@@ -27,7 +27,13 @@ const Record = () => {
     setLoading(true);
     try {
       const response = loggedInUser?.userType === 3 
-        ? await axios.get(`http://localhost:8080/student-record/getStudentRecordsBySectionAndSchoolYear?section=${loggedInUser.section}&schoolYear=${loggedInUser.schoolYear}`)
+        ? await axios.get(`http://localhost:8080/student-record/getStudentRecordsByAdviser`, {
+            params: { 
+              grade: loggedInUser.grade, // Assuming grade is available in the loggedInUser object
+              section: loggedInUser.section, 
+              schoolYear: loggedInUser.schoolYear 
+            }
+          })
         : await axios.get('http://localhost:8080/student-record/getAllStudentRecords');
       setRecords(response.data);
     } catch (error) {
@@ -36,6 +42,7 @@ const Record = () => {
       setLoading(false);
     }
   };
+  
 
   const fetchInitialData = async () => {
     try {
@@ -54,7 +61,7 @@ const Record = () => {
     try {
       const response = loggedInUser?.userType === 3
         ? await axios.get('http://localhost:8080/student/getAllStudentsByAdviser', {
-            params: { section: loggedInUser.section, schoolYear: loggedInUser.schoolYear },
+            params: { grade: loggedInUser.grade, section: loggedInUser.section, schoolYear: loggedInUser.schoolYear },
           })
         : await axios.get('http://localhost:8080/student/getAllCurrentStudents');
 

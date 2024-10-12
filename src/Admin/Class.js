@@ -13,7 +13,7 @@ const Class = () => {
 
     const [classes, setClasses] = useState([]);
     const [schoolYears, setSchoolYears] = useState([]);
-    const [newGrade, setNewGrade] = useState("");
+    const [newGrade, setNewGrade] = useState(null); // Change to null
     const [newSection, setNewSection] = useState("");
     const [newSchoolYear, setNewSchoolYear] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
@@ -131,8 +131,11 @@ const Class = () => {
     const handleSearch = (e) => setSearchTerm(e.target.value);
 
     const filteredClasses = classes
-        .filter(classItem => classItem.grade?.toString().includes(searchTerm) || classItem.section?.toLowerCase().includes(searchTerm.toLowerCase()))
-        .sort((a, b) => a.grade.localeCompare(b.grade));
+    .filter(classItem => 
+        classItem.grade === newGrade || classItem.section?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => a.grade - b.grade); // Sort numerically
+
 
     const filteredSchoolYears = schoolYears.filter(schoolYear => schoolYear.schoolYear?.includes(searchTerm));
 
@@ -220,15 +223,18 @@ const Class = () => {
                         <div className={classStyles['class-container']}>
                             <div className={classStyles['class-group']}>
                                 <label className={classStyles['classgroup-label']}>Grade: </label>
-                                <select className={classStyles['classgroup-input']} value={newGrade} onChange={e => setNewGrade(e.target.value)}
+                                <select 
+                                    className={classStyles['classgroup-input']} 
+                                    value={newGrade} 
+                                    onChange={e => setNewGrade(Number(e.target.value))} // Convert to integer
                                     id="grade"
                                     name="grade"
                                 >
                                     <option value="">Select Grade</option>
-                                    <option value="G7">Grade 7</option>
-                                    <option value="G8">Grade 8</option>
-                                    <option value="G9">Grade 9</option>
-                                    <option value="G10">Grade 10</option>
+                                    <option value={7}>Grade 7</option>
+                                    <option value={8}>Grade 8</option>
+                                    <option value={9}>Grade 9</option>
+                                    <option value={10}>Grade 10</option>
                                 </select>
                             </div>
                             <div className={classStyles['class-group']}>

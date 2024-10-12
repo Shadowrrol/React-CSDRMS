@@ -6,6 +6,7 @@ import ImportModal from './RecordStudentImportModal'; // Import ImportModal comp
 import styles from './Record.module.css'; // Importing CSS module
 import formStyles from './GlobalForm.module.css'; // Importing GlobalForm styles
 import tableStyles from './GlobalTable.module.css'; // Importing GlobalForm styles
+import RecordStudentEditModal from './RecordStudentEditModal';
 
 const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudents }) => {
   const [filteredStudents, setFilteredStudents] = useState([]); // For filtered search results
@@ -19,6 +20,9 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
   const [selectedWeek, setSelectedWeek] = useState('');
   const [showAddRecordModal, setShowAddRecordModal] = useState(false); // Modal visibility state
   const [showImportModal, setShowImportModal] = useState(false); // Control ImportModal visibility
+  const [showEditRecordModal, setShowEditRecordModal] = useState(false); // Modal visibility state
+  const [recordToEdit, setRecordToEdit] = useState(null); // Hold the record to edit
+  
 
   const monitoredRecordsList = [
     'Absent',
@@ -98,14 +102,24 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
       acc[record] = 0; // Initialize each monitored record with 0
       return acc;
     }, {});
-
+  
     filteredRecords.forEach((record) => {
       if (frequencies[record.monitored_record] !== undefined) {
         frequencies[record.monitored_record]++;
       }
     });
-    return frequencies;
+  
+    // Count sanctions separately
+    const sanctionFrequency = filteredRecords.reduce((count, record) => {
+      if (record.sanction) {
+        count++;
+      }
+      return count;
+    }, 0);
+  
+    return { ...frequencies, Sanction: sanctionFrequency };
   };
+  
 
   const frequencies = countFrequency();
   
@@ -277,20 +291,38 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
                   <th>Incident Date</th>
                   <th>Monitored Record</th>
                   <th>Sanction</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredRecords.map((record) => (
+              {filteredRecords.map((record) => (
                   <tr key={record.recordId}>
                     <td>{record.record_date}</td>
                     <td>{record.incident_date}</td>
                     <td>{record.monitored_record}</td>
                     <td>{record.sanction}</td>
+                    <td>
+                      <button
+                        onClick={() => {
+                          setRecordToEdit(record); // Set the record to edit
+                          setShowEditRecordModal(true); // Show the edit modal
+                        }}
+                        className={formStyles['global-button']}
+                      >
+                        Edit
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>            
+          </div>      
+          {showEditRecordModal && (
+                  <RecordStudentEditModal
+                    record={recordToEdit} // Pass the record to edit
+                    onClose={() => setShowEditRecordModal(false)} // Close handler
+                  />
+                )}           
         </>
       )}
     </>

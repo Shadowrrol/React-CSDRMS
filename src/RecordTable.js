@@ -12,8 +12,12 @@ const RecordTable = ({ records, schoolYears, grades }) => {
   const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedWeek, setSelectedWeek] = useState('');
-  const [selectedGrade, setSelectedGrade] = useState(loggedInUser?.userType === 3 ? loggedInUser.grade : '');
-  const [selectedSection, setSelectedSection] = useState(loggedInUser?.userType === 3 ? loggedInUser.section : '');
+  const [selectedGrade, setSelectedGrade] = useState(
+    loggedInUser?.userType === 3 ? parseInt(loggedInUser.grade, 10) : null
+  );
+  const [selectedSection, setSelectedSection] = useState(
+    loggedInUser?.userType === 3 ? loggedInUser.section : ''
+  );
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -45,7 +49,7 @@ const RecordTable = ({ records, schoolYears, grades }) => {
         if (isSection) {
           return record.student.section === entity && record.monitored_record === category;
         } else {
-          return record.student.grade === entity && record.monitored_record === category;
+          return record.student.grade === parseInt(entity, 10) && record.monitored_record === category; // Ensure entity is parsed as int
         }
       })
       .filter((record) => {
@@ -78,8 +82,13 @@ const RecordTable = ({ records, schoolYears, grades }) => {
     'Offense',
     'Misbehavior',
     'Clinic',
-    'Sanction',
+    
+    
   ];
+
+  const countSanctionFrequency = () => {
+    return records.filter(record => record.sanction).length;
+  };
 
   // Function to gather unique students based on the selected filters
   const getStudentsBySection = () => {
@@ -171,6 +180,7 @@ const RecordTable = ({ records, schoolYears, grades }) => {
               {categories.map((category) => (
                 <th key={category}>{category}</th>
               ))}
+               <th>Sanction</th>
             </tr>
           </thead>
           <tbody>
@@ -184,6 +194,7 @@ const RecordTable = ({ records, schoolYears, grades }) => {
                     {categories.map((category) => (
                       <td key={category}>{countFrequency(section, category, true)}</td>
                     ))}
+                    <td>{countSanctionFrequency()}</td> {/* Sanction count column */}
                   </tr>
                 ))
             ) : (
@@ -193,6 +204,7 @@ const RecordTable = ({ records, schoolYears, grades }) => {
                   {categories.map((category) => (
                     <td key={category}>{countFrequency(grade, category)}</td>
                   ))}
+                  <td>{countSanctionFrequency()}</td> {/* Sanction count column */}
                 </tr>
               ))
             )}
@@ -203,6 +215,7 @@ const RecordTable = ({ records, schoolYears, grades }) => {
                   {calculateTotalForCategory(category, !!selectedGrade)}
                 </td>
               ))}
+              <td style={{ fontWeight: 'bold' }}>{countSanctionFrequency()}</td> {/* Total for Sanction */}
             </tr>
           </tbody>
         </table>

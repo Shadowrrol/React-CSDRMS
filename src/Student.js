@@ -34,6 +34,7 @@ const Student = () => {
                     if (loggedInUser.userType === 3) {
                         url = 'http://localhost:8080/student/getAllStudentsByAdviser';
                         params = {
+                            grade: loggedInUser.grade,
                             section: loggedInUser.section,
                             schoolYear: loggedInUser.schoolYear,
                         };
