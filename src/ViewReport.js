@@ -1,30 +1,28 @@
-// ViewReport.js
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import styles from './ViewReport.module.css';
+import Navigation from './Navigation';
+import navStyles from "./Navigation.module.css";
 
-const ViewReport = ({ reportId, onClose }) => {
+const ViewReport = () => {
   const authToken = localStorage.getItem("authToken");
   const loggedInUser = authToken ? JSON.parse(authToken) : null;
+  const { reportId } = useParams(); // Get the reportId from the URL
   const [report, setReport] = useState(null);
-  const [suspension, setSuspension] = useState(null);
+  const [suspension, setSuspension] = useState(null); // State for suspension
   const [loading, setLoading] = useState(true);
-  const [suspensionLoading, setSuspensionLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [suspensionLoading, setSuspensionLoading] = useState(true); // Loading state for suspension
 
+  // Fetch the report data when the component mounts
   useEffect(() => {
     const fetchReport = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/report/getReport/${reportId}`);
-        if (response.status === 200) {
-          setReport(response.data);
-        } else {
-          setError('Report not found.');
-        }
+        setReport(response.data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching report:', error);
-        setError('Error fetching report.');
-      } finally {
         setLoading(false);
       }
     };
@@ -32,19 +30,15 @@ const ViewReport = ({ reportId, onClose }) => {
     fetchReport();
   }, [reportId]);
 
+  // Fetch the suspension data associated with the report
   useEffect(() => {
     const fetchSuspension = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/suspension/getSuspensionByReport/${reportId}`);
-        if (response.status === 200) {
-          setSuspension(response.data);
-        } else {
-          setSuspension(null);
-        }
+        setSuspension(response.data);
+        setSuspensionLoading(false);
       } catch (error) {
         console.error('Error fetching suspension:', error);
-        setSuspension(null);
-      } finally {
         setSuspensionLoading(false);
       }
     };
@@ -56,74 +50,19 @@ const ViewReport = ({ reportId, onClose }) => {
     return <p>Loading report...</p>;
   }
 
-  if (error) {
-    return <p>{error}</p>;
+  if (!report) {
+    return <p>Report not found.</p>;
   }
 
   return (
-    <div className={styles['viewreport-modal-overlay']}>
-      <div className={styles['viewreport-modal-content']}>
-        <button className={styles['close-button']} onClick={onClose}>
-          &times; {/* Close button */}
-        </button>
-        <div className={styles.tablesContainer}>
-          <h2>Report Details</h2>
-          <table className={styles['report-details']}>
-            <thead>
-              <tr>
-                <th>Field</th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Student:</td>
-                <td>{report.student.name}</td>
-              </tr>
-              <tr>
-                <td>Adviser:</td>
-                <td>{report.adviser.firstname} {report.adviser.lastname}</td>
-              </tr>
-              <tr>
-                <td>Date:</td>
-                <td>{report.date}</td>
-              </tr>
-              <tr>
-                <td>Time:</td>
-                <td>{report.time}</td>
-              </tr>
-              <tr>
-                <td>Received:</td>
-                <td>{report.received ? report.received : 'Pending'}</td>
-              </tr>
-              <tr>
-                <td>Complaint:</td>
-                <td>{report.complaint}</td>
-              </tr>
-              <tr>
-                <td>Complainant:</td>
-                <td>{report.complainant}</td>
-              </tr>
-              <tr>
-                <td>Complete:</td>
-                <td>{report.complete ? 'Yes' : 'No'}</td>
-              </tr>
-              <tr>
-                <td>Viewed by Adviser:</td>
-                <td>{report.viewedByAdviser ? 'Yes' : 'No'}</td>
-              </tr>
-              <tr>
-                <td>Viewed by SSO:</td>
-                <td>{report.viewedBySso ? 'Yes' : 'No'}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h2>Suspension Details</h2>
-          {suspensionLoading ? (
-            <p>Loading suspension details...</p>
-          ) : suspension ? (
-            <table className={styles['suspension-details-table']}>
+    <div className={navStyles.wrapper}>
+      <Navigation loggedInUser={loggedInUser} />
+      <div className={navStyles.content}>  
+        <div className={styles.tablesContainer}> {/* New container for tables */}
+          {/* Report Details Table */}
+          <div className={styles.tableWrapper}>
+            <h2>Report Details</h2>
+            <table className={styles['report-details']}>
               <thead>
                 <tr>
                   <th>Field</th>
@@ -132,42 +71,101 @@ const ViewReport = ({ reportId, onClose }) => {
               </thead>
               <tbody>
                 <tr>
-                  <td>Date Submitted:</td>
-                  <td>{suspension.dateSubmitted}</td>
+                  <td>Student:</td>
+                  <td>{report.student.name}</td>
                 </tr>
                 <tr>
-                  <td>Days Suspended:</td>
-                  <td>{suspension.days}</td>
+                  <td>Adviser:</td>
+                  <td>{report.adviser.firstname} {report.adviser.lastname}</td>
                 </tr>
                 <tr>
-                  <td>Start Date:</td>
-                  <td>{suspension.startDate}</td>
+                  <td>Date:</td>
+                  <td>{report.date}</td>
                 </tr>
                 <tr>
-                  <td>End Date:</td>
-                  <td>{suspension.endDate}</td>
+                  <td>Time:</td>
+                  <td>{report.time}</td>
                 </tr>
                 <tr>
-                  <td>Return Date:</td>
-                  <td>{suspension.returnDate}</td>
+                  <td>Received:</td>
+                  <td>{report.received ? report.received : 'Pending'}</td>
                 </tr>
                 <tr>
-                  <td>Viewed by Principal:</td>
-                  <td>{suspension.viewedByPrincipal ? 'Yes' : 'No'}</td>
+                  <td>Complaint:</td>
+                  <td>{report.complaint}</td>
+                </tr>
+                <tr>
+                  <td>Complainant:</td>
+                  <td>{report.complainant}</td>
+                </tr>
+                <tr>
+                  <td>Complete:</td>
+                  <td>{report.complete ? 'Yes' : 'No'}</td>
                 </tr>
                 <tr>
                   <td>Viewed by Adviser:</td>
-                  <td>{suspension.viewedByAdviser ? 'Yes' : 'No'}</td>
+                  <td>{report.viewedByAdviser ? 'Yes' : 'No'}</td>
                 </tr>
                 <tr>
                   <td>Viewed by SSO:</td>
-                  <td>{suspension.viewedBySso ? 'Yes' : 'No'}</td>
+                  <td>{report.viewedBySso ? 'Yes' : 'No'}</td>
                 </tr>
               </tbody>
             </table>
-          ) : (
-            <p>No suspension details found for this report.</p>
-          )}
+          </div>
+  
+          {/* Display Suspension Details Table */}
+          <div className={styles.tableWrapper}>
+            <h2>Suspension Details</h2>
+            {suspensionLoading ? (
+              <p>Loading suspension details...</p>
+            ) : suspension ? (
+              <table className={styles['suspension-details-table']}>
+                <thead>
+                  <tr>
+                    <th>Field</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Date Submitted:</td>
+                    <td>{suspension.dateSubmitted}</td>
+                  </tr>
+                  <tr>
+                    <td>Days Suspended:</td>
+                    <td>{suspension.days}</td>
+                  </tr>
+                  <tr>
+                    <td>Start Date:</td>
+                    <td>{suspension.startDate}</td>
+                  </tr>
+                  <tr>
+                    <td>End Date:</td>
+                    <td>{suspension.endDate}</td>
+                  </tr>
+                  <tr>
+                    <td>Return Date:</td>
+                    <td>{suspension.returnDate}</td>
+                  </tr>
+                  <tr>
+                    <td>Viewed by Principal:</td>
+                    <td>{suspension.viewedByPrincipal ? 'Yes' : 'No'}</td>
+                  </tr>
+                  <tr>
+                    <td>Viewed by Adviser:</td>
+                    <td>{suspension.viewedByAdviser ? 'Yes' : 'No'}</td>
+                  </tr>
+                  <tr>
+                    <td>Viewed by SSO:</td>
+                    <td>{suspension.viewedBySso ? 'Yes' : 'No'}</td>
+                  </tr>
+                </tbody>
+              </table>
+            ) : (
+              <p>No suspension details found for this report.</p>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -7,7 +7,6 @@ import Navigation from './Navigation';
 import ReportModal from './ReportModal';
 import EditReportModal from './EditReportModal';
 import AddSuspensionModal from './SSO/AddSuspensionModal';
-import ViewReport from './ViewReport'; // Importing ViewReport component
 import styles from './Report.module.css';
 
 const Reports = () => {
@@ -20,7 +19,6 @@ const Reports = () => {
   const [showReportModal, setShowReportModal] = useState(false);
   const [showSuspensionModal, setShowSuspensionModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showViewModal, setShowViewModal] = useState(false); // New state for ViewReport modal
   const [selectedReportId, setSelectedReportId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedReportStatus, setSelectedReportStatus] = useState({ completed: false, suspended: false });
@@ -34,12 +32,15 @@ const Reports = () => {
     if (!authToken) {
       navigate('/login');
     }
-
+  
+    // Mark reports as viewed based on user type
     const markReportsAsViewed = async () => {
       try {
         if (loggedInUser?.userType === 1) {
+          // Mark as viewed for SSO
           await axios.post('http://localhost:8080/report/markAsViewedForSso');
         } else if (loggedInUser?.userType === 3) {
+          // Mark as viewed for Adviser
           await axios.post('http://localhost:8080/report/markAsViewedForAdviser', {
             section: loggedInUser.section,
             schoolYear: loggedInUser.schoolYear,
@@ -49,9 +50,10 @@ const Reports = () => {
         console.error('Error marking reports as viewed:', error);
       }
     };
-
+  
     markReportsAsViewed();
   }, [authToken, loggedInUser, navigate]);
+  
 
   const fetchSuspensions = async () => {
     try {
@@ -117,7 +119,7 @@ const Reports = () => {
   const handleComplete = async (reportId) => {
     try {
       await axios.put(`http://localhost:8080/report/complete/${reportId}`);
-      fetchReports();
+      fetchReports(); 
     } catch (error) {
       console.error('Error completing the report:', error);
       alert('Failed to complete the report.');
@@ -152,13 +154,7 @@ const Reports = () => {
   };
 
   const handleViewReport = (reportId) => {
-    setSelectedReportId(reportId);
-    setShowViewModal(true); // Show the ViewReport modal
-  };
-
-  const closeViewModal = () => {
-    setShowViewModal(false);
-    setSelectedReportId(null); // Reset the selected report ID when closing the modal
+    navigate(`/view-report/${reportId}`);
   };
 
   return (
@@ -205,7 +201,7 @@ const Reports = () => {
                             ? `${report.teacherComplainant.firstname} ${report.teacherComplainant.lastname}` 
                             : report.guidanceComplainant 
                               ? `${report.guidanceComplainant.firstname} ${report.guidanceComplainant.lastname}` 
-                              : 'N/A'}
+                              : 'N/A'} {/* Display 'N/A' if no complainant is found */}
                     </td>
                     <td>{report.student.name}</td>
                     <td>{report.adviser.firstname} {report.adviser.lastname}</td>
@@ -214,6 +210,7 @@ const Reports = () => {
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
         )}
@@ -279,13 +276,6 @@ const Reports = () => {
             reportId={selectedReportId}
             onClose={() => setShowEditModal(false)}
             refreshReports={fetchReports}
-          />
-        )}
-
-        {showViewModal && ( // Render ViewReport modal if it's open
-          <ViewReport
-            reportId={selectedReportId}
-            onClose={closeViewModal}
           />
         )}
       </div>
