@@ -18,12 +18,14 @@ const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refres
         } else if (loggedInUser?.userType === 3) {
           await axios.post('http://localhost:8080/report/markAsViewedForAdviser', null, {
             params: {
+              grade: loggedInUser.grade,
               section: loggedInUser.section,
               schoolYear: loggedInUser.schoolYear,
             },
           });
           await axios.post('http://localhost:8080/suspension/markAsViewedForAdviser', null, {
             params: {
+              grade: loggedInUser.grade,
               section: loggedInUser.section,
               schoolYear: loggedInUser.schoolYear,
             },

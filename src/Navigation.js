@@ -74,7 +74,7 @@ const Navigation = ({ loggedInUser }) => {
             }
           });
 
-          const suspensionsResponse = await axios.get('http://localhost:8080/suspension/getAllSuspensionsBySectionAndSchoolYear', {
+          const suspensionsResponse = await axios.get('http://localhost:8080/suspension/getAllSuspensionsByGradeSectionAndSchoolYear', {
             params: {
               grade: loggedInUser.grade,
               section: loggedInUser.section,
@@ -88,6 +88,7 @@ const Navigation = ({ loggedInUser }) => {
           // Filter unviewed reports and suspensions
           const unviewedReports = reportsResponse.data.filter(
             (report) =>
+              report.student.grade === loggedInUser.grade &&
               report.student.section === loggedInUser.section &&
               report.student.schoolYear === loggedInUser.schoolYear &&
               !report.viewedByAdviser

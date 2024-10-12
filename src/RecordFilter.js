@@ -40,6 +40,7 @@ const RecordFilter = ({
     { value: '2', label: 'Week 2' },
     { value: '3', label: 'Week 3' },
     { value: '4', label: 'Week 4' },
+    { value: '5', label: 'Week 5' },
   ];
 
   const fetchSectionsByGrade = async (grade) => {

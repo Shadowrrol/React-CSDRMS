@@ -61,10 +61,10 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
     }
   };
 
-  const fetchAdviser = async (section, schoolYear) => {
+  const fetchAdviser = async (grade, section, schoolYear) => {
     try {
       const response = await axios.get(`http://localhost:8080/user/adviser`, {
-        params: { section, schoolYear }
+        params: { grade, section, schoolYear }
       });
       setAdviser(response.data);
     } catch (error) {
@@ -76,7 +76,7 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
   const handleStudentSelect = (student) => {
     setSelectedStudent(student);
     fetchStudentRecords(student.sid); // Fetch records for the selected student
-    fetchAdviser(student.section, student.schoolYear); // Fetch adviser's info
+    fetchAdviser(student.grade, student.section, student.schoolYear); // Fetch adviser's info
     setSearchQuery(''); // Reset search query to close the dropdown
   };
 

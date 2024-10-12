@@ -17,12 +17,12 @@ const Class = () => {
     const [newSection, setNewSection] = useState("");
     const [newSchoolYear, setNewSchoolYear] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
-    const [showAddGrade, setShowAddGrade] = useState(false);
+    const [showAddClass, setShowAddClass] = useState(false);
     const [showAddSchoolYear, setShowAddSchoolYear] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    const handleOpen = () => setShowAddGrade(true);
-    const handleClose = () => setShowAddGrade(false);
+    const handleOpen = () => setShowAddClass(true);
+    const handleClose = () => setShowAddClass(false);
     const handleOpenSchoolYear = () => setShowAddSchoolYear(true);
     const handleCloseSchoolYear = () => setShowAddSchoolYear(false);
 
@@ -53,30 +53,35 @@ const Class = () => {
         }
     };
 
-    const addGrade = async () => {
-        if (!newGrade || !newSection) {
-            alert("Please fill in all fields");
-            return;
-        }
+    const addClass = async () => {
+    if (!newGrade || !newSection) {
+        alert("Please fill in all fields");
+        return;
+    }
 
-        const sectionExists = classes.some(classItem => classItem.section === newSection);
-        if (sectionExists) {
-            alert("Section already exists");
-            return;
-        }
+    // Check if the combination of grade and section already exists
+    const classExists = classes.some(classItem => 
+        classItem.grade === newGrade && classItem.section === newSection
+    );
+    
+    if (classExists) {
+        alert("Class already exists");
+        return;
+    }
 
-        try {
-            await axios.post("http://localhost:8080/class/addClass", {
-                grade: newGrade,
-                section: newSection,
-            });
-            await fetchClasses();
-            handleClose();
-        } catch (error) {
-            console.error("Error adding grade:", error);
-            alert("Failed to add grade and section");
-        }
-    };
+    try {
+        await axios.post("http://localhost:8080/class/addClass", {
+            grade: newGrade,
+            section: newSection,
+        });
+        await fetchClasses();
+        handleClose();
+    } catch (error) {
+        console.error("Error adding grade:", error);
+        alert("Failed to add grade and section");
+    }
+};
+
 
     const addSchoolYear = async () => {
         if (!newSchoolYear) {
@@ -217,7 +222,7 @@ const Class = () => {
                 </div>
 
                 {/* Add Grade Modal */}
-                <Modal open={showAddGrade} onClose={handleClose}>
+                <Modal open={showAddClass} onClose={handleClose}>
                     <Box className={classStyles.modalContainer}>
                         <h2 className={classStyles.modalHeader}>Add New Grade & Section</h2>
                         <div className={classStyles['class-container']}>
@@ -249,7 +254,7 @@ const Class = () => {
                             </div>
                         </div>
                         <div className={classStyles.buttonGroup}>
-                            <button onClick={addGrade} className={classStyles.button}>Add</button>
+                            <button onClick={addClass} className={classStyles.button}>Add</button>
                             <button onClick={handleClose} className={`${classStyles.button} ${classStyles.buttonCancel}`}>Cancel</button>
                         </div>
                     </Box>
@@ -279,7 +284,7 @@ const Class = () => {
                 </Modal>
 
                 <div className={classStyles.addButtonContainer}>
-                    <button onClick={handleOpen} className={classStyles.button}>Add Grade</button>
+                    <button onClick={handleOpen} className={classStyles.button}>Add Class</button>
                     <button onClick={handleOpenSchoolYear} className={classStyles.button}>Add School Year</button>
                     <div className={classStyles.searchContainer}>
                         <input
