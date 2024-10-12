@@ -1,300 +1,214 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import styles from './Record.module.css'; // Importing CSS module
-import tableStyles from './GlobalTable.module.css'; // Importing global table styles
-import RecordFilter from './RecordFilter'; // Importing the new RecordFilter component
+import tableStyles from './GlobalTable.module.css'; // Import the CSS module
 
-const RecordTable = ({ records, schoolYears, grades }) => {
-  const authToken = localStorage.getItem('authToken');
-  const loggedInUser = authToken ? JSON.parse(authToken) : null;
+const RecordTable = () => {
+    const authToken = localStorage.getItem("authToken");
+    const loggedInUser = authToken ? JSON.parse(authToken) : null;
+    const [records, setRecords] = useState([]);
+    const [classes, setClasses] = useState([]);
+    const [schoolYears, setSchoolYears] = useState([]);
+    const [selectedClass, setSelectedClass] = useState('');
+    const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
+    const [selectedMonth, setSelectedMonth] = useState('');
+    const [selectedWeek, setSelectedWeek] = useState('');
 
-  const [sections, setSections] = useState([]);
-  const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
-  const [selectedMonth, setSelectedMonth] = useState('');
-  const [selectedWeek, setSelectedWeek] = useState('');
-  const [selectedGrade, setSelectedGrade] = useState(
-    loggedInUser?.userType === 3 ? parseInt(loggedInUser.grade, 10) : null
-  );
-  const [selectedSection, setSelectedSection] = useState(
-    loggedInUser?.userType === 3 ? loggedInUser.section : ''
-  );
-  const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        const fetchClasses = async () => {
+            const response = await axios.get('http://localhost:8080/class/getAllClasses');
+            setClasses(response.data);
+        };
 
-  useEffect(() => {
-    if (selectedGrade) {
-      fetchSectionsByGrade(selectedGrade);
-    }
-  }, [selectedGrade]);
+        const fetchSchoolYears = async () => {
+            const response = await axios.get('http://localhost:8080/schoolYear/getAllSchoolYears');
+            setSchoolYears(response.data);
+        };
 
-  const fetchSectionsByGrade = async (grade) => {
-    try {
-      const response = await axios.get(`http://localhost:8080/class/sections/${grade}`);
-      setSections(response.data);
-    } catch (error) {
-      console.error('Error fetching sections:', error);
-    }
-  };
+        fetchClasses();
+        fetchSchoolYears();
+    }, []);
 
-  const getWeekNumber = (date) => {
-    const dayOfMonth = date.getDate();
-    return Math.ceil(dayOfMonth / 7);
-  };
+    useEffect(() => {
+        if (loggedInUser && loggedInUser.userType === 3) {
+            const userGrade = loggedInUser.grade;
+            const userSection = loggedInUser.section;
 
-  const countFrequency = (entity, category, isSection = false) => {
-    return records
-      .filter((record) => {
-        if (selectedSchoolYear && record.student.schoolYear !== selectedSchoolYear) {
-          return false;
+            setSelectedClass(`${userGrade}${userSection}`);
+            setSelectedSchoolYear('');
         }
-        if (isSection) {
-          return record.student.section === entity && 
-                 (record.monitored_record === category || 
-                 (category === 'Sanction' && record.sanction));
-        } else {
-          return record.student.grade === parseInt(entity, 10) && 
-                 (record.monitored_record === category || 
-                 (category === 'Sanction' && record.sanction)); // Ensure entity is parsed as int
-        }
-      })
-      .filter((record) => {
-        if (selectedMonth) {
-          const recordMonth = new Date(record.record_date).getMonth() + 1;
-          return recordMonth === parseInt(selectedMonth, 10);
-        }
-        return true;
-      })
-      .filter((record) => {
-        if (selectedWeek) {
-          const recordDate = new Date(record.record_date);
-          const weekNumber = getWeekNumber(recordDate);
-          return weekNumber === parseInt(selectedWeek, 10);
-        }
-        return true;
-      }).length;
-  };
-  
+    }, [loggedInUser]);
 
-  const calculateTotalForCategory = (category, isSection = false) => {
-    const entities = isSection ? sections : grades;
-    return entities.reduce((total, entity) => total + countFrequency(entity, category, isSection), 0);
-  };
+    useEffect(() => {
+        const fetchRecords = async () => {
+            let response;
+            if (loggedInUser && loggedInUser.userType === 3) {
+                const grade = loggedInUser.grade;
+                const section = loggedInUser.section;
+                const schoolYear = loggedInUser.schoolYear;
 
-  const categories = [
-    'Absent',
-    'Tardy',
-    'Cutting Classes',
-    'Improper Uniform',
-    'Offense',
-    'Misbehavior',
-    'Clinic',
-    
-    
-  ];
+                response = await axios.get(
+                    `http://localhost:8080/student-record/getStudentRecordsByAdviser`,
+                    { params: { grade, section, schoolYear } }
+                );
+            } else {
+                response = await axios.get('http://localhost:8080/student-record/getAllStudentRecords');
+            }
+            setRecords(response.data);
+        };
 
-  const countSanctionFrequency = () => {
-    return records.filter(record => record.sanction).length;
-  };
+        fetchRecords();
+    }, [selectedClass, selectedSchoolYear, loggedInUser]);
 
-  // Function to gather unique students based on the selected filters
-  const getStudentsBySection = () => {
-    const studentMap = {};
+    const handleClassChange = (event) => {
+        setSelectedClass(event.target.value);
+    };
 
-    records.forEach((record) => {
-      const isInSelectedYear = !selectedSchoolYear || record.student.schoolYear === selectedSchoolYear;
-      const isInSelectedGrade = !selectedGrade || record.student.grade === selectedGrade;
-      const isInSelectedSection = !selectedSection || record.student.section === selectedSection;
+    const handleSchoolYearChange = (event) => {
+        setSelectedSchoolYear(event.target.value);
+    };
 
-      if (isInSelectedYear && isInSelectedGrade && isInSelectedSection) {
-        const studentId = record.student.id; // Assuming each student has a unique ID
-        if (!studentMap[studentId]) {
-          studentMap[studentId] = {
-            name: record.student.name,
-            categories: {}, // To hold category counts
-          };
-        }
-        // Count the category occurrences
-        const category = record.monitored_record;
-        if (!studentMap[studentId].categories[category]) {
-          studentMap[studentId].categories[category] = 0;
-        }
-        studentMap[studentId].categories[category]++;
-      }
+    const handleMonthChange = (event) => {
+        setSelectedMonth(event.target.value);
+        setSelectedWeek('');
+    };
+
+    const handleWeekChange = (event) => {
+        setSelectedWeek(event.target.value);
+    };
+
+    const filteredRecords = records.filter(record => {
+        const matchesClass = selectedClass ? (record.student.grade + record.student.section === selectedClass) : true;
+        const matchesMonth = selectedMonth ? (new Date(record.record_date).getMonth() + 1) === parseInt(selectedMonth) : true;
+        const matchesWeek = selectedWeek ? Math.ceil(new Date(record.record_date).getDate() / 7) === parseInt(selectedWeek) : true;
+        const matchesSchoolYear = selectedSchoolYear ? record.student.schoolYear === selectedSchoolYear : true;
+
+        return matchesClass && matchesMonth && matchesWeek && matchesSchoolYear;
     });
 
-    return Object.values(studentMap);
-  };
-
-  const students = getStudentsBySection();
-
-  // Function to get students for adviser's section only
-  const getAdviserStudents = () => {
-    const studentMap = {};
-
-    records.forEach((record) => {
-      if (loggedInUser?.userType === 3 && record.student.section === loggedInUser.section) {  
-        const studentId = record.student.id;
-        if (!studentMap[studentId]) {
-          studentMap[studentId] = {
-            name: record.student.name,
-            categories: {}, // To hold category counts
-          };
+    const groupedRecords = {};
+    filteredRecords.forEach(record => {
+        const grade = record.student.grade;
+        if (!groupedRecords[grade]) {
+            groupedRecords[grade] = {
+                Absent: 0,
+                Tardy: 0,
+                'Cutting Classes': 0,
+                'Improper Uniform': 0,
+                Offense: 0,
+                Misbehavior: 0,
+                Clinic: 0,
+                SanctionFrequency: 0,
+            };
         }
-        const category = record.monitored_record;
-        if (!studentMap[studentId].categories[category]) {
-          studentMap[studentId].categories[category] = 0;
+        groupedRecords[grade][record.monitored_record]++;
+        if (record.sanction) {
+            groupedRecords[grade].SanctionFrequency++;
         }
-        studentMap[studentId].categories[category]++;
-      }
     });
 
-    return Object.values(studentMap);
-  };
-
-  const adviserStudents = getAdviserStudents();
-
-  return (
-    <>
-      <h2 className={styles.RecordTitle}>Table Overview</h2>
-
-      {/* Using RecordFilter to handle all filter logic */}
-      <RecordFilter
-        schoolYears={schoolYears}
-        grades={grades}
-        loggedInUser={loggedInUser}
-        selectedSchoolYear={selectedSchoolYear}
-        setSelectedSchoolYear={setSelectedSchoolYear}
-        selectedGrade={selectedGrade}
-        setSelectedGrade={setSelectedGrade}
-        selectedSection={selectedSection}
-        setSelectedSection={setSelectedSection}
-        selectedMonth={selectedMonth}
-        setSelectedMonth={setSelectedMonth}
-        selectedWeek={selectedWeek}
-        setSelectedWeek={setSelectedWeek}
-      />
-
-      {loading ? (
-        <p>Loading records...</p>
-      ) : (
-      <div className={tableStyles['table-container']}>
-        <table className={tableStyles['global-table']}>
-          <thead>
-  <tr>
-    <th>Grade</th>
-    {selectedGrade && <th>Section</th>}
-    {categories.map((category) => (
-      <th key={category}>{category}</th>
-    ))}
-    <th>Sanction</th> {/* Add the Sanction column here */}
-  </tr>
-</thead>
-<tbody>
-  {selectedGrade ? (
-    sections
-      .filter(section => !selectedSection || section === selectedSection)
-      .map((section) => (
-        <tr key={section}>
-          <td>{selectedGrade}</td>
-          <td>{section}</td>
-          {categories.map((category) => (
-            <td key={category}>{countFrequency(section, category, true)}</td>
-          ))}
-          <td>{countFrequency(section, 'Sanction', true)}</td> {/* Count sanctions for the section */}
-        </tr>
-      ))
-  ) : (
-    grades.map((grade) => (
-      <tr key={grade}>
-        <td>{grade}</td>
-        {categories.map((category) => (
-          <td key={category}>{countFrequency(grade, category)}</td>
-        ))}
-        <td>{countFrequency(grade, 'Sanction')}</td> {/* Count sanctions for the grade */}
-      </tr>
-    ))
-  )}
-  <tr>
-    <td colSpan={selectedGrade ? "2" : "1"} style={{ fontWeight: 'bold' }}>Total</td>
-    {categories.map((category) => (
-      <td key={category} style={{ fontWeight: 'bold' }}>
-        {calculateTotalForCategory(category, !!selectedGrade)}
-      </td>
-    ))}
-    <td style={{ fontWeight: 'bold' }}>
-      {calculateTotalForCategory('Sanction', !!selectedGrade)} {/* Calculate total sanctions */}
-    </td>
-  </tr>
-</tbody>
-
-        </table>
-      </div>
-      )}
-
-      {/* Displaying the Student Details Table */}
-      {selectedSchoolYear && selectedGrade && selectedSection && (
-        <>
-          <h2 className={styles.RecordTitle}>Student Details</h2>
-          <div className={tableStyles['table-container']}>
-            <table className={tableStyles['global-table']}>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  {categories.map((category) => (
-                    <th key={category}>{category}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {students.length > 0 ? (
-                  students.map((student) => (
-                    <tr key={student.name}>
-                      <td>{student.name}</td>
-                      {categories.map((category) => (
-                        <td key={category}>{student.categories[category] || 0}</td>
-                      ))}
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={categories.length + 1}>No students found for the selected filters.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
-
-      {/* Displaying Adviser's Student Details Table */}
-      {loggedInUser?.userType === 3 && adviserStudents.length > 0 && (  
-        <>
-          <h2 className={styles.RecordTitle}>Adviser's Student Details</h2>
-          <div className={tableStyles['table-container']}>
-            <table className={tableStyles['global-table']}>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  {categories.map((category) => (
-                    <th key={category}>{category}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {adviserStudents.map((student) => (
-                  <tr key={student.name}>
-                    <td>{student.name}</td>
-                    {categories.map((category) => (
-                      <td key={category}>{student.categories[category] || 0}</td>
+    return (
+        <div>
+            <h1>Student Records</h1>
+            <div>
+                <label htmlFor="class-select">Select Class:</label>
+                <select id="class-select" value={selectedClass} onChange={handleClassChange} disabled={loggedInUser && loggedInUser.userType === 3}>
+                    <option value="">All Classes</option>
+                    {classes.map((classEntity) => (
+                        <option key={classEntity.class_id} value={classEntity.grade + classEntity.section}>
+                            {classEntity.grade} - {classEntity.section}
+                        </option>
                     ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
-    </>
-  );
-};
+                </select>
+
+                {loggedInUser && loggedInUser.userType !== 3 && (
+                    <>
+                        <label htmlFor="schoolyear-select">Select School Year:</label>
+                        <select id="schoolyear-select" value={selectedSchoolYear} onChange={handleSchoolYearChange}>
+                            <option value="">All School Years</option>
+                            {schoolYears.map((sy) => (
+                                <option key={sy.schoolYear_ID} value={sy.schoolYear}>
+                                    {sy.schoolYear}
+                                </option>
+                            ))}
+                        </select>
+                    </>
+                )}
+
+                <label htmlFor="month-select">Select Month:</label>
+                <select id="month-select" value={selectedMonth} onChange={handleMonthChange}>
+                    <option value="">All Months</option>
+                    {[
+                        { value: 8, label: 'August' },
+                        { value: 9, label: 'September' },
+                        { value: 10, label: 'October' },
+                        { value: 11, label: 'November' },
+                        { value: 12, label: 'December' },
+                        { value: 1, label: 'January' },
+                        { value: 2, label: 'February' },
+                        { value: 3, label: 'March' },
+                        { value: 4, label: 'April' },
+                        { value: 5, label: 'May' },
+                    ].map(month => (
+                        <option key={month.value} value={month.value}>
+                            {month.label}
+                        </option>
+                    ))}
+                </select>
+
+                {selectedMonth && (
+                    <>
+                        <label htmlFor="week-select">Select Week:</label>
+                        <select id="week-select" value={selectedWeek} onChange={handleWeekChange}>
+                            <option value="">All Weeks</option>
+                            {[1, 2, 3, 4, 5].map(week => (
+                                <option key={week} value={week}>{`Week ${week}`}</option>
+                            ))}
+                        </select>
+                    </>
+                )}
+            </div>
+            <div className={tableStyles['table-container']}>
+                <table className={tableStyles['global-table']}>
+                    <thead>
+                        <tr>
+                            <th>Grade</th>
+                            <th>Absent</th>
+                            <th>Tardy</th>
+                            <th>Cutting Classes</th>
+                            <th>Improper Uniform</th>
+                            <th>Offense</th>
+                            <th>Misbehavior</th>
+                            <th>Clinic</th>
+                            <th>Sanction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {Object.entries(groupedRecords).length > 0 ? (
+                            Object.entries(groupedRecords).map(([grade, counts]) => (
+                                <tr key={grade}>
+                                    <td>{grade}</td>
+                                    <td>{counts.Absent}</td>
+                                    <td>{counts.Tardy}</td>
+                                    <td>{counts['Cutting Classes']}</td>
+                                    <td>{counts['Improper Uniform']}</td>
+                                    <td>{counts.Offense}</td>
+                                    <td>{counts.Misbehavior}</td>
+                                    <td>{counts.Clinic}</td>
+                                    <td>{counts.SanctionFrequency}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="9" style={{ textAlign: 'center' }}>
+                                    No records found.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};   
 
 export default RecordTable;
