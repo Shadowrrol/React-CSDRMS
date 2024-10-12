@@ -77,7 +77,6 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
     setSelectedStudent(student);
     fetchStudentRecords(student.sid); // Fetch records for the selected student
     fetchAdviser(student.section, student.schoolYear); // Fetch adviser's info
-    setSearchQuery(''); // Reset search query to close the dropdown
   };
 
   const getWeekNumber = (date) => {
@@ -193,7 +192,6 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
           <AddRecordModal
             student={selectedStudent}
             onClose={() => setShowAddRecordModal(false)}
-            refreshRecords={() => fetchStudentRecords(selectedStudent.sid)} // Pass the refresh function
           />
           )}        
           
@@ -219,16 +217,16 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
           {searchQuery && (
             <div>
               {filteredStudents.length > 0 ? (
-                <div className={formStyles['global-dropdown']}>
+                <ul className={formStyles['global-dropdown']}>
                   {filteredStudents.map((student) => (
-                    <div
+                    <li
                       key={student.sid} 
-                      onClick={() => handleStudentSelect(student)} // Dropdown disappears after selection
+                      onClick={() => handleStudentSelect(student)}
                       className={formStyles['global-dropdown-item']}>
                       {student.name} ({student.sid})
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               ) : (
                 <p className={formStyles['global-dropdown']}>No students found.</p>
               )}

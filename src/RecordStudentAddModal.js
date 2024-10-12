@@ -3,7 +3,7 @@ import axios from 'axios';
 import styles from './RecordModal.module.css'; // Importing CSS module for the modal
 import formStyles from './GlobalForm.module.css'; // Importing GlobalForm styles
 
-const AddRecordModal = ({ student, onClose, refreshRecords }) => {  // Add refreshRecords as a prop
+const AddRecordModal = ({ student, onClose }) => {
   const [recordDate, setRecordDate] = useState('');
   const [incidentDate, setIncidentDate] = useState('');
   const [time, setTime] = useState('');
@@ -35,7 +35,6 @@ const AddRecordModal = ({ student, onClose, refreshRecords }) => {  // Add refre
     try {
       await axios.post('http://localhost:8080/student-record/insertRecord', newRecord);
       alert('Record added successfully');
-      refreshRecords(); // Call the refresh function to fetch updated records
       onClose(); // Close the modal after submission
     } catch (error) {
       console.error('Error adding record:', error);
@@ -46,7 +45,7 @@ const AddRecordModal = ({ student, onClose, refreshRecords }) => {  // Add refre
   return (
     <div className={styles['student-modal-overlay']}>
       <div className={styles['student-add-modal-content']}>
-        <h2>Add New Record for <br /> {student.name}</h2>
+        <h2>Add New Record for {student.name}</h2>
         
         <div className={formStyles['form-container']}>
           <div className={formStyles['form-group']}>
