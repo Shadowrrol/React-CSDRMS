@@ -218,7 +218,33 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
               )}
             </div>
           )}
-          
+
+          <h2 className={styles['h2-title-record']}>Total Frequency of Monitored Records</h2>
+          <div className={tableStyles['table-container']}>
+            <table className={tableStyles['global-table-small']}>
+              <thead>
+                <tr>
+                  {monitoredRecordsList.map((monitoredRecord, index) => (
+                    <th key={index}>{monitoredRecord}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {monitoredRecordsList.map((monitoredRecord, index) => (
+                    <td key={index}>{frequencies[monitoredRecord]}</td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>    
+      </div>   
+
+
+      {/* Display records if student is selected */}
+      {selectedStudent && (
+        <>
           {/* Use RecordFilter component to filter by school year, month, week */}
           <div className={styles['filter-container']}>
             {selectedStudent && (
@@ -239,33 +265,7 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
                 showGradeAndSection={false} // Hide grade and section filters
               />
             )}    
-          </div> 
-        </div>    
-      </div>   
-
-
-      {/* Display records if student is selected */}
-      {selectedStudent && (
-        <>
-          <h2>Total Frequency of Monitored Records</h2>
-          <div className={tableStyles['table-container']}>
-            <table className={tableStyles['global-table']}>
-              <thead>
-                <tr>
-                  {monitoredRecordsList.map((monitoredRecord, index) => (
-                    <th key={index}>{monitoredRecord}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  {monitoredRecordsList.map((monitoredRecord, index) => (
-                    <td key={index}>{frequencies[monitoredRecord]}</td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          </div>         
 
           <h2 style={{ marginTop: '40px' }}>Detailed Records</h2>
           <div className={tableStyles['table-container']}>
@@ -276,7 +276,7 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
                   <th>Record Date</th>
                   <th>Incident Date</th>
                   <th>Monitored Record</th>
-                  <th>Remarks</th>
+                  <th>Sanction</th>
                 </tr>
               </thead>
               <tbody>
@@ -285,7 +285,7 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
                     <td>{record.record_date}</td>
                     <td>{record.incident_date}</td>
                     <td>{record.monitored_record}</td>
-                    <td>{record.remarks}</td>
+                    <td>{record.sanction}</td>
                   </tr>
                 ))}
               </tbody>

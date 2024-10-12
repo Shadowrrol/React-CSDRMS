@@ -14,9 +14,6 @@ import AddStudentRecord from './SSO/AddStudentRecord';
 import Sanction from './SSO/Sanction';
 import TimeLog from './SSO/TimeLog'
 
-
-import ViewStudentReports from './ViewStudentReports';
-import ViewStudentSuspensions from './ViewStudentSuspensions';
 import ViewSuspensions from './Principal/ViewSuspensions';
 
 import Followup from './Adviser/Followup';
@@ -62,8 +59,6 @@ function App() {
           {loggedInUser && loggedInUser.userType === 2 && (
             <>
              <Route path="/viewSuspensions" element={<ViewSuspensions />} />
-             <Route path="/view-student-reports/:sid" element={<ViewStudentReports />} /> 
-             <Route path="/view-student-suspensions/:sid" element={<ViewStudentSuspensions />} /> 
             </>
 
           )}

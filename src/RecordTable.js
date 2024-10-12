@@ -81,9 +81,40 @@ const RecordTable = ({ records, schoolYears, grades }) => {
     'Sanction',
   ];
 
+  // Function to gather unique students based on the selected filters
+  const getStudentsBySection = () => {
+    const studentMap = {};
+
+    records.forEach((record) => {
+      const isInSelectedYear = !selectedSchoolYear || record.student.schoolYear === selectedSchoolYear;
+      const isInSelectedGrade = !selectedGrade || record.student.grade === selectedGrade;
+      const isInSelectedSection = !selectedSection || record.student.section === selectedSection;
+
+      if (isInSelectedYear && isInSelectedGrade && isInSelectedSection) {
+        const studentId = record.student.id; // Assuming each student has a unique ID
+        if (!studentMap[studentId]) {
+          studentMap[studentId] = {
+            name: record.student.name,
+            categories: {}, // To hold category counts
+          };
+        }
+        // Count the category occurrences
+        const category = record.monitored_record;
+        if (!studentMap[studentId].categories[category]) {
+          studentMap[studentId].categories[category] = 0;
+        }
+        studentMap[studentId].categories[category]++;
+      }
+    });
+
+    return Object.values(studentMap);
+  };
+
+  const students = getStudentsBySection();
+
   return (
     <>
-      <h2 className={styles.RecordTitle}>Table Overview</h2> 
+      <h2 className={styles.RecordTitle}>Table Overview</h2>
 
       {/* Using RecordFilter to handle all filter logic */}
       <RecordFilter
@@ -150,6 +181,41 @@ const RecordTable = ({ records, schoolYears, grades }) => {
           </tbody>
         </table>
       </div>
+      )}
+
+      {/* Displaying the Student Details Table */}
+      {selectedSchoolYear && selectedGrade && selectedSection && (
+        <>
+          <h2 className={styles.RecordTitle}>Student Details</h2>
+          <div className={tableStyles['table-container']}>
+            <table className={tableStyles['global-table']}>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  {categories.map((category) => (
+                    <th key={category}>{category}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {students.length > 0 ? (
+                  students.map((student) => (
+                    <tr key={student.name}>
+                      <td>{student.name}</td>
+                      {categories.map((category) => (
+                        <td key={category}>{student.categories[category] || 0}</td>
+                      ))}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={categories.length + 1}>No students found for the selected filters.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </>
   );

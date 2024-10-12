@@ -16,7 +16,10 @@ const RecordFilter = ({
   selectedWeek,
   setSelectedWeek,
   grades,
-  showGradeAndSection = true, // New prop to control visibility of grade and section filters
+  chartType, // New prop for chart type
+  setChartType, // New prop to set chart type
+  showGradeAndSection = true, // Existing prop to control grade and section visibility
+  isAnalytics = false, // New prop to control chart type dropdown visibility
 }) => {
   const [sections, setSections] = useState([]);
 
@@ -74,7 +77,6 @@ const RecordFilter = ({
         </select>
       )}
 
-      {/* Conditionally render grade and section filters based on the new prop */}
       {showGradeAndSection && (
         <>
           <select
@@ -133,6 +135,18 @@ const RecordFilter = ({
           </option>
         ))}
       </select>
+
+      {/* Conditional rendering for the chart type dropdown */}
+      {isAnalytics && (
+        <select
+          value={chartType}
+          onChange={(e) => setChartType(e.target.value)}
+        >
+          <option value="line">Line Chart</option>
+          <option value="bar">Bar Chart</option>
+          <option value="pie">Pie Chart</option>
+        </select>
+      )}
     </div>
   );
 };

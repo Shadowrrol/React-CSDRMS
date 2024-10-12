@@ -51,57 +51,55 @@ const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refres
 
   return (
     <div className={styles['notification-modal-overlay']}>
-      <div className={styles['notification-modal-content']}>
-        <button className={styles['notification-close-button']} onClick={onClose}>
-          ✕
-        </button>
-        <h2 className={styles['notification-modal-title']}>Notifications</h2>
+        <div className={styles['notification-modal-content']}>
+            <button className={styles['notification-close-button']} onClick={onClose}>
+                ✕
+            </button>
+            <h2 className={styles['notification-modal-title']}>Your Notifications</h2>
 
-        <h3 className={styles['notification-modal-section-title']}>Reports</h3>
-        {reports.length > 0 ? (
-          <ul className={styles['notification-modal-list']}>
-            {reports
-              .filter(report => report.complainant !== loggedInUser?.username) // Filter out reports by the logged-in complainant
-              .map((report) => (
-                <li
-                  key={report.reportId}
-                  className={`${styles['notification-modal-list-item']} ${styles['clickable']}`}
-                  onClick={() => handleViewReport(report.reportId)} // Make report clickable
-                >
-                  <strong>Complaint:</strong> {report.complaint}<br />
-                  <strong>Complainant:</strong> {report.complainant}<br />
-                  <strong>Student:</strong> {report.student.name}<br />
-                </li>
-              ))}
-          </ul>
-        ) : (
-          <p className={styles['notification-modal-empty-message']}>No reports available.</p>
-        )}
-
-        {loggedInUser?.userType !== 1 && (
-          <>
-            <h3 className={styles['notification-modal-section-title']}>Suspensions</h3>
-            {suspensions.length > 0 ? (
-              <ul className={styles['notification-modal-list']}>
-                {suspensions.map((suspension) => (
-                  <li
-                    key={suspension.suspensionId}
-                    className={`${styles['notification-modal-list-item']} ${styles['clickable']}`}
-                    onClick={() => handleViewReport(suspension.reportEntity.reportId)} // Make suspension clickable
-                  >
-                     <strong>Student:</strong> {suspension.reportEntity.student.name}<br />
-                    <strong>Start Date:</strong> {suspension.startDate}<br />
-                    <strong>End Date:</strong> {suspension.endDate}<br />
-                   
-                  </li>
-                ))}
-              </ul>
+            <h3 className={styles['notification-modal-section-title']}>New Reports</h3>
+            {reports.length > 0 ? (
+                <ul className={styles['notification-modal-list']}>
+                    {reports
+                        .filter(report => report.complainant !== loggedInUser?.username)
+                        .map((report) => (
+                            <li
+                                key={report.reportId}
+                                className={`${styles['notification-modal-list-item']} ${styles['clickable']}`}
+                                onClick={() => handleViewReport(report.reportId)}
+                            >
+                                <strong>{report.student.name}</strong> from <strong>{report.student.grade} - {report.student.section}</strong> has a report concerning a recent incident. <br />
+                                <small>Click to view details.</small>
+                            </li>
+                        ))}
+                </ul>
             ) : (
-              <p className={styles['notification-modal-empty-message']}>No suspensions available.</p>
+                <p className={styles['notification-modal-empty-message']}>You have no new reports at the moment.</p>
             )}
-          </>
-        )}
-      </div>
+
+            {loggedInUser?.userType !== 1 && (
+                <>
+                    <h3 className={styles['notification-modal-section-title']}>Recent Suspensions</h3>
+                    {suspensions.length > 0 ? (
+                        <ul className={styles['notification-modal-list']}>
+                            {suspensions.map((suspension) => (
+                                <li
+                                    key={suspension.suspensionId}
+                                    className={`${styles['notification-modal-list-item']} ${styles['clickable']}`}
+                                    onClick={() => handleViewReport(suspension.reportEntity.reportId)}
+                                >
+                                    <strong>{suspension.reportEntity.student.name}</strong> has been suspended. 
+                                    <br />
+                                    <small>Click to view report details.</small>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className={styles['notification-modal-empty-message']}>No suspensions recorded at this time.</p>
+                    )}
+                </>
+            )}
+        </div>
     </div>
   );
 };
