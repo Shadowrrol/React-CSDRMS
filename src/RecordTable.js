@@ -112,6 +112,32 @@ const RecordTable = ({ records, schoolYears, grades }) => {
 
   const students = getStudentsBySection();
 
+  // Function to get students for adviser's section only
+  const getAdviserStudents = () => {
+    const studentMap = {};
+
+    records.forEach((record) => {
+      if (loggedInUser?.userType === 3 && record.student.section === loggedInUser.section) {  
+        const studentId = record.student.id;
+        if (!studentMap[studentId]) {
+          studentMap[studentId] = {
+            name: record.student.name,
+            categories: {}, // To hold category counts
+          };
+        }
+        const category = record.monitored_record;
+        if (!studentMap[studentId].categories[category]) {
+          studentMap[studentId].categories[category] = 0;
+        }
+        studentMap[studentId].categories[category]++;
+      }
+    });
+
+    return Object.values(studentMap);
+  };
+
+  const adviserStudents = getAdviserStudents();
+
   return (
     <>
       <h2 className={styles.RecordTitle}>Table Overview</h2>
@@ -212,6 +238,35 @@ const RecordTable = ({ records, schoolYears, grades }) => {
                     <td colSpan={categories.length + 1}>No students found for the selected filters.</td>
                   </tr>
                 )}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+
+      {/* Displaying Adviser's Student Details Table */}
+      {loggedInUser?.userType === 3 && adviserStudents.length > 0 && (  
+        <>
+          <h2 className={styles.RecordTitle}>Adviser's Student Details</h2>
+          <div className={tableStyles['table-container']}>
+            <table className={tableStyles['global-table']}>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  {categories.map((category) => (
+                    <th key={category}>{category}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {adviserStudents.map((student) => (
+                  <tr key={student.name}>
+                    <td>{student.name}</td>
+                    {categories.map((category) => (
+                      <td key={category}>{student.categories[category] || 0}</td>
+                    ))}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

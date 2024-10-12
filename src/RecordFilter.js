@@ -100,6 +100,7 @@ const RecordFilter = ({
             <select
               value={selectedSection}
               onChange={(e) => setSelectedSection(e.target.value)}
+              disabled={loggedInUser?.userType === 3}
             >
               <option value="">All Sections</option>
               {sections.map((section) => (
