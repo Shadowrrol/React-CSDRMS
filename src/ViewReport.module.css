@@ -1,49 +1,88 @@
-.report-details, .suspension-details-table {
-    border-collapse: collapse; /* Ensure borders are merged */
-    margin-top: 20px; /* Add space above the table */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add slight shadow for depth */
+/* Modal Overlay */
+.viewreport-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Make sure it appears on top */
+}
+
+/* Modal Content */
+.viewreport-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 90%; /* Responsive width */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Add shadow */
+    position: relative; /* Position relative for absolute elements */
+}
+
+/* Close Button */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Existing styles for report details tables */
+.report-details,
+.suspension-details-table {
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
 }
 
-.report-details th, .suspension-details-table th,
-.report-details td, .suspension-details-table td {
-    border: 1px solid #ccc; /* Set border for table cells */
-    padding: 10px; /* Add padding for better spacing */
-    text-align: left; /* Align text to the left */
+.report-details th,
+.suspension-details-table th,
+.report-details td,
+.suspension-details-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
 }
 
 .report-details td:nth-child(1) {
-    width: 10%; /* Set the width to 30% of the table width */
+    width: 10%;
 }
 
 .report-details td:nth-child(2) {
-    width: 30%; /* Set the width to 30% of the table width */
+    width: 30%;
 }
 
-.report-details th, .suspension-details-table th {
-    background-color: #f2f2f2; /* Light background for header */
-    font-weight: bold; /* Make header text bold */
+.report-details th,
+.suspension-details-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
 }
 
-.report-details tr:nth-child(even), .suspension-details-table tr:nth-child(even) {
-    background-color: #f9f9f9; /* Light background for even rows */
+.report-details tr:nth-child(even),
+.suspension-details-table tr:nth-child(even) {
+    background-color: #f9f9f9;
 }
 
-.report-details tr:hover, .suspension-details-table tr:hover {
-    background-color: #e9e9e9; /* Highlight row on hover */
+.report-details tr:hover,
+.suspension-details-table tr:hover {
+    background-color: #e9e9e9;
 }
 
 .tablesContainer {
-    display: flex; /* Use flexbox to align items side by side */
-    justify-content: space-between; /* Add space between the tables */
-    margin-top: 5px; /* Space above the tables */
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
     gap: 10%;
 }
 
 .tableWrapper {
-    flex: 1; /* Allow each table to take equal space */
-    margin-right: 20px; /* Space between the tables */
+    flex: 1;
+    margin-right: 20px;
 }
-  
-
-  

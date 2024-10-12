@@ -13,7 +13,6 @@
   font-size: 24px;
   font-weight: bold;
   color: #333;
-  margin-top: 10%;
 }
 
 .RecordTitle {
@@ -38,7 +37,7 @@
   border: 2px solid #8A252C;
   border-radius: 20px; /* Optional: Slightly rounds the corners of the container */
   background-color: #f9f9f9; /* Optional: Light background color */
-  width: 500px;
+  width: 700px;
 }
 
 .search-container {
@@ -78,8 +77,8 @@
 }
 
 .details-table td:nth-child(1) {
-  width: 30%;  
-  text-align: center;  
+  width: 55%;  
+  text-align: left;  
 }
 
 .details-table td:nth-child(2) {
@@ -88,7 +87,7 @@
 }
 
 .details-table td:nth-child(3) {
-  width: 35%;  
+  width: 150%;  
   text-align: left;  
 }
 
