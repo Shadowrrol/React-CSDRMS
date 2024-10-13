@@ -22,11 +22,13 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
     const [schoolYears, setSchoolYears] = useState([]);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [passwordStrength, setPasswordStrength] = useState(0); // Password strength state
 
     useEffect(() => {
         if (isOpen) {
             setMessage('');
             setError('');
+            setPasswordStrength(0); // Reset password strength on modal open
 
             // Fetch grade, section, and school year for Adviser role only
             if (role === 'Adviser') {
@@ -74,10 +76,39 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setUserData(prevUserData => ({ ...prevUserData, [name]: value }));
+
+        // Update password strength if the password field is changed
+        if (name === 'password') {
+            setPasswordStrength(calculatePasswordStrength(value));
+        }
+    };
+
+    const calculatePasswordStrength = (password) => {
+        let strength = 0;
+
+        // Check password length
+        if (password.length >= 8) strength += 1; // Minimum length 8
+        if (password.length >= 12) strength += 1; // More points for longer
+        if (/[A-Z]/.test(password)) strength += 1; // At least one uppercase letter
+        if (/[a-z]/.test(password)) strength += 1; // At least one lowercase letter
+        if (/[0-9]/.test(password)) strength += 1; // At least one digit
+        if (/[\W_]/.test(password)) strength += 1; // At least one special character
+
+        return strength; // Return a value from 0 to 6
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+    
+        // Minimum strength required for the password
+        const minimumPasswordStrength = 5;
+    
+        // Check if password strength meets the requirement
+        if (passwordStrength < minimumPasswordStrength) {
+            alert("Password must be at least 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character.");
+            return; // Prevent form submission
+        }
+    
         const endpoint = role === 'Adviser' ? 'registerAdviser' 
                          : role === 'Principal' ? 'registerPrincipal' 
                          : role === 'Teacher' ? 'registerTeacher' 
@@ -109,10 +140,12 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
             setMessage('');
         }
     };
+    
+    
 
     if (!isOpen) return null;
 
-    return ReactDOM.createPortal(
+    return (
         <div className={styles['modal-overlay']} onClick={onClose}>
             <div className={styles['modal-content']} onClick={e => e.stopPropagation()}>
                 <button className={styles['modal-close-button']} onClick={onClose}>X</button>
@@ -143,7 +176,17 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                             placeholder="Password"
                             required
                         />
+                        
                     </div>
+                    
+                    <div className={styles['password-strength-container']}>
+                            <div className={styles['password-strength-bar']} style={{ width: `${(passwordStrength / 6) * 100}%`, backgroundColor: passwordStrength === 6 ? 'green' : passwordStrength >= 4 ? 'yellow' : 'red' }} />
+                        </div>
+                        <p className={styles['password-strength-text']}>
+                            {passwordStrength === 0 ? '' :
+                             passwordStrength < 3 ? 'Weak' :
+                             passwordStrength < 5 ? 'Moderate' : 'Strong'}
+                        </p>
                     <div className={formStyles['form-group']}>
                         <label htmlFor="firstname">First Name:</label>
                         <input
@@ -229,13 +272,12 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                             </div>
                         </>
                     )}
-                    <div className={formStyles['global-buttonGroup']}>
-                        <button type="submit" className={formStyles['global-button']}>Register</button>
-                    </div>                       
+                     <div className={formStyles['global-buttonGroup']}>
+                    <button type="submit" className={formStyles['global-button']}>Register</button>
+                    </div>
                 </form>
             </div>
-        </div>,
-        document.body
+        </div>
     );
 };
 

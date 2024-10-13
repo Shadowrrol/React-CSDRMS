@@ -20,6 +20,7 @@ const UpdateAccountModal = ({ isOpen, onClose, user }) => {
         grade: null,
         section: ''
     });
+    const [passwordStrength, setPasswordStrength] = useState(0); // Password strength state
 
     useEffect(() => {
         if (isOpen && user) {
@@ -41,6 +42,11 @@ const UpdateAccountModal = ({ isOpen, onClose, user }) => {
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setUpdatedUser({ ...updatedUser, [name]: value });
+
+        // Update password strength if the password field is changed
+        if (name === 'password') {
+            setPasswordStrength(calculatePasswordStrength(value));
+        }
     };
 
     const handleUpdate = () => {
@@ -49,14 +55,24 @@ const UpdateAccountModal = ({ isOpen, onClose, user }) => {
         // If the password field is empty, remove it from the object to avoid updating
         if (updatedData.password === '') {
             delete updatedData.password;
+        } else {
+            // Validate password strength
+            const passwordStrength = calculatePasswordStrength(updatedData.password);
+            const minimumPasswordStrength = 5;
+    
+            // Check if password strength meets the requirement
+            if (passwordStrength < minimumPasswordStrength) {
+                alert("Password must be at least 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character.");
+                return; // Prevent form submission
+            }
         }
     
         const endpoint = updatedUser.userType === 1 ? 'updateSSO' :
                          updatedUser.userType === 2 ? 'updatePrincipal' :
                          updatedUser.userType === 3 ? 'updateAdviser' :
                          updatedUser.userType === 4 ? 'updateAdmin' :
-                         updatedUser.userType === 5 ? 'updateTeacher' :    // Teacher role
-                         updatedUser.userType === 6 ? 'updateGuidance' : '';  // Guidance role
+                         updatedUser.userType === 5 ? 'updateTeacher' :
+                         updatedUser.userType === 6 ? 'updateGuidance' : '';
     
         if (endpoint) {
             axios.put(`http://localhost:8080/user/${endpoint}`, updatedData)
@@ -78,7 +94,21 @@ const UpdateAccountModal = ({ isOpen, onClose, user }) => {
         }
     };
     
-
+    // Password strength calculation function
+    const calculatePasswordStrength = (password) => {
+        let strength = 0;
+    
+        // Check password length
+        if (password.length >= 8) strength += 1; // Minimum length 8
+        if (password.length >= 12) strength += 1; // More points for longer
+        if (/[A-Z]/.test(password)) strength += 1; // At least one uppercase letter
+        if (/[a-z]/.test(password)) strength += 1; // At least one lowercase letter
+        if (/[0-9]/.test(password)) strength += 1; // At least one digit
+        if (/[\W_]/.test(password)) strength += 1; // At least one special character
+    
+        return strength; // Return a value from 0 to 6
+    };
+    
 
     if (!isOpen) return null;
 
@@ -90,12 +120,20 @@ const UpdateAccountModal = ({ isOpen, onClose, user }) => {
                 <form className={styles1['form-container']}>
                     <div className={styles1['form-group']}>
                         <label>Username:</label>
-                        <input type="text" name="username" value={updatedUser.username} onChange={handleInputChange} disabled style={{ cursor: 'not-allowed' }}/>
+                        <input type="text" name="username" value={updatedUser.username} onChange={handleInputChange} disabled style={{ cursor: 'not-allowed' }} />
                     </div>
                     <div className={styles1['form-group']}>
                         <label>Password:</label>
                         <input type="password" name="password" value={updatedUser.password} onChange={handleInputChange} />
                     </div>
+                    <div className={styles['password-strength-container']}>
+                        <div className={styles['password-strength-bar']} style={{ width: `${(passwordStrength / 6) * 100}%`, backgroundColor: passwordStrength === 6 ? 'green' : passwordStrength >= 4 ? 'yellow' : 'red' }} />
+                    </div>
+                    <p className={styles['password-strength-text']}>
+                        {passwordStrength === 0 ? '' :
+                            passwordStrength < 3 ? 'Weak' :
+                            passwordStrength < 5 ? 'Moderate' : 'Strong'}
+                    </p>
                     <div className={styles1['form-group']}>
                         <label>First Name:</label>
                         <input type="text" name="firstname" value={updatedUser.firstname} onChange={handleInputChange} />

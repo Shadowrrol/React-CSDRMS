@@ -44,3 +44,23 @@
     background-color: #ccc; 
     transform: scale(1.1); /* Slightly enlarge the button on hover */
 }
+
+.password-strength-container {
+    margin-left: 48%;
+    width: 50%;
+    height: 8px;
+    background-color: #e0e0e0; /* Light grey background */
+    border-radius: 4px;
+}
+
+.password-strength-bar {
+    height: 100%;
+    border-radius: 4px;
+}
+
+.password-strength-text {
+    font-size: 14px;
+    margin-left: 48%;
+    text-align: left;
+    margin-top: 0;
+}
