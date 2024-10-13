@@ -64,9 +64,10 @@ const handleCreateReport = async () => {
       time: new Date().toLocaleTimeString(), // Automatically set current time
       complainant: loggedInUser.username, // Set the logged-in user's username as the complainant
       encoder: loggedInUser.firstname + ' ' + loggedInUser.lastname,
-      viewedByAdviser: loggedInUser.userType === 3 && loggedInUser.section === newReport.section, // Set viewedByAdviser to true if user is Adviser for the student
+      viewedByAdviser: loggedInUser.userType === 3 && loggedInUser.grade === newReport.grade && loggedInUser.section === newReport.section && loggedInUser.schoolYear === newReport.schoolYear, // Set viewedByAdviser to true if user is Adviser for the student
       viewedBySso: loggedInUser.userType === 1,      // Set viewedBySso to true if user is SSO
     };
+
 
     await axios.post('http://localhost:8080/report/insertReport', reportData);
     refreshReports(); // Refresh the reports list after submission
@@ -79,7 +80,13 @@ const handleCreateReport = async () => {
 
   // Handle student selection
   const handleSelectStudent = (student) => {
-    setNewReport({ ...newReport, studentId: student.id });
+    setNewReport({
+      ...newReport,
+      studentId: student.id,
+      grade: student.grade, // Assuming these properties exist on the student object
+      section: student.section,
+      schoolYear: student.schoolYear,
+    });
     setSearchQuery(`${student.sid} - ${student.name}`); // Update the search field with selected student's details
     setShowDropdown(false); // Hide dropdown after selection
   };

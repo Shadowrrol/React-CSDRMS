@@ -1,18 +1,30 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import navigate hook for navigation
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './NotificationModal.module.css';
 
 const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refreshNotifications }) => {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   // Automatically mark notifications as viewed when modal opens
   useEffect(() => {
     const markNotificationsAsViewed = async () => {
       try {
+        // Logic to update "received" status for userType === 1
         if (loggedInUser?.userType === 1) {
+          // Mark notifications as viewed
           await axios.post('http://localhost:8080/report/markAsViewedForSso');
           await axios.post('http://localhost:8080/suspension/markAsViewedForSso');
+          
+          // Fetch reports and update "received" status
+          const response = await axios.get('http://localhost:8080/report/getAllReports'); // Fetch all reports
+          const currentDate = new Date().toISOString().split('T')[0];
+
+          const updates = response.data
+            .filter(report => !report.received) // Filter unreceived reports
+            .map(report => axios.put(`http://localhost:8080/report/updateReceived/${report.reportId}`, { received: currentDate }));
+
+          await Promise.all(updates); // Update all unreceived reports
         } else if (loggedInUser?.userType === 2) {
           await axios.post('http://localhost:8080/suspension/markAsViewedForPrincipal');
         } else if (loggedInUser?.userType === 3) {

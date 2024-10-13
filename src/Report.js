@@ -42,6 +42,7 @@ const Reports = () => {
         } else if (loggedInUser?.userType === 3) {
           // Mark as viewed for Adviser
           await axios.post('http://localhost:8080/report/markAsViewedForAdviser', {
+            grade: loggedInUser.grade,
             section: loggedInUser.section,
             schoolYear: loggedInUser.schoolYear,
           });

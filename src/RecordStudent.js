@@ -7,6 +7,7 @@ import styles from './Record.module.css'; // Importing CSS module
 import formStyles from './GlobalForm.module.css'; // Importing GlobalForm styles
 import tableStyles from './GlobalTable.module.css'; // Importing GlobalForm styles
 import RecordStudentEditModal from './RecordStudentEditModal';
+import AddStudentModal from './Adviser/AddStudentModal';
 
 const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudents }) => {
   const [filteredStudents, setFilteredStudents] = useState([]); // For filtered search results
@@ -20,6 +21,7 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
   const [selectedWeek, setSelectedWeek] = useState('');
   const [showAddRecordModal, setShowAddRecordModal] = useState(false); // Modal visibility state
   const [showImportModal, setShowImportModal] = useState(false); // Control ImportModal visibility
+  const [showAddStudentModal, setShowAddStudentModal] = useState(false); 
   const [showEditRecordModal, setShowEditRecordModal] = useState(false); // Modal visibility state
   const [recordToEdit, setRecordToEdit] = useState(null); // Hold the record to edit
   
@@ -186,7 +188,14 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
               onClose={() => setShowImportModal(false)}
               schoolYears={schoolYears}
             />
-          )}    
+          )}
+
+          {showAddStudentModal && ( 
+          <AddStudentModal
+          open={showAddStudentModal}
+          onClose={() => setShowAddStudentModal(false)}
+            />    
+          )}
         
           {/* Add Record Modal */}
           {showAddRecordModal && (
@@ -202,7 +211,13 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
             <button onClick={() => setShowImportModal(true)} className={formStyles['global-button']} style={{ marginLeft: '20px' }}>
               Import Students
             </button>
-          )}                 
+          )}      
+
+           {loggedInUser?.userType !== 3 && (
+            <button onClick={() => setShowAddStudentModal(true)} className={formStyles['global-button']} style={{ marginLeft: '20px' }}>
+              Add Student
+            </button>
+          )}             
           
           {/* Add Record Button */}
           {selectedStudent && loggedInUser?.userType === 1 && (
