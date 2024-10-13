@@ -60,7 +60,6 @@
     overflow: hidden; /* Optional: Hide overflowed content */
     text-overflow: ellipsis; /* Optional: Add ellipsis for overflowed text */
     white-space: nowrap; /* Optional: Prevent text from wrapping */
-    border: none;
 }
 
 /* Search Bar */

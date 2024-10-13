@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Line } from 'react-chartjs-2';
+import { Line, Bar, Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
+import styles from './Record.module.css'; // Importing CSS module
 
 const RecordAnalytics = () => {
   const authToken = localStorage.getItem("authToken");
   const loggedInUser = authToken ? JSON.parse(authToken) : null;
-  
+
+  const months = [
+    { value: 7, label: 'August' },
+    { value: 8, label: 'September' },
+    { value: 9, label: 'October' },
+    { value: 10, label: 'November' },
+    { value: 11, label: 'December' },
+    { value: 0, label: 'January' },
+    { value: 1, label: 'February' },
+    { value: 2, label: 'March' },
+    { value: 3, label: 'April' },
+    { value: 4, label: 'May' },
+  ];
+
   const [chartData, setChartData] = useState(null);
   const [schoolYears, setSchoolYears] = useState([]);
   const [classes, setClasses] = useState([]);
@@ -15,6 +29,7 @@ const RecordAnalytics = () => {
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedWeek, setSelectedWeek] = useState('');
   const [records, setRecords] = useState([]);
+  const [chartType, setChartType] = useState('line'); // Default chart type
 
   const isAdviser = loggedInUser && loggedInUser.userType === 3;
 
@@ -59,7 +74,7 @@ const RecordAnalytics = () => {
         // Fetch all student records
         response = await axios.get('http://localhost:8080/student-record/getAllStudentRecords');
       }
-      
+
       setRecords(response.data);
       if (response.data.length > 0) {
         processData(response.data, selectedSchoolYear, selectedClass, selectedMonth, selectedWeek);
@@ -68,9 +83,8 @@ const RecordAnalytics = () => {
       console.error('Error fetching student records:', error);
     }
   };
-  
+
   const processData = (records, schoolYear, classFilter, monthFilter, weekFilter) => {
-    const months = ['August', 'September', 'October', 'November', 'December', 'January', 'February', 'March', 'April', 'May'];
     const daysInMonth = (month) => new Date(2023, month + 1, 0).getDate();
     const monitoredRecords = ['Absent', 'Tardy', 'Cutting Classes', 'Improper Uniform', 'Offense', 'Misbehavior', 'Clinic'];
     const frequency = {};
@@ -119,7 +133,7 @@ const RecordAnalytics = () => {
     });
 
     const chartData = {
-      labels: monthFilter ? Array.from({ length: daysInMonth(monthFilter) }, (_, i) => i + 1) : months,
+      labels: monthFilter ? Array.from({ length: daysInMonth(monthFilter) }, (_, i) => i + 1) : months.map(m => m.label),
       datasets: [
         ...monitoredRecords.map((type, index) => ({
           label: type,
@@ -143,13 +157,14 @@ const RecordAnalytics = () => {
 
   const getColor = (index) => {
     const colors = [
-      'rgba(255, 99, 132, 1)',
-      'rgba(54, 162, 235, 1)',
-      'rgba(255, 206, 86, 1)',
-      'rgba(75, 192, 192, 1)',
-      'rgba(153, 102, 255, 1)',
-      'rgba(255, 159, 64, 1)',
-      'rgba(199, 199, 199, 1)'
+      'rgba(255, 0, 0, 1)', // Red
+      'rgba(255, 127, 0, 1)', // Orange
+      'rgba(255, 255, 0, 1)', // Yellow
+      'rgba(0, 255, 0, 1)', // Green
+      'rgba(0, 0, 255, 1)', // Blue
+      'rgba(75, 0, 130, 1)', // Indigo
+      'rgba(148, 0, 211, 1)', // Violet
+      'rgba(0, 0, 0, 1)', // Black
     ];
     return colors[index % colors.length];
   };
@@ -172,8 +187,7 @@ const RecordAnalytics = () => {
     setSelectedMonth(month);
     setSelectedWeek(''); // Reset week when month changes
     processData(records, selectedSchoolYear, selectedClass, month, ''); // Pass empty string for week
-};
-
+  };
 
   const handleWeekChange = (event) => {
     const week = event.target.value;
@@ -181,90 +195,117 @@ const RecordAnalytics = () => {
     processData(records, selectedSchoolYear, selectedClass, selectedMonth, week);
   };
 
+  const handleChartTypeChange = (event) => {
+    setChartType(event.target.value);
+  };
+
   if (!chartData) {
     return <p>Loading data...</p>;
   }
 
+  // Pie Chart Options
+  const pieChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      title: {
+        display: true,
+        text: 'Distribution of Monitored Records by Category (Pie Chart)',
+      },
+    },
+  };
+
+  const barChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      title: {
+        display: true,
+        text: selectedMonth
+          ? `Monitored Records for ${months.find((m) => m.value === selectedMonth)?.label || ''} (Bar Chart)`
+          : 'Monitored Records by Category (Bar Chart)',
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: 'Frequency' },
+        ticks: {
+          callback: function(value) {
+            return Number.isInteger(value) ? value : ''; // Show integer values only
+          },
+        },
+      },
+      x: { title: { display: true, text: selectedMonth ? 'Days of the Month' : 'Categories' } },
+    },
+  };
+
+  // Conditionally render the chart based on selected chart type
+  const renderChart = () => {
+    switch (chartType) {
+      case 'bar':
+        return <Bar data={chartData} options={barChartOptions} className={styles.chart} />;
+      case 'pie':
+        return <Pie data={chartData} options={pieChartOptions} className={styles.chart} />;
+      default:
+        return <Line data={chartData} options={{ responsive: true }} className={styles.chart} />;
+    }
+  };
+
   return (
     <div>
-      <h2>Monitored Record Analytics</h2>
-      {!isAdviser && (
-        <>
-          <label htmlFor="schoolYearSelect">Select School Year:</label>
-          <select id="schoolYearSelect" value={selectedSchoolYear} onChange={handleSchoolYearChange}>
-            <option value="">All School Years</option>
-            {schoolYears.map((year) => (
-              <option key={year.id} value={year.schoolYear}>{year.schoolYear}</option>
+      <h2 className={styles.RecordTitle}>Analytics Overview</h2>
+      <div className={styles['filterContainer']}>
+        <label>Filters:
+          {!isAdviser && (
+            <select id="schoolYearSelect" value={selectedSchoolYear} onChange={handleSchoolYearChange}>
+              <option value="">All School Years</option>
+              {schoolYears.map((year) => (
+                <option key={year.id} value={year.schoolYear}>{year.schoolYear}</option>
+              ))}
+            </select>
+          )}
+
+          <select id="classSelect" value={isAdviser ? `${loggedInUser.grade} - ${loggedInUser.section}` : (selectedClass?.class_id || '')} onChange={handleClassChange} disabled={isAdviser}>
+            {isAdviser ? (
+              <option value={`${loggedInUser.grade} - ${loggedInUser.section}`}>
+                {`${loggedInUser.grade} - ${loggedInUser.section}`}
+              </option>
+            ) : (
+              <option value="">All Classes</option>
+            )}
+            {classes.map((cls) => (
+              <option key={cls.class_id} value={cls.class_id}>{`${cls.grade} - ${cls.section}`}</option>
             ))}
           </select>
-        </>
-      )}
-      
-      <label htmlFor="classSelect">Select Class:</label>
-      <select id="classSelect" value={isAdviser ? `${loggedInUser.grade} - ${loggedInUser.section}` : (selectedClass?.class_id || '')} onChange={handleClassChange} disabled={isAdviser}>
-        {isAdviser ? (
-          <option value={`${loggedInUser.grade} - ${loggedInUser.section}`}>
-            {`${loggedInUser.grade} - ${loggedInUser.section}`}
-          </option>
-        ) : (
-          <option value="">All Classes</option>
-        )}
-        {classes.map((cls) => (
-          <option key={cls.class_id} value={cls.class_id}>{`${cls.grade} - ${cls.section}`}</option>
-        ))}
-      </select>
-      <label htmlFor="monthSelect">Select Month:</label>
-      <select id="monthSelect" value={selectedMonth || ''} onChange={handleMonthChange}>
-        <option value="">All Months</option>
-        <option value="7">August</option>
-        <option value="8">September</option>
-        <option value="9">October</option>
-        <option value="10">November</option>
-        <option value="11">December</option>
-        <option value="0">January</option>
-        <option value="1">February</option>
-        <option value="2">March</option>
-        <option value="3">April</option>
-        <option value="4">May</option>
-      </select>
 
-      {selectedMonth && (
-        <>
-          <label htmlFor="weekSelect">Select Week:</label>
-          <select id="weekSelect" value={selectedWeek} onChange={handleWeekChange}>
-            <option value="">All Weeks</option>
-            <option value="0">Week 1</option>
-            <option value="1">Week 2</option>
-            <option value="2">Week 3</option>
-            <option value="3">Week 4</option>
-            <option value="4">Week 5</option>
+          <select id="monthSelect" value={selectedMonth || ''} onChange={handleMonthChange}>
+            <option value="">All Months</option>
+            {months.map(month => (
+              <option key={month.value} value={month.value}>{month.label}</option>
+            ))}
           </select>
-        </>
-      )}
 
-      <Line data={chartData} options={{
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top'
-          }
-        },
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: selectedMonth ? (selectedWeek !== '' ? 'Days in Week' : 'Days') : 'Months'
-            }
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Frequency'
-            },
-            beginAtZero: true
-          }
-        }
-      }} />
+          {selectedMonth && (
+            <select id="weekSelect" value={selectedWeek} onChange={handleWeekChange}>
+              <option value="">All Weeks</option>
+              <option value="0">Week 1</option>
+              <option value="1">Week 2</option>
+              <option value="2">Week 3</option>
+              <option value="3">Week 4</option>
+              <option value="4">Week 5</option>
+            </select>
+          )}
+
+          <select value={chartType} onChange={handleChartTypeChange}>
+            <option value="line">Line Chart</option>
+            <option value="bar">Bar Chart</option>
+            <option value="pie">Pie Chart</option>
+          </select>
+        </label>
+      </div>
+
+      {renderChart()}
     </div>
   );
 };

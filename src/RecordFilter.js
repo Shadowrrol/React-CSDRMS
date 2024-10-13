@@ -62,93 +62,93 @@ const RecordFilter = ({
 
   return (
     <div className={styles.filterContainer}>
-      <label>Filters: </label>
-
-      {loggedInUser?.userType !== 3 && (
-        <select
-          value={selectedSchoolYear}
-          onChange={(e) => setSelectedSchoolYear(e.target.value)}
-        >
-          <option value="">All School Years</option>
-          {schoolYears.map((schoolYear) => (
-            <option key={schoolYear.schoolYear_ID} value={schoolYear.schoolYear}>
-              {schoolYear.schoolYear}
-            </option>
-          ))}
-        </select>
-      )}
-
-      {showGradeAndSection && (
-        <>
+      <label>Filters: 
+        {loggedInUser?.userType !== 3 && (
           <select
-            value={selectedGrade}
-            onChange={(e) => {
-              setSelectedGrade(e.target.value);
-              setSelectedSection(''); // Reset section when grade changes
-              fetchSectionsByGrade(e.target.value); // Fetch sections for selected grade
-            }}
-            disabled={loggedInUser?.userType === 3}
+            value={selectedSchoolYear}
+            onChange={(e) => setSelectedSchoolYear(e.target.value)}
           >
-            <option value="">All Grades</option>
-            {grades.map((grade) => (
-              <option key={grade} value={grade}>
-                {grade}
+            <option value="">All School Years</option>
+            {schoolYears.map((schoolYear) => (
+              <option key={schoolYear.schoolYear_ID} value={schoolYear.schoolYear}>
+                {schoolYear.schoolYear}
               </option>
             ))}
           </select>
+        )}
 
-          {selectedGrade && (
+        {showGradeAndSection && (
+          <>
             <select
-              value={selectedSection}
-              onChange={(e) => setSelectedSection(e.target.value)}
+              value={selectedGrade}
+              onChange={(e) => {
+                setSelectedGrade(e.target.value);
+                setSelectedSection(''); // Reset section when grade changes
+                fetchSectionsByGrade(e.target.value); // Fetch sections for selected grade
+              }}
               disabled={loggedInUser?.userType === 3}
             >
-              <option value="">All Sections</option>
-              {sections.map((section) => (
-                <option key={section} value={section}>
-                  {section}
+              <option value="">All Grades</option>
+              {grades.map((grade) => (
+                <option key={grade} value={grade}>
+                  {grade}
                 </option>
               ))}
             </select>
-          )}
-        </>
-      )}
 
-      <select
-        value={selectedMonth}
-        onChange={(e) => setSelectedMonth(e.target.value)}
-      >
-        <option value="">All Months</option>
-        {months.map((month) => (
-          <option key={month.value} value={month.value}>
-            {month.label}
-          </option>
-        ))}
-      </select>
+            {selectedGrade && (
+              <select
+                value={selectedSection}
+                onChange={(e) => setSelectedSection(e.target.value)}
+                disabled={loggedInUser?.userType === 3}
+              >
+                <option value="">All Sections</option>
+                {sections.map((section) => (
+                  <option key={section} value={section}>
+                    {section}
+                  </option>
+                ))}
+              </select>
+            )}
+          </>
+        )}
 
-      <select
-        value={selectedWeek}
-        onChange={(e) => setSelectedWeek(e.target.value)}
-      >
-        <option value="">All Weeks</option>
-        {weeks.map((week) => (
-          <option key={week.value} value={week.value}>
-            {week.label}
-          </option>
-        ))}
-      </select>
-
-      {/* Conditional rendering for the chart type dropdown */}
-      {isAnalytics && (
         <select
-          value={chartType}
-          onChange={(e) => setChartType(e.target.value)}
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value)}
         >
-          <option value="line">Line Chart</option>
-          <option value="bar">Bar Chart</option>
-          <option value="pie">Pie Chart</option>
+          <option value="">All Months</option>
+          {months.map((month) => (
+            <option key={month.value} value={month.value}>
+              {month.label}
+            </option>
+          ))}
         </select>
-      )}
+
+        <select
+          value={selectedWeek}
+          onChange={(e) => setSelectedWeek(e.target.value)}
+        >
+          <option value="">All Weeks</option>
+          {weeks.map((week) => (
+            <option key={week.value} value={week.value}>
+              {week.label}
+            </option>
+          ))}
+        </select>
+
+        {/* Conditional rendering for the chart type dropdown */}
+        {isAnalytics && (
+          <select
+            value={chartType}
+            onChange={(e) => setChartType(e.target.value)}
+          >
+            <option value="line">Line Chart</option>
+            <option value="bar">Bar Chart</option>
+            <option value="pie">Pie Chart</option>
+          </select>
+        )}
+      </label>
     </div>
   );
 };

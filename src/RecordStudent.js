@@ -173,6 +173,25 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
 
         {/* Search Bar for Students */}
         <div className={styles['search-container']}>
+        <h2 className={styles['h2-title-record']}>Total Frequency of Monitored Records</h2>
+          <div className={tableStyles['table-container']}>
+            <table className={tableStyles['global-table-small']}>
+              <thead>
+                <tr>
+                  {monitoredRecordsList.map((monitoredRecord, index) => (
+                    <th key={index}>{monitoredRecord}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {monitoredRecordsList.map((monitoredRecord, index) => (
+                    <td key={index}>{frequencies[monitoredRecord]}</td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <label htmlFor="studentSearch">Search: </label>
           <input
             type="text"
@@ -181,6 +200,26 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Enter student name or ID"
           />
+
+          {/* Only show the student list if the searchQuery is not empty and filtered students exist */}
+          {searchQuery && (
+            <div>
+              {filteredStudents.length > 0 ? (
+                <div className={formStyles['global-dropdown']}>
+                  {filteredStudents.map((student) => (
+                    <div
+                      key={student.sid} 
+                      onClick={() => handleStudentSelect(student)} // Dropdown disappears after selection
+                      className={formStyles['global-dropdown-item']}>
+                      {student.name} ({student.sid})
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className={formStyles['global-dropdown']}>No students found.</p>
+              )}
+            </div>
+          )}
 
           {/* Import Modal */}
           {showImportModal && ( // Conditionally render ImportModal based on showImportModal state
@@ -229,46 +268,6 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
               Add Record
             </button>
           )}    
-
-          {/* Only show the student list if the searchQuery is not empty and filtered students exist */}
-          {searchQuery && (
-            <div>
-              {filteredStudents.length > 0 ? (
-                <div className={formStyles['global-dropdown']}>
-                  {filteredStudents.map((student) => (
-                    <div
-                      key={student.sid} 
-                      onClick={() => handleStudentSelect(student)} // Dropdown disappears after selection
-                      className={formStyles['global-dropdown-item']}>
-                      {student.name} ({student.sid})
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className={formStyles['global-dropdown']}>No students found.</p>
-              )}
-            </div>
-          )}
-
-          <h2 className={styles['h2-title-record']}>Total Frequency of Monitored Records</h2>
-          <div className={tableStyles['table-container']}>
-            <table className={tableStyles['global-table-small']}>
-              <thead>
-                <tr>
-                  {monitoredRecordsList.map((monitoredRecord, index) => (
-                    <th key={index}>{monitoredRecord}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  {monitoredRecordsList.map((monitoredRecord, index) => (
-                    <td key={index}>{frequencies[monitoredRecord]}</td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
-          </div>
         </div>    
       </div>   
 
@@ -298,48 +297,47 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
             )}    
           </div>         
 
-          <h2 style={{ marginTop: '40px' }}>Detailed Records</h2>
-          <div className={tableStyles['table-container']}>
-
-            <table className={tableStyles['global-table']}>
-              <thead>
-                <tr>
-                  <th>Record Date</th>
-                  <th>Incident Date</th>
-                  <th>Monitored Record</th>
-                  <th>Sanction</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-              {filteredRecords.map((record) => (
-                  <tr key={record.recordId}>
-                    <td>{record.record_date}</td>
-                    <td>{record.incident_date}</td>
-                    <td>{record.monitored_record}</td>
-                    <td>{record.sanction}</td>
-                    <td>
-                      <button
-                        onClick={() => {
-                          setRecordToEdit(record); // Set the record to edit
-                          setShowEditRecordModal(true); // Show the edit modal
-                        }}
-                        className={formStyles['global-button']}
-                      >
-                        Edit
-                      </button>
-                    </td>
+          <h2>Detailed Records</h2>
+            <div className={tableStyles['table-container']}>
+              <table className={tableStyles['global-table']}>
+                <thead>
+                  <tr>
+                    <th>Record Date</th>
+                    <th>Incident Date</th>
+                    <th>Monitored Record</th>
+                    <th>Sanction</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>      
-          {showEditRecordModal && (
-                  <RecordStudentEditModal
-                    record={recordToEdit} // Pass the record to edit
-                    onClose={() => setShowEditRecordModal(false)} // Close handler
-                  />
-                )}           
+                </thead>
+                <tbody>
+                {filteredRecords.map((record) => (
+                    <tr key={record.recordId}>
+                      <td>{record.record_date}</td>
+                      <td>{record.incident_date}</td>
+                      <td>{record.monitored_record}</td>
+                      <td>{record.sanction}</td>
+                      <td>
+                        <button
+                          onClick={() => {
+                            setRecordToEdit(record); // Set the record to edit
+                            setShowEditRecordModal(true); // Show the edit modal
+                          }}
+                          className={formStyles['global-button']}
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>      
+            {showEditRecordModal && (
+              <RecordStudentEditModal
+                record={recordToEdit} // Pass the record to edit
+                onClose={() => setShowEditRecordModal(false)} // Close handler
+              />
+            )}           
         </>
       )}
     </>

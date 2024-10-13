@@ -45,8 +45,23 @@
   width: 70%;
 }
 
+.search-container input {
+  width: 250px;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #333333;
+  background-color: #ffffff;
+}
+
+.search-container label {
+  margin-top: 10px;  
+}
+
+
 .filter-container{
-  display: fixed;
   margin-top: 50px;
   max-width: 100%;
 }

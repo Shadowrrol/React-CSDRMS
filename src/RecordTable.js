@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import tableStyles from './GlobalTable.module.css'; // Import the CSS module
+import styles from './Record.module.css'; // Importing CSS module
 
 const RecordTable = () => {
     const authToken = localStorage.getItem("authToken");
@@ -87,9 +88,9 @@ const RecordTable = () => {
 
     const groupedRecords = {};
     filteredRecords.forEach(record => {
-        const grade = record.student.grade;
-        if (!groupedRecords[grade]) {
-            groupedRecords[grade] = {
+        const gradeSection = `${record.student.grade} - ${record.student.section}`; // Combine grade and section
+        if (!groupedRecords[gradeSection]) {
+            groupedRecords[gradeSection] = {
                 Absent: 0,
                 Tardy: 0,
                 'Cutting Classes': 0,
@@ -100,78 +101,77 @@ const RecordTable = () => {
                 SanctionFrequency: 0,
             };
         }
-        groupedRecords[grade][record.monitored_record]++;
+        groupedRecords[gradeSection][record.monitored_record]++;
         if (record.sanction) {
-            groupedRecords[grade].SanctionFrequency++;
+            groupedRecords[gradeSection].SanctionFrequency++;
         }
     });
 
     return (
         <div>
-            <h1>Student Records</h1>
-            <div>
-                <label htmlFor="class-select">Select Class:</label>
-                <select id="class-select" value={selectedClass} onChange={handleClassChange} disabled={loggedInUser && loggedInUser.userType === 3}>
-                    <option value="">All Classes</option>
-                    {classes.map((classEntity) => (
-                        <option key={classEntity.class_id} value={classEntity.grade + classEntity.section}>
-                            {classEntity.grade} - {classEntity.section}
-                        </option>
-                    ))}
-                </select>
+            <h2 className={styles.RecordTitle}>Table Overview</h2>
+            <div className={styles['filterContainer']}>
+                <label>Filters:
+                    {loggedInUser && loggedInUser.userType !== 3 && (
+                            <>
+                                <select id="schoolyear-select" value={selectedSchoolYear} onChange={handleSchoolYearChange}>
+                                    <option value="">All School Years</option>
+                                    {schoolYears.map((sy) => (
+                                        <option key={sy.schoolYear_ID} value={sy.schoolYear}>
+                                            {sy.schoolYear}
+                                        </option>
+                                    ))}
+                                </select>
+                            </>
+                        )}
+                    
+                    <select id="class-select" value={selectedClass} onChange={handleClassChange} disabled={loggedInUser && loggedInUser.userType === 3}>
+                        <option value="">All Classes</option>
+                        {classes.map((classEntity) => (
+                            <option key={classEntity.class_id} value={classEntity.grade + classEntity.section}>
+                                {classEntity.grade} - {classEntity.section}
+                            </option>
+                        ))}
+                    </select>
 
-                {loggedInUser && loggedInUser.userType !== 3 && (
-                    <>
-                        <label htmlFor="schoolyear-select">Select School Year:</label>
-                        <select id="schoolyear-select" value={selectedSchoolYear} onChange={handleSchoolYearChange}>
-                            <option value="">All School Years</option>
-                            {schoolYears.map((sy) => (
-                                <option key={sy.schoolYear_ID} value={sy.schoolYear}>
-                                    {sy.schoolYear}
-                                </option>
-                            ))}
-                        </select>
-                    </>
-                )}
+                    <select id="month-select" value={selectedMonth} onChange={handleMonthChange}>
+                        <option value="">All Months</option>
+                        {[
+                            { value: 8, label: 'August' },
+                            { value: 9, label: 'September' },
+                            { value: 10, label: 'October' },
+                            { value: 11, label: 'November' },
+                            { value: 12, label: 'December' },
+                            { value: 1, label: 'January' },
+                            { value: 2, label: 'February' },
+                            { value: 3, label: 'March' },
+                            { value: 4, label: 'April' },
+                            { value: 5, label: 'May' },
+                        ].map(month => (
+                            <option key={month.value} value={month.value}>
+                                {month.label}
+                            </option>
+                        ))}
+                    </select>
 
-                <label htmlFor="month-select">Select Month:</label>
-                <select id="month-select" value={selectedMonth} onChange={handleMonthChange}>
-                    <option value="">All Months</option>
-                    {[
-                        { value: 8, label: 'August' },
-                        { value: 9, label: 'September' },
-                        { value: 10, label: 'October' },
-                        { value: 11, label: 'November' },
-                        { value: 12, label: 'December' },
-                        { value: 1, label: 'January' },
-                        { value: 2, label: 'February' },
-                        { value: 3, label: 'March' },
-                        { value: 4, label: 'April' },
-                        { value: 5, label: 'May' },
-                    ].map(month => (
-                        <option key={month.value} value={month.value}>
-                            {month.label}
-                        </option>
-                    ))}
-                </select>
+                    {selectedMonth && (
+                        <>
+                            <select id="week-select" value={selectedWeek} onChange={handleWeekChange}>
+                                <option value="">All Weeks</option>
+                                {[1, 2, 3, 4, 5].map(week => (
+                                    <option key={week} value={week}>{`Week ${week}`}</option>
+                                ))}
+                            </select>
+                        </>
+                    )}
 
-                {selectedMonth && (
-                    <>
-                        <label htmlFor="week-select">Select Week:</label>
-                        <select id="week-select" value={selectedWeek} onChange={handleWeekChange}>
-                            <option value="">All Weeks</option>
-                            {[1, 2, 3, 4, 5].map(week => (
-                                <option key={week} value={week}>{`Week ${week}`}</option>
-                            ))}
-                        </select>
-                    </>
-                )}
+                </label>
             </div>
             <div className={tableStyles['table-container']}>
                 <table className={tableStyles['global-table']}>
                     <thead>
                         <tr>
-                            <th>Grade</th>
+                            <th>Class</th> {/* Updated header label */}
                             <th>Absent</th>
                             <th>Tardy</th>
                             <th>Cutting Classes</th>
@@ -184,9 +184,9 @@ const RecordTable = () => {
                     </thead>
                     <tbody>
                         {Object.entries(groupedRecords).length > 0 ? (
-                            Object.entries(groupedRecords).map(([grade, counts]) => (
-                                <tr key={grade}>
-                                    <td>{grade}</td>
+                            Object.entries(groupedRecords).map(([gradeSection, counts]) => (
+                                <tr key={gradeSection}>
+                                    <td>{gradeSection}</td> {/* Show both grade and section */}
                                     <td>{counts.Absent}</td>
                                     <td>{counts.Tardy}</td>
                                     <td>{counts['Cutting Classes']}</td>

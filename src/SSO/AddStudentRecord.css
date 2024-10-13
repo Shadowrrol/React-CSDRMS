@@ -34,7 +34,7 @@ label {
 /* Input and select field styling 
 input[type="date"],*/
 input[type="time"],
-input[type="text"],
+input[type="input"],
 select {
     width: 25%;
     padding: 12px;
@@ -79,10 +79,3 @@ button:hover {
     margin-top: 10px;
 }
 
-/* Customize the color of the form elements on focus */
-input:focus,
-select:focus {
-    outline: none;
-    border-color: #800000; /* Maroon border color on focus */
-    box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.2); /* Maroon box shadow on focus */
-}
