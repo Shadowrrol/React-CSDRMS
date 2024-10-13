@@ -1,248 +1,271 @@
-import React, { useState } from 'react';
-import { Line, Bar, Pie } from 'react-chartjs-2'; // Import Bar and Pie components
-import { Chart, registerables } from 'chart.js';
-import styles from './Record.module.css';
-import RecordFilter from './RecordFilter'; // Importing the RecordFilter component
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Line } from 'react-chartjs-2';
+import 'chart.js/auto';
 
-Chart.register(...registerables);
-
-const RecordAnalytics = ({ records, schoolYears, grades }) => {
-  const authToken = localStorage.getItem('authToken');
+const RecordAnalytics = () => {
+  const authToken = localStorage.getItem("authToken");
   const loggedInUser = authToken ? JSON.parse(authToken) : null;
-
+  
+  const [chartData, setChartData] = useState(null);
+  const [schoolYears, setSchoolYears] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
-  const [selectedGrade, setSelectedGrade] = useState(loggedInUser?.userType === 3 ? loggedInUser.grade : '');
-  const [selectedSection, setSelectedSection] = useState(loggedInUser?.userType === 3 ? loggedInUser.section : '');
+  const [selectedClass, setSelectedClass] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedWeek, setSelectedWeek] = useState('');
-  const [chartType, setChartType] = useState('line'); // New state to control the chart type
+  const [records, setRecords] = useState([]);
 
-  const months = [
-    { value: '08', label: 'August' },
-    { value: '09', label: 'September' },
-    { value: '10', label: 'October' },
-    { value: '11', label: 'November' },
-    { value: '12', label: 'December' },
-    { value: '01', label: 'January' },
-    { value: '02', label: 'February' },
-    { value: '03', label: 'March' },
-    { value: '04', label: 'April' },
-    { value: '05', label: 'May' },
-  ];
+  const isAdviser = loggedInUser && loggedInUser.userType === 3;
 
-  // Function to count records for each category by day or month
-  const countRecordsByDayOrMonth = (dayOrMonth, category, isMonthView = false) => {
-    return records.filter((record) => {
-      if (loggedInUser?.userType !== 3 && selectedSchoolYear && record.student.schoolYear !== selectedSchoolYear) return false;
-      if (selectedGrade && record.student.grade !== selectedGrade) return false;
-      if (selectedSection && record.student.section !== selectedSection) return false;
+  useEffect(() => {
+    fetchSchoolYears();
+    fetchClasses();
+    fetchStudentRecords();
+  }, []);
 
-      const recordDate = new Date(record.record_date);
-      const recordMonth = String(recordDate.getMonth() + 1).padStart(2, '0');
-      const recordWeek = Math.ceil(recordDate.getDate() / 7);
-      if (isMonthView) {
-        if (selectedWeek && recordWeek !== parseInt(selectedWeek, 10)) return false;
-        return recordMonth === dayOrMonth && record.monitored_record === category;
-      } else {
-        const recordDay = recordDate.getDate();
-        if (selectedWeek && recordWeek !== parseInt(selectedWeek, 10)) return false;
-        return recordDay === dayOrMonth && recordMonth === selectedMonth && record.monitored_record === category;
-      }
-    }).length;
-  };
-
-  const categories = ['Absent', 'Tardy', 'Cutting Classes', 'Improper Uniform', 'Offense', 'Misbehavior', 'Clinic', 'Sanction'];
-  const isAllMonthsSelected = selectedMonth === '';
-  let lineLabels = [];
-  let lineDatasets = [];
-
-  const rainbowColors = [
-    '#FF0000', // Red
-    '#FF7F00', // Orange
-    '#FFFF00', // Yellow
-    '#00FF00', // Green
-    '#0000FF', // Blue
-    '#4B0082', // Indigo
-    '#8B00FF', // Violet
-    '#000000', // Black for the 8th category
-  ];
-
-  if (isAllMonthsSelected) {
-    lineLabels = months.map((month) => month.label);
-    lineDatasets = categories.map((category, index) => ({
-      label: category,
-      data: months.map((month) => countRecordsByDayOrMonth(month.value, category, true)),
-      borderColor: rainbowColors[index], // Use rainbow colors for line chart
-      backgroundColor: 'rgba(0, 0, 0, 0)',
-      tension: 0.4,
-    }));
-  } else {
-    const daysInSelectedMonth = new Date(2024, parseInt(selectedMonth, 10), 0).getDate();
-    lineLabels = Array.from({ length: daysInSelectedMonth }, (_, i) => i + 1);
-    lineDatasets = categories.map((category, index) => ({
-      label: category,
-      data: Array.from({ length: daysInSelectedMonth }, (_, i) => countRecordsByDayOrMonth(i + 1, category)),
-      borderColor: rainbowColors[index], // Use rainbow colors for line chart
-      backgroundColor: 'rgba(0, 0, 0, 0)',
-      tension: 0.4,
-    }));
-  }
-
-  // Pie chart data - sum the records by category based on selected filters
-  const getPieData = () => {
-    const filteredData = categories.map((category) =>
-      records.filter((record) => {
-        if (loggedInUser?.userType !== 3 && selectedSchoolYear && record.student.schoolYear !== selectedSchoolYear) return false;
-        if (selectedGrade && record.student.grade !== selectedGrade) return false;
-        if (selectedSection && record.student.section !== selectedSection) return false;
-
-        const recordDate = new Date(record.record_date);
-        const recordMonth = String(recordDate.getMonth() + 1).padStart(2, '0');
-        const recordWeek = Math.ceil(recordDate.getDate() / 7);
-        
-        const isInSelectedMonth = isAllMonthsSelected || recordMonth === selectedMonth;
-        const isInSelectedWeek = !selectedWeek || recordWeek === parseInt(selectedWeek, 10);
-        
-        return isInSelectedMonth && isInSelectedWeek && record.monitored_record === category;
-      }).length
-    );
-
-    return {
-      labels: categories,
-      datasets: [
-        {
-          data: filteredData,
-          backgroundColor: rainbowColors, // Use rainbow colors array
-          borderWidth: 1,
-        },
-      ],
-    };
-  };
-
-  const pieData = getPieData();
-
-  // Bar chart data - group categories and sum their counts per month or day
-  const barLabels = isAllMonthsSelected ? months.map((month) => month.label) : Array.from({ length: 31 }, (_, i) => i + 1);
-  const barDatasets = categories.map((category, index) => ({
-    label: category,
-    data: isAllMonthsSelected
-      ? months.map((month) => countRecordsByDayOrMonth(month.value, category, true))
-      : Array.from({ length: 31 }, (_, i) => countRecordsByDayOrMonth(i + 1, category)),
-    backgroundColor: rainbowColors[index], // Use rainbow colors array
-  }));
-
-  const lineChartData = {
-    labels: lineLabels,
-    datasets: lineDatasets,
-  };
-
-  const barChartData = {
-    labels: barLabels,
-    datasets: barDatasets,
-  };
-
-  // Line Chart Options
-  const lineChartOptions = {
-    responsive: true,
-    plugins: {
-      legend: { position: 'top' },
-      title: {
-        display: true,
-        text: isAllMonthsSelected
-          ? 'Monitored Records by Month (Line Chart)'
-          : `Monitored Records for ${months.find((m) => m.value === selectedMonth)?.label || ''} (Line Chart)`,
-      },
-    },
-    scales: {
-      y: { 
-        beginAtZero: true, 
-        title: { display: true, text: 'Frequency' },
-        ticks: {
-          callback: function(value) {
-            return Number.isInteger(value) ? value : ''; // Show integer values only
-          },
-        },
-      },      
-      x: { title: { display: true, text: isAllMonthsSelected ? 'Months' : 'Days of the Month' } },
-    },
-  };
-
-  // Pie Chart Options
-  const pieChartOptions = {
-    responsive: true,
-    plugins: {
-      legend: { position: 'top' },
-      title: {
-        display: true,
-        text: 'Distribution of Monitored Records by Category (Pie Chart)',
-      },
-    },
-    // No need to specify scales for the pie chart
-  };
-
-  const barChartOptions = {
-    responsive: true,
-    plugins: {
-      legend: { position: 'top' },
-      title: {
-        display: true,
-        text: isAllMonthsSelected
-          ? 'Monitored Records by Category (Bar Chart)'
-          : `Monitored Records for ${months.find((m) => m.value === selectedMonth)?.label || ''} (Bar Chart)`,
-      },
-    },
-    scales: {
-      y: { 
-        beginAtZero: true, 
-        title: { display: true, text: 'Frequency' },
-        ticks: {
-          callback: function(value) {
-            return Number.isInteger(value) ? value : ''; // Show integer values only
-          },
-        },
-      },
-      x: { title: { display: true, text: isAllMonthsSelected ? 'Months' : 'Days of the Month' } },
-    },
-  };
-
-  // Conditionally render the chart based on selected chart type
-  const renderChart = () => {
-    switch (chartType) {
-      case 'bar':
-        return <Bar data={barChartData} options={barChartOptions} className={styles.chart} />;
-      case 'pie':
-        return <Pie data={pieData} options={pieChartOptions} className={styles.chart} />;
-      default:
-        return <Line data={lineChartData} options={lineChartOptions} className={styles.chart} />;
+  const fetchSchoolYears = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/schoolYear/getAllSchoolYears');
+      setSchoolYears(response.data);
+    } catch (error) {
+      console.error('Error fetching school years:', error);
     }
   };
 
-  return (
-    <>
-      <h2 className={styles.RecordTitle}> Analytics Overview</h2> 
-      <RecordFilter
-        schoolYears={schoolYears}
-        grades={grades}
-        loggedInUser={loggedInUser}
-        selectedSchoolYear={selectedSchoolYear}
-        setSelectedSchoolYear={setSelectedSchoolYear}
-        selectedGrade={selectedGrade}
-        setSelectedGrade={setSelectedGrade}
-        selectedSection={selectedSection}
-        setSelectedSection={setSelectedSection}
-        selectedMonth={selectedMonth}
-        setSelectedMonth={setSelectedMonth}
-        selectedWeek={selectedWeek}
-        setSelectedWeek={setSelectedWeek}
-        chartType={chartType} // Pass chartType state to the RecordFilter component
-        setChartType={setChartType} // Pass setChartType to change chart type
-        isAnalytics={true} // Pass true to show chart type dropdown
-      />
+  const fetchClasses = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/class/getAllClasses');
+      setClasses(response.data);
+    } catch (error) {
+      console.error('Error fetching classes:', error);
+    }
+  };
 
-      <div className={styles.chartWrapper}>
-        {renderChart()}
-      </div>
-    </>
+  const fetchStudentRecords = async () => {
+    try {
+      let response;
+      if (isAdviser) {
+        // Fetch records by adviser using the user's grade, section, and school year
+        response = await axios.get('http://localhost:8080/student-record/getStudentRecordsByAdviser', {
+          params: {
+            grade: loggedInUser.grade,
+            section: loggedInUser.section,
+            schoolYear: loggedInUser.schoolYear
+          }
+        });
+        setSelectedClass(classes.find(cls => cls.grade === loggedInUser.grade && cls.section === loggedInUser.section));
+      } else {
+        // Fetch all student records
+        response = await axios.get('http://localhost:8080/student-record/getAllStudentRecords');
+      }
+      
+      setRecords(response.data);
+      if (response.data.length > 0) {
+        processData(response.data, selectedSchoolYear, selectedClass, selectedMonth, selectedWeek);
+      }
+    } catch (error) {
+      console.error('Error fetching student records:', error);
+    }
+  };
+  
+  const processData = (records, schoolYear, classFilter, monthFilter, weekFilter) => {
+    const months = ['August', 'September', 'October', 'November', 'December', 'January', 'February', 'March', 'April', 'May'];
+    const daysInMonth = (month) => new Date(2023, month + 1, 0).getDate();
+    const monitoredRecords = ['Absent', 'Tardy', 'Cutting Classes', 'Improper Uniform', 'Offense', 'Misbehavior', 'Clinic'];
+    const frequency = {};
+    const sanctionCount = new Array(31).fill(0);
+
+    monitoredRecords.forEach(type => {
+      frequency[type] = new Array(monthFilter ? daysInMonth(monthFilter) : 10).fill(0);
+    });
+
+    records.forEach(record => {
+      const recordDate = new Date(record.record_date);
+      const month = recordDate.getMonth();
+      const year = record.student.schoolYear;
+      const grade = record.student.grade;
+      const section = record.student.section;
+
+      if ((schoolYear && year !== schoolYear) || 
+          (classFilter && (grade !== classFilter.grade || section !== classFilter.section)) ||
+          (monthFilter && month !== monthFilter)) return;
+
+      const day = recordDate.getDate() - 1;
+      const week = Math.floor(day / 7);
+
+      if (monthFilter) {
+        if (weekFilter !== '' && week !== parseInt(weekFilter)) return;
+
+        const monitoredType = record.monitored_record;
+        if (frequency[monitoredType]) {
+          frequency[monitoredType][day]++;
+        }
+        if (record.sanction && record.sanction.trim() !== '') {
+          sanctionCount[day]++;
+        }
+      } else if (month >= 7 || month <= 4) {
+        const monthIndex = (month >= 7) ? month - 7 : month + 5;
+        const monitoredType = record.monitored_record;
+
+        if (frequency[monitoredType]) {
+          frequency[monitoredType][monthIndex]++;
+        }
+
+        if (record.sanction && record.sanction.trim() !== '') {
+          sanctionCount[monthIndex]++;
+        }
+      }
+    });
+
+    const chartData = {
+      labels: monthFilter ? Array.from({ length: daysInMonth(monthFilter) }, (_, i) => i + 1) : months,
+      datasets: [
+        ...monitoredRecords.map((type, index) => ({
+          label: type,
+          data: frequency[type],
+          borderColor: getColor(index),
+          fill: false,
+          tension: 0.1
+        })),
+        {
+          label: 'Sanctions',
+          data: sanctionCount,
+          borderColor: 'rgba(255, 99, 71, 1)',
+          fill: false,
+          tension: 0.1
+        }
+      ]
+    };
+
+    setChartData(chartData);
+  };
+
+  const getColor = (index) => {
+    const colors = [
+      'rgba(255, 99, 132, 1)',
+      'rgba(54, 162, 235, 1)',
+      'rgba(255, 206, 86, 1)',
+      'rgba(75, 192, 192, 1)',
+      'rgba(153, 102, 255, 1)',
+      'rgba(255, 159, 64, 1)',
+      'rgba(199, 199, 199, 1)'
+    ];
+    return colors[index % colors.length];
+  };
+
+  const handleSchoolYearChange = (event) => {
+    const newSchoolYear = event.target.value;
+    setSelectedSchoolYear(newSchoolYear);
+    processData(records, newSchoolYear, selectedClass, selectedMonth, selectedWeek);
+  };
+
+  const handleClassChange = (event) => {
+    const classId = event.target.value;
+    const selectedClass = classes.find(cls => cls.class_id === parseInt(classId));
+    setSelectedClass(selectedClass);
+    processData(records, selectedSchoolYear, selectedClass, selectedMonth, selectedWeek);
+  };
+
+  const handleMonthChange = (event) => {
+    const month = event.target.value === '' ? '' : parseInt(event.target.value);
+    setSelectedMonth(month);
+    setSelectedWeek(''); // Reset week when month changes
+    processData(records, selectedSchoolYear, selectedClass, month, ''); // Pass empty string for week
+};
+
+
+  const handleWeekChange = (event) => {
+    const week = event.target.value;
+    setSelectedWeek(week);
+    processData(records, selectedSchoolYear, selectedClass, selectedMonth, week);
+  };
+
+  if (!chartData) {
+    return <p>Loading data...</p>;
+  }
+
+  return (
+    <div>
+      <h2>Monitored Record Analytics</h2>
+      {!isAdviser && (
+        <>
+          <label htmlFor="schoolYearSelect">Select School Year:</label>
+          <select id="schoolYearSelect" value={selectedSchoolYear} onChange={handleSchoolYearChange}>
+            <option value="">All School Years</option>
+            {schoolYears.map((year) => (
+              <option key={year.id} value={year.schoolYear}>{year.schoolYear}</option>
+            ))}
+          </select>
+        </>
+      )}
+      
+      <label htmlFor="classSelect">Select Class:</label>
+      <select id="classSelect" value={isAdviser ? `${loggedInUser.grade} - ${loggedInUser.section}` : (selectedClass?.class_id || '')} onChange={handleClassChange} disabled={isAdviser}>
+        {isAdviser ? (
+          <option value={`${loggedInUser.grade} - ${loggedInUser.section}`}>
+            {`${loggedInUser.grade} - ${loggedInUser.section}`}
+          </option>
+        ) : (
+          <option value="">All Classes</option>
+        )}
+        {classes.map((cls) => (
+          <option key={cls.class_id} value={cls.class_id}>{`${cls.grade} - ${cls.section}`}</option>
+        ))}
+      </select>
+      <label htmlFor="monthSelect">Select Month:</label>
+      <select id="monthSelect" value={selectedMonth || ''} onChange={handleMonthChange}>
+        <option value="">All Months</option>
+        <option value="7">August</option>
+        <option value="8">September</option>
+        <option value="9">October</option>
+        <option value="10">November</option>
+        <option value="11">December</option>
+        <option value="0">January</option>
+        <option value="1">February</option>
+        <option value="2">March</option>
+        <option value="3">April</option>
+        <option value="4">May</option>
+      </select>
+
+      {selectedMonth && (
+        <>
+          <label htmlFor="weekSelect">Select Week:</label>
+          <select id="weekSelect" value={selectedWeek} onChange={handleWeekChange}>
+            <option value="">All Weeks</option>
+            <option value="0">Week 1</option>
+            <option value="1">Week 2</option>
+            <option value="2">Week 3</option>
+            <option value="3">Week 4</option>
+            <option value="4">Week 5</option>
+          </select>
+        </>
+      )}
+
+      <Line data={chartData} options={{
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top'
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: selectedMonth ? (selectedWeek !== '' ? 'Days in Week' : 'Days') : 'Months'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Frequency'
+            },
+            beginAtZero: true
+          }
+        }
+      }} />
+    </div>
   );
 };
 
