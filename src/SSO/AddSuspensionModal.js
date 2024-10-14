@@ -5,7 +5,6 @@ import styles from '../ReportModal.module.css'; // Importing the CSS file
 const AddSuspensionModal = ({ onClose, reportId, refreshReports, refreshSuspensions }) => {
   const authToken = localStorage.getItem("authToken");
   const loggedInUser = authToken ? JSON.parse(authToken) : null;
-
   const [suspensionData, setSuspensionData] = useState({
     days: '',
     startDate: '',
@@ -15,7 +14,13 @@ const AddSuspensionModal = ({ onClose, reportId, refreshReports, refreshSuspensi
 
   // Handle input changes for the form
   const handleInputChange = (e) => {
-    setSuspensionData({ ...suspensionData, [e.target.name]: e.target.value });
+    const inputValue = e.target.value;  
+
+    // Ensure the value is not negative
+    if (inputValue === "" || parseInt(inputValue) >= 1 && e.target.name === "days") {
+      setSuspensionData({ ...suspensionData, [e.target.name]: e.target.value });
+    }
+
   };
 
   // Handle adding suspension
