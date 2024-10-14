@@ -107,32 +107,56 @@ const RecordTable = () => {
         }
     });
 
+    // New: Create a mapping of student records with their counts
+    const studentRecords = {};
+    filteredRecords.forEach(record => {
+        const studentName = record.student.name;
+        if (!studentRecords[studentName]) {
+            studentRecords[studentName] = {
+                Absent: 0,
+                Tardy: 0,
+                'Cutting Classes': 0,
+                'Improper Uniform': 0,
+                Offense: 0,
+                Misbehavior: 0,
+                Clinic: 0,
+                SanctionFrequency: 0,
+            };
+        }
+        studentRecords[studentName][record.monitored_record]++;
+        if (record.sanction) {
+            studentRecords[studentName].SanctionFrequency++;
+        }
+    });
+
     return (
         <div>
             <h2 className={styles.RecordTitle}>Table Overview</h2>
             <div className={styles['filterContainer']}>
                 <label>Filters:
                     {loggedInUser && loggedInUser.userType !== 3 && (
-                            <>
-                                <select id="schoolyear-select" value={selectedSchoolYear} onChange={handleSchoolYearChange}>
-                                    <option value="">All School Years</option>
-                                    {schoolYears.map((sy) => (
-                                        <option key={sy.schoolYear_ID} value={sy.schoolYear}>
-                                            {sy.schoolYear}
-                                        </option>
-                                    ))}
-                                </select>
-                            </>
-                        )}
-                    
-                    <select id="class-select" value={selectedClass} onChange={handleClassChange} disabled={loggedInUser && loggedInUser.userType === 3}>
-                        <option value="">All Classes</option>
-                        {classes.map((classEntity) => (
-                            <option key={classEntity.class_id} value={classEntity.grade + classEntity.section}>
-                                {classEntity.grade} - {classEntity.section}
-                            </option>
-                        ))}
-                    </select>
+                        <>
+                            <select id="schoolyear-select" value={selectedSchoolYear} onChange={handleSchoolYearChange}>
+                                <option value="">All School Years</option>
+                                {schoolYears.map((sy) => (
+                                    <option key={sy.schoolYear_ID} value={sy.schoolYear}>
+                                        {sy.schoolYear}
+                                    </option>
+                                ))}
+                            </select>
+                        </>
+                    )}
+
+                    {loggedInUser.userType !== 3 && (
+                        <select id="class-select" value={selectedClass} onChange={handleClassChange} disabled={loggedInUser && loggedInUser.userType === 3}>
+                            <option value="">All Classes</option>
+                            {classes.map((classEntity) => (
+                                <option key={classEntity.class_id} value={classEntity.grade + classEntity.section}>
+                                    {classEntity.grade} - {classEntity.section}
+                                </option>
+                            ))}
+                        </select>
+                    )}
 
                     <select id="month-select" value={selectedMonth} onChange={handleMonthChange}>
                         <option value="">All Months</option>
@@ -164,14 +188,13 @@ const RecordTable = () => {
                             </select>
                         </>
                     )}
-
                 </label>
             </div>
             <div className={tableStyles['table-container']}>
-                <table className={tableStyles['global-table']}>
+                <table className={tableStyles['table-overview']}>
                     <thead>
                         <tr>
-                            <th>Class</th> {/* Updated header label */}
+                            <th>Class</th>
                             <th>Absent</th>
                             <th>Tardy</th>
                             <th>Cutting Classes</th>
@@ -186,7 +209,7 @@ const RecordTable = () => {
                         {Object.entries(groupedRecords).length > 0 ? (
                             Object.entries(groupedRecords).map(([gradeSection, counts]) => (
                                 <tr key={gradeSection}>
-                                    <td>{gradeSection}</td> {/* Show both grade and section */}
+                                    <td>{gradeSection}</td>
                                     <td>{counts.Absent}</td>
                                     <td>{counts.Tardy}</td>
                                     <td>{counts['Cutting Classes']}</td>
@@ -207,8 +230,51 @@ const RecordTable = () => {
                     </tbody>
                 </table>
             </div>
+
+            {/* New Table for Students */}
+            <h2 className={styles.RecordTitle}>Students Overview</h2>
+            <div className={tableStyles['table-container']}>
+                <table className={tableStyles['table-overview']}>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Absent</th>
+                            <th>Tardy</th>
+                            <th>Cutting Classes</th>
+                            <th>Improper Uniform</th>
+                            <th>Offense</th>
+                            <th>Misbehavior</th>
+                            <th>Clinic</th>
+                            <th>Sanction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {Object.entries(studentRecords).length > 0 ? (
+                            Object.entries(studentRecords).map(([studentName, counts]) => (
+                                <tr key={studentName}>
+                                    <td>{studentName}</td>
+                                    <td>{counts.Absent}</td>
+                                    <td>{counts.Tardy}</td>
+                                    <td>{counts['Cutting Classes']}</td>
+                                    <td>{counts['Improper Uniform']}</td>
+                                    <td>{counts.Offense}</td>
+                                    <td>{counts.Misbehavior}</td>
+                                    <td>{counts.Clinic}</td>
+                                    <td>{counts.SanctionFrequency}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="9" style={{ textAlign: 'center' }}>
+                                    No students found.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
-};   
+};
 
 export default RecordTable;

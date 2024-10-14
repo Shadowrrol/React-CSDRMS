@@ -115,7 +115,7 @@
 
 .global-buttonGroup {
     display: flex;
-    gap: 8px;
+    gap: 25px;
     justify-content: center;
     align-items: center;
     margin-top: 5px;
@@ -166,4 +166,24 @@
 
 .red-button:hover {
     background-color: #e53935;
+}
+
+.maroon-button {
+    background-color: #861b1c;
+    text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
+}
+
+.maroon-button:hover {
+    background-color: #6d3f3e;
+
+}
+
+.orange-button {
+    background-color: #FF9800;
+    text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
+}
+
+.orange-button:hover {
+    background-color: #FB8C00;
+
 }

@@ -21,7 +21,9 @@ const RecordAnalytics = () => {
     { value: 4, label: 'May' },
   ];
 
-  const [chartData, setChartData] = useState(null);
+  const [lineChartData, setLineChartData] = useState(null);
+  const [barChartData, setBarChartData] = useState(null);
+  const [pieChartData, setPieChartData] = useState(null);
   const [schoolYears, setSchoolYears] = useState([]);
   const [classes, setClasses] = useState([]);
   const [selectedSchoolYear, setSelectedSchoolYear] = useState('');
@@ -61,7 +63,6 @@ const RecordAnalytics = () => {
     try {
       let response;
       if (isAdviser) {
-        // Fetch records by adviser using the user's grade, section, and school year
         response = await axios.get('http://localhost:8080/student-record/getStudentRecordsByAdviser', {
           params: {
             grade: loggedInUser.grade,
@@ -71,7 +72,6 @@ const RecordAnalytics = () => {
         });
         setSelectedClass(classes.find(cls => cls.grade === loggedInUser.grade && cls.section === loggedInUser.section));
       } else {
-        // Fetch all student records
         response = await axios.get('http://localhost:8080/student-record/getAllStudentRecords');
       }
 
@@ -132,7 +132,8 @@ const RecordAnalytics = () => {
       }
     });
 
-    const chartData = {
+    // Create Line Chart Data
+    const lineData = {
       labels: monthFilter ? Array.from({ length: daysInMonth(monthFilter) }, (_, i) => i + 1) : months.map(m => m.label),
       datasets: [
         ...monitoredRecords.map((type, index) => ({
@@ -145,14 +146,49 @@ const RecordAnalytics = () => {
         {
           label: 'Sanctions',
           data: sanctionCount,
-          borderColor: 'rgba(255, 99, 71, 1)',
+          borderColor: 'rgba(0, 0, 0, 1)',
           fill: false,
           tension: 0.1
         }
       ]
     };
 
-    setChartData(chartData);
+    // Create Bar Chart Data
+    const barData = {
+      labels: monthFilter ? Array.from({ length: daysInMonth(monthFilter) }, (_, i) => i + 1) : months.map(m => m.label),
+      datasets: [
+        ...monitoredRecords.map((type, index) => ({
+          label: type,
+          data: frequency[type],
+          backgroundColor: getColor(index),
+        })),
+        {
+          label: 'Sanctions',
+          data: sanctionCount,
+          backgroundColor: 'rgba(0, 0, 0, 1)',
+        }
+      ]
+    };
+
+    // Create Pie Chart Data
+    const pieData = {
+      labels: [...monitoredRecords, 'Sanctions'], // Add 'Sanctions' to the labels
+      datasets: [{
+        data: [
+          ...monitoredRecords.map(type => frequency[type].reduce((a, b) => a + b, 0)), // Total counts of monitored records
+          sanctionCount.reduce((a, b) => a + b, 0) // Total count of sanctions
+        ],
+        backgroundColor: [
+          ...monitoredRecords.map((_, index) => getColor(index)), // Colors for monitored records
+          'rgba(0, 0, 0, 1)', // Color for sanctions
+        ],
+      }]
+    };
+
+    // Set chart data states
+    setLineChartData(lineData);
+    setBarChartData(barData);
+    setPieChartData(pieData);
   };
 
   const getColor = (index) => {
@@ -199,15 +235,16 @@ const RecordAnalytics = () => {
     setChartType(event.target.value);
   };
 
-  if (!chartData) {
+  if (!lineChartData || !barChartData || !pieChartData) {
     return <p>Loading data...</p>;
   }
 
   // Pie Chart Options
   const pieChartOptions = {
     responsive: true,
+    maintainAspectRatio: false, // Allows custom sizing of the container
     plugins: {
-      legend: { position: 'top' },
+      legend: { position: 'right' },
       title: {
         display: true,
         text: 'Distribution of Monitored Records by Category (Pie Chart)',
@@ -223,7 +260,7 @@ const RecordAnalytics = () => {
         display: true,
         text: selectedMonth
           ? `Monitored Records for ${months.find((m) => m.value === selectedMonth)?.label || ''} (Bar Chart)`
-          : 'Monitored Records by Category (Bar Chart)',
+          : 'Monitored Records by Month (Bar Chart)',
       },
     },
     scales: {
@@ -240,17 +277,63 @@ const RecordAnalytics = () => {
     },
   };
 
+  // Line Chart Options
+  const lineChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      title: {
+        display: true,
+        text: selectedMonth
+          ? `Monitored Records for ${months.find((m) => m.value === selectedMonth)?.label || ''} (Line Chart)`
+          : 'Monitored Records by Month (Line Chart)',
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: 'Frequency' },
+        ticks: {
+          callback: function(value) {
+            return Number.isInteger(value) ? value : ''; // Show integer values only
+          },
+        },
+      },
+      x: { title: { display: true, text: selectedMonth ? 'Days of the Month' : 'Months' } },
+    },
+  };
+
   // Conditionally render the chart based on selected chart type
   const renderChart = () => {
-    switch (chartType) {
-      case 'bar':
-        return <Bar data={chartData} options={barChartOptions} className={styles.chart} />;
-      case 'pie':
-        return <Pie data={chartData} options={pieChartOptions} className={styles.chart} />;
-      default:
-        return <Line data={chartData} options={{ responsive: true }} className={styles.chart} />;
-    }
+    return (
+      <div className={styles.chartContainer}> {/* This will apply the centering styles */}
+        {(() => {
+          switch (chartType) {
+            case 'bar':
+              return (
+                <div className={styles['barchart-Container']}>
+                  <Bar data={barChartData} options={barChartOptions} />
+                </div>
+              );
+            case 'pie':
+              return (
+                <div className={styles['pieChart-Container']}>
+                  <Pie data={pieChartData} options={pieChartOptions} />
+                </div>
+              );
+            case 'line':
+            default:
+              return (
+                <div className={styles['linechart-Container']}>
+                  <Line data={lineChartData} options={lineChartOptions} />
+                </div>
+              );
+          }
+        })()}
+      </div>
+    );
   };
+
 
   return (
     <div>

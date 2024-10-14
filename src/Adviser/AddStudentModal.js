@@ -80,7 +80,6 @@ const AddStudentModal = ({ open, onClose }) => {
     return ReactDOM.createPortal(
         <div className={styles['modal-overlay']} open={open} onClose={onClose}>
             <div className={styles['modal-content']}>
-            <button className={styles['modal-close-button']} onClick={onClose}>X</button>
             <h2>Add Student</h2>
                 <form onSubmit={handleSubmit} className={formStyles['form-container']}>
                         <div className={formStyles['form-group']}>
@@ -102,7 +101,7 @@ const AddStudentModal = ({ open, onClose }) => {
                                 name="name"
                                 value={studentData.name}
                                 onChange={handleChange}
-                                placeholder="Lastname, Firstname Middlename"
+                                placeholder="Lastname, Firstname Middle..."
                             />
                         </div>
                         <div className={formStyles['form-group']}>
@@ -169,7 +168,9 @@ const AddStudentModal = ({ open, onClose }) => {
                         </div>
                 </form>
             <div className={formStyles['global-buttonGroup']}>
-                <button className={formStyles['global-button']} type="submit" onClick={handleSubmit} >Add Student</button>
+                <button className={formStyles['green-button']} type="submit" onClick={handleSubmit} >Add</button>
+                <button className={`${formStyles['green-button']} ${formStyles['red-button']}`}  onClick={onClose}>Cancel</button>
+
             </div>
             </div>
         </div>,

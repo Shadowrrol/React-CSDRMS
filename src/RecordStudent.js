@@ -201,28 +201,8 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
             placeholder="Enter student name or ID"
           />
 
-          {/* Only show the student list if the searchQuery is not empty and filtered students exist */}
-          {searchQuery && (
-            <div>
-              {filteredStudents.length > 0 ? (
-                <div className={formStyles['global-dropdown']}>
-                  {filteredStudents.map((student) => (
-                    <div
-                      key={student.sid} 
-                      onClick={() => handleStudentSelect(student)} // Dropdown disappears after selection
-                      className={formStyles['global-dropdown-item']}>
-                      {student.name} ({student.sid})
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className={formStyles['global-dropdown']}>No students found.</p>
-              )}
-            </div>
-          )}
-
-          {/* Import Modal */}
-          {showImportModal && ( // Conditionally render ImportModal based on showImportModal state
+                    {/* Import Modal */}
+                    {showImportModal && ( // Conditionally render ImportModal based on showImportModal state
             <ImportModal
               onClose={() => setShowImportModal(false)}
               schoolYears={schoolYears}
@@ -247,27 +227,41 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
           
           {/* Button to open Import Modal */}
           {loggedInUser?.userType !== 3 && (
-            <button onClick={() => setShowImportModal(true)} className={formStyles['global-button']} style={{ marginLeft: '20px' }}>
+            <button onClick={() => setShowImportModal(true)} 
+              className={`${formStyles['green-button']} ${formStyles['maroon-button']}`} 
+              style={{ marginLeft: '20px' }}>
               Import Students
             </button>
           )}      
 
            {loggedInUser?.userType !== 3 && (
-            <button onClick={() => setShowAddStudentModal(true)} className={formStyles['global-button']} style={{ marginLeft: '20px' }}>
+            <button onClick={() => setShowAddStudentModal(true)} 
+            className={formStyles['green-button']} 
+              style={{ marginLeft: '10px' }}>
               Add Student
             </button>
-          )}             
+          )}           
+
+          {/* Only show the student list if the searchQuery is not empty and filtered students exist */}
+          {searchQuery && (
+            <div>
+              {filteredStudents.length > 0 ? (
+                <div className={formStyles['global-dropdown']}>
+                  {filteredStudents.map((student) => (
+                    <div
+                      key={student.sid} 
+                      onClick={() => handleStudentSelect(student)} // Dropdown disappears after selection
+                      className={formStyles['global-dropdown-item']}>
+                      {student.name} ({student.sid})
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className={formStyles['global-dropdown']}>No students found.</p>
+              )}
+            </div>
+          )}  
           
-          {/* Add Record Button */}
-          {selectedStudent && loggedInUser?.userType === 1 && (
-            <button
-              className={formStyles['global-button']}
-              style={{ marginLeft: '20px' }}
-              onClick={() => setShowAddRecordModal(true)}
-            >
-              Add Record
-            </button>
-          )}    
         </div>    
       </div>   
 
@@ -296,48 +290,59 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
               />
             )}    
           </div>         
-
-          <h2>Detailed Records</h2>
-            <div className={tableStyles['table-container']}>
-              <table className={tableStyles['global-table']}>
-                <thead>
-                  <tr>
-                    <th>Record Date</th>
-                    <th>Incident Date</th>
-                    <th>Monitored Record</th>
-                    <th>Sanction</th>
-                    <th>Action</th>
+          
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2>Detailed Records</h2>
+            {selectedStudent && loggedInUser?.userType === 1 && (
+              <button
+              className={`${formStyles['green-button']} ${formStyles['orange-button']}`} 
+                onClick={() => setShowAddRecordModal(true)}
+              >
+                Add Record
+              </button>
+            )}
+          </div>
+                      
+          <div className={tableStyles['table-container']}>
+            <table className={tableStyles['global-table']}>
+              <thead>
+                <tr>
+                  <th>Record Date</th>
+                  <th>Incident Date</th>
+                  <th>Monitored Record</th>
+                  <th>Sanction</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+              {filteredRecords.map((record) => (
+                  <tr key={record.recordId}>
+                    <td>{record.record_date}</td>
+                    <td>{record.incident_date}</td>
+                    <td>{record.monitored_record}</td>
+                    <td>{record.sanction}</td>
+                    <td>
+                      <button
+                        onClick={() => {
+                          setRecordToEdit(record); // Set the record to edit
+                          setShowEditRecordModal(true); // Show the edit modal
+                        }}
+                        className={formStyles['global-button']}
+                      >
+                        Edit
+                      </button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                {filteredRecords.map((record) => (
-                    <tr key={record.recordId}>
-                      <td>{record.record_date}</td>
-                      <td>{record.incident_date}</td>
-                      <td>{record.monitored_record}</td>
-                      <td>{record.sanction}</td>
-                      <td>
-                        <button
-                          onClick={() => {
-                            setRecordToEdit(record); // Set the record to edit
-                            setShowEditRecordModal(true); // Show the edit modal
-                          }}
-                          className={formStyles['global-button']}
-                        >
-                          Edit
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>      
-            {showEditRecordModal && (
-              <RecordStudentEditModal
-                record={recordToEdit} // Pass the record to edit
-                onClose={() => setShowEditRecordModal(false)} // Close handler
-              />
-            )}           
+                ))}
+              </tbody>
+            </table>
+          </div>      
+          {showEditRecordModal && (
+            <RecordStudentEditModal
+              record={recordToEdit} // Pass the record to edit
+              onClose={() => setShowEditRecordModal(false)} // Close handler
+            />
+          )}           
         </>
       )}
     </>
