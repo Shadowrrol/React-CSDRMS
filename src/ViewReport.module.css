@@ -2,7 +2,20 @@
     border-collapse: collapse; /* Ensure borders are merged */
     margin-top: 20px; /* Add space above the table */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add slight shadow for depth */
-    overflow-y: auto;
+    border: 2px solid #8A252C;
+    width: 100%; /* Make tables full width of the container */
+}
+
+.report-details thead th, .suspension-details-table thead th {
+    position: sticky; /* Sticky header */
+    top: 0; /* Stick to the top */
+    z-index: 1; /* Ensure header stays on top of scrolling body */
+    background-color: #8A252C; /* Keep background color to prevent overlapping with content */
+    color: white; /* White text for headers */
+    text-shadow: 3px 3px 5px #000; /* Slight shadow for text */
+    font-weight: 600;
+    border-left: none;
+    border: 0.5px solid #8A252C;
 }
 
 .report-details th, .suspension-details-table th,
@@ -13,11 +26,11 @@
 }
 
 .report-details td:nth-child(1) {
-    width: 10%; /* Set the width to 30% of the table width */
+    width: 30%; /* Set the width for first column */
 }
 
 .report-details td:nth-child(2) {
-    width: 30%; /* Set the width to 30% of the table width */
+    width: 70%; /* Set the width for second column */
 }
 
 .report-details th, .suspension-details-table th {
@@ -37,13 +50,15 @@
     display: flex; /* Use flexbox to align items side by side */
     justify-content: space-between; /* Add space between the tables */
     margin-top: 5px; /* Space above the tables */
-    gap: 10%;
+    gap: 20px; /* Increased gap between tables */
 }
 
 .tableWrapper {
     flex: 1; /* Allow each table to take equal space */
-    margin-right: 20px; /* Space between the tables */
+    margin-bottom: 5%; /* Space below the table */
 }
-  
 
-  
+.tableWrapper-second {
+    flex: 1; /* Allow each table to take equal space */
+    margin-bottom: 5%; /* Space below the table */
+}

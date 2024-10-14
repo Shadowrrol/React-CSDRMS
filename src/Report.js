@@ -5,6 +5,7 @@ import navStyles from './Navigation.module.css';
 import tableStyles from './GlobalTable.module.css';
 import Navigation from './Navigation';
 import ReportModal from './ReportModal';
+import ViewReportModal from './ViewReport'; // Import the modal
 import EditReportModal from './EditReportModal';
 import AddSuspensionModal from './SSO/AddSuspensionModal';
 import styles from './Report.module.css';
@@ -18,6 +19,7 @@ const Reports = () => {
   const [suspensions, setSuspensions] = useState([]);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showSuspensionModal, setShowSuspensionModal] = useState(false);
+  const [showViewReportModal, setShowViewReportModal] = useState(false); // State for showing modal
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedReportId, setSelectedReportId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -156,7 +158,13 @@ const Reports = () => {
   };
 
   const handleViewReport = (reportId) => {
-    navigate(`/view-report/${reportId}`);
+    setSelectedReportId(reportId);
+    setShowViewReportModal(true); // Show the modal
+  };
+
+  const closeViewReportModal = () => {
+    setShowViewReportModal(false); // Close modal
+    setSelectedReportId(null);
   };
 
   return (
@@ -272,6 +280,14 @@ const Reports = () => {
             refreshSuspensions={fetchSuspensions} 
           />
         )}
+
+        {/* View Report Modal */}
+        {showViewReportModal && (
+          <ViewReportModal
+            reportId={selectedReportId}
+            onClose={closeViewReportModal}
+          />
+        )}        
 
         {showEditModal && (
           <EditReportModal

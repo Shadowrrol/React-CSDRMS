@@ -11,6 +11,17 @@
     align-items: center;
     z-index: 1000;
 }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    font-size: 24px;
+    position: absolute;
+    top: 10px;
+    right: 10px; /* Keep the button inside the modal */
+    cursor: pointer;
+    color: #333;
+  }
 
 .report-modal-content {
     background-color: #fff;
@@ -31,6 +42,17 @@
     position: relative;
     border: 2px solid #000;
 }
+
+.report-view-modal-content {
+    background-color: #fff;
+    padding: 20px;
+    width: 75%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    border: 2px solid #000;
+}
+
 
 /* Input and Dropdown Styles */
 .report-container {
@@ -127,7 +149,7 @@
 
 .report-input{
     margin-right: 10px; /* Add right margin */
-    width: 65%;
+    width: 100%;
     margin-left: 26px;
     padding: 10px;
     font-size: 16px;

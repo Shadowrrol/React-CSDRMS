@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './RecordStudentEditModal.module.css'; // Import your CSS module
+import formStyles from './GlobalForm.module.css';
 
 const RecordStudentEditModal = ({ record, onClose }) => {
   const monitoredRecords = [
@@ -72,15 +73,16 @@ const RecordStudentEditModal = ({ record, onClose }) => {
           </label>
           <label>
             Sanction:
-            <input 
+            <textarea 
               type="text" 
               value={sanction} 
               onChange={(e) => setSanction(e.target.value)} 
-              className={styles.input}
             />
           </label>
-          <button type="submit" className={styles.submitButton}>Edit</button>
-          <button type="button" onClick={onClose} className={styles.cancelButton}>Cancel</button>
+          <div className={formStyles['global-buttonGroup']}>
+            <button type="submit" className={formStyles['green-button']}>Edit</button>
+            <button type="button" onClick={onClose} className={`${formStyles['green-button']} ${formStyles['red-button']}`}>Cancel</button>
+          </div>
         </form>
       </div>
     </div>

@@ -8,6 +8,7 @@ import formStyles from './GlobalForm.module.css'; // Importing GlobalForm styles
 import tableStyles from './GlobalTable.module.css'; // Importing GlobalForm styles
 import RecordStudentEditModal from './RecordStudentEditModal';
 import AddStudentModal from './Adviser/AddStudentModal';
+import EditNoteIcon from '@mui/icons-material/Edit';
 
 const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudents }) => {
   const [filteredStudents, setFilteredStudents] = useState([]); // For filtered search results
@@ -310,27 +311,27 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
                   <th>Record Date</th>
                   <th>Incident Date</th>
                   <th>Monitored Record</th>
-                  <th>Sanction</th>
+                  {/* <th>Sanction</th> */}
                   <th>Action</th>
                 </tr>
-              </thead>
+              </thead>  
               <tbody>
               {filteredRecords.map((record) => (
                   <tr key={record.recordId}>
                     <td>{record.record_date}</td>
                     <td>{record.incident_date}</td>
                     <td>{record.monitored_record}</td>
-                    <td>{record.sanction}</td>
+                    {/* <td>{record.sanction}</td> */}
                     <td>
-                      <button
+                      <EditNoteIcon
                         onClick={() => {
                           setRecordToEdit(record); // Set the record to edit
                           setShowEditRecordModal(true); // Show the edit modal
                         }}
-                        className={formStyles['global-button']}
+                        className={styles['record-edit-icon']}
                       >
                         Edit
-                      </button>
+                      </EditNoteIcon>
                     </td>
                   </tr>
                 ))}

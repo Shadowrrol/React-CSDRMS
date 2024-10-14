@@ -90,41 +90,6 @@
   margin-bottom: 10px; /* Consistent spacing */
   width: 100%;
 }
-.edit-buttonGroup {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-  margin-top: 5px;
-}
-
-.edit-report-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    cursor: pointer;
-    background-color: #4caf50;
-    color: white;
-    font-size: 14px;
-    transition: background-color 0.3s, transform 0.3s;
-    text-shadow: 1px 1px 3px #000; /* Slight shadow for all text */
-}
-
-.edit-report-button:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
-}
-
-.edit-report-button-cancel {
-    background-color: #e53935;
-    text-shadow: 1px 1px 3px #000; /* Slight shadow for all text */
-}
-
-.edit-report-button-cancel:hover {
-    background-color: #c82333;
-}
 
 .edit-report-input{
     margin-right: 10px; /* Add right margin */
