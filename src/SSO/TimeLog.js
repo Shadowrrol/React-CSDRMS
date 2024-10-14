@@ -79,7 +79,18 @@ const TimeLog = () => {
             <Navigation loggedInUser={loggedInUser} />          
 
             <div className={navStyles.content}>
-                <div className={navStyles['h1-title']}>Time Logs</div>
+                <div className={navStyles.TitleContainer} style={{ justifyContent: 'space-between' }}>
+                    <h2 className={navStyles['h1-title']}>Time Log</h2>
+                    <div className={styles['logfilter-search-bar']}>
+                        <input
+                            type="search"
+                            className={styles['logsearchRec']}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search by Name, Grade, Section, or Email..."
+                        />
+                    </div>  
+                </div>
                 <div className={styles['time-center-container']}>
                     <div className={styles['time-table-container']}>
                         <table className={styles['time-table']}>
@@ -124,16 +135,7 @@ const TimeLog = () => {
                             View
                         </button>
                     </div>
-                        
-                    <div className={styles['logfilter-search-bar']}>
-                        <input
-                            type="search"
-                            className={styles['logsearchRec']}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search by Name, Grade, Section, or Email..."
-                        />
-                    </div>  
+                    
                 </div>               
             </div>
 

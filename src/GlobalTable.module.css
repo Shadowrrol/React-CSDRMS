@@ -24,8 +24,7 @@
     color: white; /* White text for headers */
     text-shadow: 3px 3px 5px #000;  /* Slight shadow for text */
     font-weight: 600;
-    border-left: none;
-    border: 0.5px solid #8A252C;
+    border: none;
 }
 
 .global-table th, .global-table td {

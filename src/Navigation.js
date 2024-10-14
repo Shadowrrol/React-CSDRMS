@@ -175,11 +175,12 @@ const Navigation = ({ loggedInUser }) => {
 
             <div className={navStyles['header-wrapper']}>
               {/* Notification Icon */}
-              <IconButton onClick={handleNotificationClick}>
-                <NotificationsActiveIcon className={navStyles['header-icon']}/>
-                {notifications > 0 && <span className={navStyles.badge}>{notifications}</span>} {/* Show badge if there are unviewed notifications */}
-              </IconButton>
-
+              {loggedInUser?.userType !== 4 && (
+                <IconButton onClick={handleNotificationClick}>
+                  <NotificationsActiveIcon className={navStyles['header-icon']} />
+                  {notifications > 0 && <span className={navStyles.badge}>{notifications}</span>} {/* Show badge if there are unviewed notifications */}
+                </IconButton>
+              )}
               <MenuPopupState />
             </div>
         </header>
