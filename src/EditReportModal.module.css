@@ -82,6 +82,14 @@
   margin-right: 10px;
 }
 
+.edit-report-modal select {
+  padding: 8px; /* Added to match input padding */
+  font-size: 16px; /* Match input font-size */
+  border-radius: 4px; /* Same as input */
+  border: 1px solid #ccc; /* Match input border */
+  margin-bottom: 10px; /* Consistent spacing */
+  width: 100%;
+}
 .edit-buttonGroup {
   display: flex;
   gap: 8px;

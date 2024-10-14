@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './EditReportModal.module.css';
 
-const EditReportModal = ({ reportId, onClose, refreshReports}) => {
+const EditReportModal = ({ reportId, onClose, refreshReports }) => {
   const authToken = localStorage.getItem('authToken');
   const loggedInUser = authToken ? JSON.parse(authToken) : null;
 
   const [reportData, setReportData] = useState({
+    record: {
+      id: '', // Student ID will now be stored here
+      monitored_record: '',
+    },
     date: '',
     time: '',
     complaint: '',
@@ -15,8 +19,18 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
     received: '',
     viewedByAdviser: false,
     viewedBySso: false,
-    studentId: '', // Store selected student ID
   });
+
+  const monitoredRecords = [
+    'Absent',
+    'Tardy',
+    'Cutting Classes',
+    'Improper Uniform',
+    'Offense',
+    'Misbehavior',
+    'Clinic',
+    'Sanction',
+  ];
 
   const [students, setStudents] = useState([]); // Store all students
   const [filteredStudents, setFilteredStudents] = useState([]); // For search results
@@ -29,7 +43,7 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
       axios.get(`http://localhost:8080/report/getReport/${reportId}`)
         .then(response => {
           setReportData(response.data);
-          setSearchQuery(response.data.student?.name || ''); // Set the current student name in the search field
+          setSearchQuery(response.data.record?.id ? `${response.data.record.id} - ${response.data.record.student?.name}` : ''); // Set the current student name in the search field
         })
         .catch(error => console.error('Error fetching report:', error));
     }
@@ -43,6 +57,7 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
         if (loggedInUser?.userType === 3) {
           response = await axios.get('http://localhost:8080/student/getAllStudentsByAdviser', {
             params: {
+              grade: loggedInUser.grade,
               section: loggedInUser.section,
               schoolYear: loggedInUser.schoolYear,
             },
@@ -81,17 +96,22 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
     setReportData({ ...reportData, [e.target.name]: e.target.value });
   };
 
+  // Handle monitored record change
+  const handleMonitoredRecordChange = (e) => {
+    setReportData({ ...reportData, record: { ...reportData.record, monitored_record: e.target.value } });
+  };
+
   // Handle submitting the updated report
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!reportData.date || !reportData.time || !reportData.complaint || !reportData.complainant || !reportData.received || !reportData.studentId) {
+    if (!reportData.date || !reportData.time || !reportData.complaint || !reportData.complainant || !reportData.received || !reportData.record.id || !reportData.record.monitored_record) {
       alert('All fields are required.');
       return;
     }
 
     try {
-      await axios.put(`http://localhost:8080/report/updateReport/${reportId}`, reportData);
+      await axios.put(`http://localhost:8080/report/updateReport/${reportId}/${reportData.record.id}/${reportData.record.monitored_record}`, reportData);
       refreshReports(); // Refresh the report list after submission
       onClose(); // Close the modal after submission
     } catch (error) {
@@ -102,14 +122,14 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
 
   // Handle selecting a student from the dropdown
   const handleSelectStudent = (student) => {
-    setReportData({ ...reportData, studentId: student.id });
+    setReportData({ ...reportData, record: { ...reportData.record, id: student.id } }); // Update record.id with the selected student's ID
     setSearchQuery(`${student.sid} - ${student.name}`); // Update the search field with selected student's details
     setShowDropdown(false); // Hide dropdown after selection
   };
 
   // Handle clearing the student selection
   const handleClearSelection = () => {
-    setReportData({ ...reportData, studentId: '' });
+    setReportData({ ...reportData, record: { ...reportData.record, id: '' } }); // Clear record.id
     setSearchQuery(''); // Clear the search query
     setShowDropdown(false); // Hide the dropdown
   };
@@ -129,12 +149,12 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
                 placeholder="Search student by name or ID"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                disabled={!!reportData.studentId} // Disable input if a student is selected
+                disabled={!!reportData.record.id} // Disable input if a student is selected
                 required
               />
               
               {/* Show "X" button inside the input when a student is selected */}
-              {reportData.studentId && (
+              {reportData.record.id && (
                 <button className={styles.clearButton} onClick={handleClearSelection}>
                   ✕
                 </button>
@@ -142,9 +162,8 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
             </div>
           </div>
 
-
           {/* Only show dropdown and messages when no student is selected */}
-          {!reportData.studentId && (
+          {!reportData.record.id && (
             <div>
               {/* Show filtered students only when search query is not empty */}
               {searchQuery && filteredStudents.length > 0 ? (
@@ -159,12 +178,27 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
                 </ul>
               ) : searchQuery && filteredStudents.length === 0 ? (
                 <p className={styles.dropdown}>No students found.</p>
-              ) : null }
+              ) : null}
             </div>
           )}
 
+        <label>Monitored Record:</label>
+          <select
+            name="monitored_record"
+            value={reportData.record.monitored_record}
+            onChange={handleMonitoredRecordChange}
+            required
+          >
+            <option value="">Select a monitored record</option>
+            {monitoredRecords.map((record, index) => (
+              <option key={index} value={record}>{record}</option>
+            ))}
+          </select>
+
           {/* Date Field */}
-          <label>Date:</label>
+
+          
+          {/* <label>Date:</label>
           <input
             type="date"
             name="date"
@@ -173,7 +207,7 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
             required
           />
 
-          {/* Time Field */}
+         
           <label>Time:</label>
           <input
             type="time"
@@ -181,7 +215,7 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
             value={reportData.time}
             onChange={handleInputChange}
             required
-          />
+          /> */}
 
           {/* Complaint Field */}
           <label>Complaint:</label>
@@ -193,14 +227,16 @@ const EditReportModal = ({ reportId, onClose, refreshReports}) => {
             required
           />
 
+        
+          
+
           <div className={styles['edit-buttonGroup']}>
             <button className={styles['edit-report-button']} type="submit">Update Report</button>
-            <button  onClick={onClose} className={`${styles['edit-report-button']} ${styles['edit-report-button-cancel']}`}>Cancel</button>
+            <button onClick={onClose} className={`${styles['edit-report-button']} ${styles['edit-report-button-cancel']}`}>Cancel</button>
           </div>
 
         </form>
 
-        
       </div>
     </div>
   );

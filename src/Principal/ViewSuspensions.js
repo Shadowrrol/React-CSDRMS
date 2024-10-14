@@ -16,22 +16,25 @@ const ViewSuspensions = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
 
   useEffect(() => {
-    fetchSuspensions();
+    // Fetch suspensions and mark them as viewed when the component mounts
+    const fetchAndMarkSuspensions = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        await axios.post('http://localhost:8080/suspension/markAsViewedForPrincipal'); // Mark as viewed
+        const response = await axios.get('http://localhost:8080/suspension/getAllSuspensions');
+        setSuspensions(response.data);
+      } catch (error) {
+        console.error('Error fetching suspensions:', error);
+        setError('Failed to fetch suspensions. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAndMarkSuspensions();
   }, []);
 
-  const fetchSuspensions = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get('http://localhost:8080/suspension/getAllSuspensions');
-      setSuspensions(response.data);
-    } catch (error) {
-      console.error('Error fetching suspensions:', error);
-      setError('Failed to fetch suspensions. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Handle row click to select suspension
   const handleRowClick = (suspension) => {
@@ -77,7 +80,7 @@ const ViewSuspensions = () => {
                         className={selectedSuspension?.suspensionId === suspension.suspensionId ? tableStyles['selected-row'] : ''}
                       >
                         <td>{suspension.reportEntity.reportId}</td>  
-                        <td>{suspension.reportEntity.student.name}</td>
+                        <td>{suspension.reportEntity.record.student.name}</td>
                         <td>{suspension.reportEntity.adviser.firstname} {suspension.reportEntity.adviser.lastname}</td>                      
                         <td>{suspension.dateSubmitted}</td>
                         <td>{suspension.days} Days</td>

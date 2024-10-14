@@ -72,7 +72,7 @@ const ViewReport = () => {
               <tbody>
                 <tr>
                   <td>Student:</td>
-                  <td>{report.student.name}</td>
+                  <td>{report.record.student.name}</td>
                 </tr>
                 <tr>
                   <td>Adviser:</td>

@@ -82,7 +82,7 @@ const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refres
                                 className={`${styles['notification-modal-list-item']} ${styles['clickable']}`}
                                 onClick={() => handleViewReport(report.reportId)}
                             >
-                                <strong>{report.student.name}</strong> from <strong>{report.student.grade} - {report.student.section}</strong> has a report concerning a recent incident. <br />
+                                <strong>{report.record.student.name}</strong> from <strong>{report.record.student.grade} - {report.record.student.section}</strong> has a report concerning a recent incident. <br />
                                 <small>Click to view details.</small>
                             </li>
                         ))}
@@ -102,7 +102,7 @@ const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refres
                                     className={`${styles['notification-modal-list-item']} ${styles['clickable']}`}
                                     onClick={() => handleViewReport(suspension.reportEntity.reportId)}
                                 >
-                                    <strong>{suspension.reportEntity.student.name}</strong> has been suspended. 
+                                    <strong>{suspension.reportEntity.record.student.name}</strong> has been suspended. 
                                     <br />
                                     <small>Click to view report details.</small>
                                 </li>

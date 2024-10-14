@@ -8,7 +8,6 @@ const ReportModal = ({ onClose, refreshReports }) => {
 
   const [newReport, setNewReport] = useState({
     complaint: '',
-    studentId: '',
   });
 
   const [students, setStudents] = useState([]); // State for holding the list of students
@@ -69,10 +68,10 @@ const handleCreateReport = async () => {
     };
 
 
-    await axios.post('http://localhost:8080/report/insertReport', reportData);
+    await axios.post(`http://localhost:8080/report/insertReport/${newReport.studentId}`, reportData);
     refreshReports(); // Refresh the reports list after submission
     onClose(); // Close the modal after submission
-  } catch (error) {
+  } catch (error) { 
     console.error('Error creating report:', error);
   }
 };

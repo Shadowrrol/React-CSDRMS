@@ -126,14 +126,13 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
         } catch (error) {
             console.error('Error:', error);
             if (error.response && error.response.data) {
+                
                 const errorMessage = error.response.data.message;
-                if (errorMessage.includes("query did not return a unique result: 2")) {
+                if (errorMessage === "Adviser with the grade, section, and school year already exists") {
                     alert(`${role} with the same school year, grade, and section already exists.`);
-                } else if (errorMessage.includes("Username already exists")) {
-                    alert("Username already exists. Please try again.");
-                } else {
-                    alert("This section is already assigned to another adviser.");
-                }
+                } else if (errorMessage === "Username already exist") {
+                    alert("Username already exists. Please use another one");
+                } 
             } else {
                 setError('An unexpected error occurred.');
             }

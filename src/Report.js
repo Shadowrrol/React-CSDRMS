@@ -175,7 +175,7 @@ const Reports = () => {
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Time</th>
+                  <th>Monitored Record</th>
                   <th>Complainant</th>
                   <th>Student</th>
                   <th>Adviser</th>
@@ -191,7 +191,7 @@ const Reports = () => {
                     className={selectedReportId === report.reportId ? tableStyles['selected-row'] : ''}
                   >
                     <td>{report.date}</td>
-                    <td>{report.time}</td>
+                    <td>{report.record.monitored_record}</td>
                     <td>
                       {report.ssoComplainant 
                         ? `${report.ssoComplainant.firstname} ${report.ssoComplainant.lastname}`
@@ -205,7 +205,7 @@ const Reports = () => {
                               ? `${report.guidanceComplainant.firstname} ${report.guidanceComplainant.lastname}` 
                               : 'N/A'} {/* Display 'N/A' if no complainant is found */}
                     </td>
-                    <td>{report.student.name}</td>
+                    <td>{report.record.student.name}</td>
                     <td>{report.adviser.firstname} {report.adviser.lastname}</td>
                     <td>{report.encoder}</td>
                     <td>{report.received ? report.received : 'Pending'}</td>

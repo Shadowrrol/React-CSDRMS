@@ -88,9 +88,9 @@ const Navigation = ({ loggedInUser }) => {
           // Filter unviewed reports and suspensions
           const unviewedReports = reportsResponse.data.filter(
             (report) =>
-              report.student.grade === loggedInUser.grade &&
-              report.student.section === loggedInUser.section &&
-              report.student.schoolYear === loggedInUser.schoolYear &&
+              report.record.student.grade === loggedInUser.grade &&
+              report.record.student.section === loggedInUser.section &&
+              report.record.student.schoolYear === loggedInUser.schoolYear &&
               !report.viewedByAdviser
           );
           const unviewedSuspensions = suspensionsResponse.data.filter((suspension) => !suspension.viewedByAdviser);
