@@ -55,7 +55,7 @@
 .edit-report-modal input[type="time"] {
   width: 100%;
   padding: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   border-radius: 4px;
   border: 1px solid #ccc;
 }
@@ -66,7 +66,7 @@
   font-size: 16px;
   border-radius: 5px; /* Match the border-radius with the input */
   border: 1px solid #ccc; /* Match the border style with the input */
-  margin-bottom: 10px; /* Add space below */
+  margin-bottom: 15px; /* Add space below */
   resize: vertical; /* Allow vertical resizing */
   font-family: Arial, sans-serif;
   transition: border-color 0.3s ease;
@@ -87,7 +87,7 @@
   font-size: 16px; /* Match input font-size */
   border-radius: 4px; /* Same as input */
   border: 1px solid #ccc; /* Match input border */
-  margin-bottom: 10px; /* Consistent spacing */
+  margin-bottom: 15px; /* Consistent spacing */
   width: 100%;
 }
 
@@ -103,7 +103,6 @@
 
 .edit-report-group {
     display: flex; /* Use flexbox */
-    margin-top: 20px;
     margin-bottom: 10px;
 }
 

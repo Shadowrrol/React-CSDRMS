@@ -56,29 +56,25 @@ const RecordStudentEditModal = ({ record, onClose }) => {
       <div className={styles.modal}>
         <h2>Edit Student Record</h2>
         <form onSubmit={handleSubmit}>
-          <label>
-            Monitored Record:
-            <select 
-              value={selectedRecord} 
-              onChange={(e) => setSelectedRecord(e.target.value)}
-              className={styles.select}
-            >
-              <option value="">Select a monitored record</option>
-              {monitoredRecords.map((record, index) => (
-                <option key={index} value={record}>
-                  {record}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Sanction:
-            <textarea 
-              type="text" 
-              value={sanction} 
-              onChange={(e) => setSanction(e.target.value)} 
-            />
-          </label>
+          <label>Monitored Record:</label>
+          <select 
+            value={selectedRecord} 
+            onChange={(e) => setSelectedRecord(e.target.value)}
+            className={styles.select}
+          >
+            <option value="">Select a monitored record</option>
+            {monitoredRecords.map((record, index) => (
+              <option key={index} value={record}>
+                {record}
+              </option>
+            ))}
+          </select>
+          <label>Sanction:</label>
+          <textarea 
+            type="text" 
+            value={sanction} 
+            onChange={(e) => setSanction(e.target.value)} 
+          />
           <div className={formStyles['global-buttonGroup']}>
             <button type="submit" className={formStyles['green-button']}>Edit</button>
             <button type="button" onClick={onClose} className={`${formStyles['green-button']} ${formStyles['red-button']}`}>Cancel</button>

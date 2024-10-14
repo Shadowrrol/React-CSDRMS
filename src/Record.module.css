@@ -66,23 +66,13 @@
   max-width: 100%;
 }
 
-.record-view-icon{
+.record-action-icon{
   color: #8A252C;
   transition: background-color 0.3s, transform 0.3s;
   font-size: 2.0rem;
 }
 
-.record-view-icon:hover {
-  transform: scale(1.25);
-}
-
-.record-edit-icon{
-  color: #8A252C;
-  transition: background-color 0.3s, transform 0.3s;
-  font-size: 2.0rem;
-}
-
-.record-edit-icon:hover {
+.record-action-icon:hover {
   transform: scale(1.25);
 }
 

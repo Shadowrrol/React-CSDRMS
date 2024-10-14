@@ -7,8 +7,10 @@ import styles from './Record.module.css'; // Importing CSS module
 import formStyles from './GlobalForm.module.css'; // Importing GlobalForm styles
 import tableStyles from './GlobalTable.module.css'; // Importing GlobalForm styles
 import RecordStudentEditModal from './RecordStudentEditModal';
+import RecordStudentViewModal from './RecordStudentViewModal'; // Import the view modal
 import AddStudentModal from './Adviser/AddStudentModal';
 import EditNoteIcon from '@mui/icons-material/Edit';
+import ViewNoteIcon from '@mui/icons-material/Visibility';
 
 const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudents }) => {
   const [filteredStudents, setFilteredStudents] = useState([]); // For filtered search results
@@ -24,8 +26,9 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
   const [showImportModal, setShowImportModal] = useState(false); // Control ImportModal visibility
   const [showAddStudentModal, setShowAddStudentModal] = useState(false); 
   const [showEditRecordModal, setShowEditRecordModal] = useState(false); // Modal visibility state
+  const [showViewRecordModal, setShowViewRecordModal] = useState(false); // State to control view modal
   const [recordToEdit, setRecordToEdit] = useState(null); // Hold the record to edit
-  
+  const [recordToView, setRecordToView] = useState(null); // Hold the record to view
 
   const monitoredRecordsList = [
     'Absent',
@@ -74,7 +77,6 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
       console.error('Error fetching adviser:', error);
     }
   };
-   
   
   const handleStudentSelect = (student) => {
     setSelectedStudent(student);
@@ -124,7 +126,6 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
     return { ...frequencies, Sanction: sanctionFrequency };
   };
   
-
   const frequencies = countFrequency();
   
   return (
@@ -174,7 +175,7 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
 
         {/* Search Bar for Students */}
         <div className={styles['search-container']}>
-        <h2 className={styles['h2-title-record']}>Total Frequency of Monitored Records</h2>
+          <h2 className={styles['h2-title-record']}>Total Frequency of Monitored Records</h2>
           <div className={tableStyles['table-container']}>
             <table className={tableStyles['global-table-small']}>
               <thead>
@@ -202,8 +203,8 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
             placeholder="Enter student name or ID"
           />
 
-                    {/* Import Modal */}
-                    {showImportModal && ( // Conditionally render ImportModal based on showImportModal state
+          {/* Import Modal */}
+          {showImportModal && (
             <ImportModal
               onClose={() => setShowImportModal(false)}
               schoolYears={schoolYears}
@@ -211,19 +212,19 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
           )}
 
           {showAddStudentModal && ( 
-          <AddStudentModal
-          open={showAddStudentModal}
-          onClose={() => setShowAddStudentModal(false)}
+            <AddStudentModal
+              open={showAddStudentModal}
+              onClose={() => setShowAddStudentModal(false)}
             />    
           )}
         
           {/* Add Record Modal */}
           {showAddRecordModal && (
-          <AddRecordModal
-            student={selectedStudent}
-            onClose={() => setShowAddRecordModal(false)}
-            refreshRecords={() => fetchStudentRecords(selectedStudent.sid)} // Pass the refresh function
-          />
+            <AddRecordModal
+              student={selectedStudent}
+              onClose={() => setShowAddRecordModal(false)}
+              refreshRecords={() => fetchStudentRecords(selectedStudent.sid)} // Pass the refresh function
+            />
           )}        
           
           {/* Button to open Import Modal */}
@@ -235,9 +236,9 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
             </button>
           )}      
 
-           {loggedInUser?.userType !== 3 && (
+          {loggedInUser?.userType !== 3 && (
             <button onClick={() => setShowAddStudentModal(true)} 
-            className={formStyles['green-button']} 
+              className={formStyles['green-button']} 
               style={{ marginLeft: '10px' }}>
               Add Student
             </button>
@@ -265,7 +266,6 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
           
         </div>    
       </div>   
-
 
       {/* Display records if student is selected */}
       {selectedStudent && (
@@ -296,7 +296,7 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
             <h2>Detailed Records</h2>
             {selectedStudent && loggedInUser?.userType === 1 && (
               <button
-              className={`${formStyles['green-button']} ${formStyles['orange-button']}`} 
+                className={`${formStyles['green-button']} ${formStyles['orange-button']}`} 
                 onClick={() => setShowAddRecordModal(true)}
               >
                 Add Record
@@ -316,34 +316,51 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
                 </tr>
               </thead>  
               <tbody>
-              {filteredRecords.map((record) => (
+                {filteredRecords.map((record) => (
                   <tr key={record.recordId}>
                     <td>{record.record_date}</td>
                     <td>{record.incident_date}</td>
                     <td>{record.monitored_record}</td>
                     {/* <td>{record.sanction}</td> */}
                     <td>
-                      <EditNoteIcon
+                      <ViewNoteIcon
                         onClick={() => {
-                          setRecordToEdit(record); // Set the record to edit
-                          setShowEditRecordModal(true); // Show the edit modal
+                          setRecordToView(record); // Set the record to view
+                          setShowViewRecordModal(true); // Show the view modal
                         }}
-                        className={styles['record-edit-icon']}
-                      >
-                        Edit
-                      </EditNoteIcon>
+                        className={styles['record-action-icon']}
+                        style={{ marginRight: loggedInUser?.userType === 3 ? '0' : '15px' }}  
+                      />   
+                      {loggedInUser?.userType === 1 && (
+                        <EditNoteIcon
+                          onClick={() => {
+                            setRecordToEdit(record); // Set the record to edit
+                            setShowEditRecordModal(true); // Show the edit modal
+                          }}
+                          className={styles['record-action-icon']}
+                        />                   
+                      )}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>      
+
+          {/* Add the View Modal here */}
+          {showViewRecordModal && (
+            <RecordStudentViewModal
+              record={recordToView} // Pass the record to view
+              onClose={() => setShowViewRecordModal(false)} // Close handler
+            />
+          )}
+
           {showEditRecordModal && (
             <RecordStudentEditModal
               record={recordToEdit} // Pass the record to edit
               onClose={() => setShowEditRecordModal(false)} // Close handler
             />
-          )}           
+          )}     
         </>
       )}
     </>

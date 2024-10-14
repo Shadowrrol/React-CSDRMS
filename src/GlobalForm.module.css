@@ -20,7 +20,7 @@
 
 .form-group {
     display: flex; /* Use flexbox */
-    margin-bottom: 25px; /* Add space between form groups */
+    margin-bottom: 15px; /* Add space between form groups */
 }
 
 .form-group label {
