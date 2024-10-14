@@ -240,15 +240,16 @@ const Reports = () => {
           >
             View
           </button>
-          <button
-            className={`${styles['report-action-button']} ${styles['report-edit-btn']}`}
-            onClick={() => handleEdit(selectedReportId)}
-            disabled={!selectedReportId}
-          >
-            Edit 
-          </button>
+
           {loggedInUser?.userType === 1 && (
             <>
+              <button
+                className={`${styles['report-action-button']} ${styles['report-edit-btn']}`}
+                onClick={() => handleEdit(selectedReportId)}
+                disabled={!selectedReportId}
+              >
+                Edit 
+              </button>
               <button
                 className={styles['report-action-button']}
                 onClick={() => handleComplete(selectedReportId)}
