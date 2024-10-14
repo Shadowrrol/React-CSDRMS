@@ -49,7 +49,7 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/user/login', {
+      const response = await axios.post('https://spring-csdrms.onrender.com/user/login', {
         username,
         password,
       });
@@ -70,7 +70,7 @@ const LoginPage = () => {
       // Only log time if the userType is 3
       if (userType === 3) {
         const loginTime = new Date().toISOString(); // Get current time in ISO format
-        await axios.post('http://localhost:8080/time-log/login', {
+        await axios.post('https://spring-csdrms.onrender.com/time-log/login', {
           userId: response.data.uid, // Assuming `userObject` contains `uid`
           loginTime: loginTime,
         });
