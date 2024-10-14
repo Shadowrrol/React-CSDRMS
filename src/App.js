@@ -6,7 +6,7 @@ import './App.css';
 import Notification from './Notification';
 import Record from './Record';
 import Report from './Report';
-import ViewReport from './ViewReport'; 
+// import ViewReport from './ViewReport'; 
 
 import Feedback from './SSO/Feedback';
 import Case from './SSO/Case';
@@ -90,7 +90,7 @@ function App() {
           {(loggedInUser && (loggedInUser.userType !== 4)) && (
             <>
             <Route path="/report" element={<Report />} />
-            <Route path="/view-report/:reportId" element={<ViewReport />} /> 
+            {/* <Route path="/view-report/:reportId" element={<ViewReport />} />  */}
             </>
 
           )}

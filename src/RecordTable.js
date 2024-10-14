@@ -231,48 +231,52 @@ const RecordTable = () => {
                 </table>
             </div>
 
-            {/* New Table for Students */}
-            <h2 className={styles.RecordTitle}>Students Overview</h2>
-            <div className={tableStyles['table-container']}>
-                <table className={tableStyles['table-overview']}>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Absent</th>
-                            <th>Tardy</th>
-                            <th>Cutting Classes</th>
-                            <th>Improper Uniform</th>
-                            <th>Offense</th>
-                            <th>Misbehavior</th>
-                            <th>Clinic</th>
-                            <th>Sanction</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {Object.entries(studentRecords).length > 0 ? (
-                            Object.entries(studentRecords).map(([studentName, counts]) => (
-                                <tr key={studentName}>
-                                    <td>{studentName}</td>
-                                    <td>{counts.Absent}</td>
-                                    <td>{counts.Tardy}</td>
-                                    <td>{counts['Cutting Classes']}</td>
-                                    <td>{counts['Improper Uniform']}</td>
-                                    <td>{counts.Offense}</td>
-                                    <td>{counts.Misbehavior}</td>
-                                    <td>{counts.Clinic}</td>
-                                    <td>{counts.SanctionFrequency}</td>
+            {selectedClass && (
+                <>                
+                    {/* New Table for Students */}
+                    <h2 className={styles.RecordTitle}>Students Overview</h2>
+                    <div className={tableStyles['table-container']}>
+                        <table className={tableStyles['table-overview']}>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Absent</th>
+                                    <th>Tardy</th>
+                                    <th>Cutting Classes</th>
+                                    <th>Improper Uniform</th>
+                                    <th>Offense</th>
+                                    <th>Misbehavior</th>
+                                    <th>Clinic</th>
+                                    <th>Sanction</th>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="9" style={{ textAlign: 'center' }}>
-                                    No students found.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                            </thead>
+                            <tbody>
+                                {Object.entries(studentRecords).length > 0 ? (
+                                    Object.entries(studentRecords).map(([studentName, counts]) => (
+                                        <tr key={studentName}>
+                                            <td>{studentName}</td>
+                                            <td>{counts.Absent}</td>
+                                            <td>{counts.Tardy}</td>
+                                            <td>{counts['Cutting Classes']}</td>
+                                            <td>{counts['Improper Uniform']}</td>
+                                            <td>{counts.Offense}</td>
+                                            <td>{counts.Misbehavior}</td>
+                                            <td>{counts.Clinic}</td>
+                                            <td>{counts.SanctionFrequency}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="9" style={{ textAlign: 'center' }}>
+                                            No students found.
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </>
+            )}
         </div>
     );
 };

@@ -1,20 +1,15 @@
+// ViewReportModal.js
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import styles from './ViewReport.module.css';
-import Navigation from './Navigation';
-import navStyles from "./Navigation.module.css";
+import styles from './ViewReport.module.css'; // New styles for modal
+import modalStyles from './ReportModal.module.css'; // Generic modal styles
 
-const ViewReport = () => {
-  const authToken = localStorage.getItem("authToken");
-  const loggedInUser = authToken ? JSON.parse(authToken) : null;
-  const { reportId } = useParams(); // Get the reportId from the URL
+const ViewReportModal = ({ reportId, onClose }) => {
   const [report, setReport] = useState(null);
-  const [suspension, setSuspension] = useState(null); // State for suspension
+  const [suspension, setSuspension] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [suspensionLoading, setSuspensionLoading] = useState(true); // Loading state for suspension
+  const [suspensionLoading, setSuspensionLoading] = useState(true);
 
-  // Fetch the report data when the component mounts
   useEffect(() => {
     const fetchReport = async () => {
       try {
@@ -27,11 +22,6 @@ const ViewReport = () => {
       }
     };
 
-    fetchReport();
-  }, [reportId]);
-
-  // Fetch the suspension data associated with the report
-  useEffect(() => {
     const fetchSuspension = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/suspension/getSuspensionByReport/${reportId}`);
@@ -43,7 +33,10 @@ const ViewReport = () => {
       }
     };
 
-    fetchSuspension();
+    if (reportId) {
+      fetchReport();
+      fetchSuspension();
+    }
   }, [reportId]);
 
   if (loading) {
@@ -55,11 +48,11 @@ const ViewReport = () => {
   }
 
   return (
-    <div className={navStyles.wrapper}>
-      <Navigation loggedInUser={loggedInUser} />
-      <div className={navStyles.content}>  
-        <div className={styles.tablesContainer}> {/* New container for tables */}
-          {/* Report Details Table */}
+    <div className={modalStyles['report-modal-overlay']}>
+      <div className={modalStyles['report-view-modal-content']}>
+        <button className={modalStyles.closeButton} onClick={onClose}>✕</button>
+        <div className={styles.tablesContainer}>
+          {/* Report Details */}
           <div className={styles.tableWrapper}>
             <h2>Report Details</h2>
             <table className={styles['report-details']}>
@@ -96,26 +89,38 @@ const ViewReport = () => {
                 </tr>
                 <tr>
                   <td>Complainant:</td>
-                  <td>{report.complainant}</td>
+                  <td>
+                    {report.ssoComplainant 
+                      ? `${report.ssoComplainant.firstname} ${report.ssoComplainant.lastname}`
+                      : report.principalComplainant
+                      ? `${report.principalComplainant.firstname} ${report.principalComplainant.lastname}` 
+                      : report.adviserComplainant 
+                        ? `${report.adviserComplainant.firstname} ${report.adviserComplainant.lastname}` 
+                        : report.teacherComplainant 
+                          ? `${report.teacherComplainant.firstname} ${report.teacherComplainant.lastname}` 
+                          : report.guidanceComplainant 
+                            ? `${report.guidanceComplainant.firstname} ${report.guidanceComplainant.lastname}` 
+                            : 'N/A'} {/* Display 'N/A' if no complainant is found */}
+                  </td>
                 </tr>
                 <tr>
                   <td>Complete:</td>
                   <td>{report.complete ? 'Yes' : 'No'}</td>
                 </tr>
-                <tr>
+                {/* <tr>
                   <td>Viewed by Adviser:</td>
                   <td>{report.viewedByAdviser ? 'Yes' : 'No'}</td>
                 </tr>
                 <tr>
                   <td>Viewed by SSO:</td>
                   <td>{report.viewedBySso ? 'Yes' : 'No'}</td>
-                </tr>
+                </tr> */}
               </tbody>
             </table>
           </div>
   
           {/* Display Suspension Details Table */}
-          <div className={styles.tableWrapper}>
+          <div className={styles['tableWrapper-second']}>
             <h2>Suspension Details</h2>
             {suspensionLoading ? (
               <p>Loading suspension details...</p>
@@ -148,7 +153,7 @@ const ViewReport = () => {
                     <td>Return Date:</td>
                     <td>{suspension.returnDate}</td>
                   </tr>
-                  <tr>
+                  {/* <tr>
                     <td>Viewed by Principal:</td>
                     <td>{suspension.viewedByPrincipal ? 'Yes' : 'No'}</td>
                   </tr>
@@ -159,7 +164,7 @@ const ViewReport = () => {
                   <tr>
                     <td>Viewed by SSO:</td>
                     <td>{suspension.viewedBySso ? 'Yes' : 'No'}</td>
-                  </tr>
+                  </tr> */}
                 </tbody>
               </table>
             ) : (
@@ -172,4 +177,4 @@ const ViewReport = () => {
   );
 };
 
-export default ViewReport;
+export default ViewReportModal;

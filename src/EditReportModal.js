@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './EditReportModal.module.css';
+import formStyles from './GlobalForm.module.css';
 
 const EditReportModal = ({ reportId, onClose, refreshReports }) => {
   const authToken = localStorage.getItem('authToken');
@@ -225,14 +226,11 @@ const EditReportModal = ({ reportId, onClose, refreshReports }) => {
             value={reportData.complaint}
             onChange={handleInputChange}
             required
-          />
+          />       
 
-        
-          
-
-          <div className={styles['edit-buttonGroup']}>
-            <button className={styles['edit-report-button']} type="submit">Update Report</button>
-            <button onClick={onClose} className={`${styles['edit-report-button']} ${styles['edit-report-button-cancel']}`}>Cancel</button>
+          <div className={formStyles['global-buttonGroup']}>
+            <button className={formStyles['green-button']} type="submit">Update</button>
+            <button onClick={onClose} className={`${formStyles['green-button']} ${formStyles['red-button']}`}>Cancel</button>
           </div>
 
         </form>

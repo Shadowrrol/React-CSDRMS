@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Logout from '@mui/icons-material/Logout';
 import SchoolIcon from '@mui/icons-material/School';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
@@ -12,7 +11,7 @@ import navStyles from './Navigation.module.css'; // CSS for Navigation
 import JHSLogo from './image-sso-yellow.png';
 import axios from 'axios';
 import NotificationModal from './NotificationModal'; // Import NotificationModal
-import MenuPopupState from './components/MenuPopupState'; 
+import MenuPopupState from './Components/MenuPopupState'; 
 import IconButton from '@mui/material/IconButton';
 
 const Navigation = ({ loggedInUser }) => {

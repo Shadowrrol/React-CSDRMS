@@ -187,3 +187,13 @@
     background-color: #FB8C00;
 
 }
+
+.yellow-button {
+    background-color: #e8bd26;
+    text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
+}
+
+.yellow-button:hover {
+    background-color: #C69A1E;
+    transform: scale(1.05);
+}
