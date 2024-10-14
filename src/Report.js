@@ -40,10 +40,10 @@ const Reports = () => {
       try {
         if (loggedInUser?.userType === 1) {
           // Mark as viewed for SSO
-          await axios.post('http://localhost:8080/report/markAsViewedForSso');
+          await axios.post('https://spring-csdrms.onrender.com/report/markAsViewedForSso');
         } else if (loggedInUser?.userType === 3) {
           // Mark as viewed for Adviser
-          await axios.post('http://localhost:8080/report/markAsViewedForAdviser', {
+          await axios.post('https://spring-csdrms.onrender.com/report/markAsViewedForAdviser', {
             grade: loggedInUser.grade,
             section: loggedInUser.section,
             schoolYear: loggedInUser.schoolYear,
@@ -60,7 +60,7 @@ const Reports = () => {
 
   const fetchSuspensions = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/suspension/getAllSuspensions');
+      const response = await axios.get('https://spring-csdrms.onrender.com/suspension/getAllSuspensions');
       setSuspensions(response.data);
     } catch (error) {
       console.error('Error fetching suspensions:', error);
@@ -74,7 +74,7 @@ const Reports = () => {
       let response;
   
       if (loggedInUser?.userType === 3) {
-        response = await axios.get('http://localhost:8080/report/getAllReportsForAdviser', {
+        response = await axios.get('https://spring-csdrms.onrender.com/report/getAllReportsForAdviser', {
           params: {
             grade: loggedInUser.grade,
             section: loggedInUser.section,
@@ -83,13 +83,13 @@ const Reports = () => {
           },
         });
       } else if (loggedInUser?.userType === 2 || loggedInUser?.userType === 5 || loggedInUser?.userType === 6) {
-        response = await axios.get('http://localhost:8080/report/getAllReportsByComplainant', {
+        response = await axios.get('https://spring-csdrms.onrender.com/report/getAllReportsByComplainant', {
           params: {
             complainant: loggedInUser.username,
           },
         });
       } else {
-        response = await axios.get('http://localhost:8080/report/getAllReports');
+        response = await axios.get('https://spring-csdrms.onrender.com/report/getAllReports');
       }
   
       let fetchedReports = response.data;
@@ -99,11 +99,11 @@ const Reports = () => {
         const updates = fetchedReports
           .filter((report) => !report.received)
           .map((report) =>
-            axios.put(`http://localhost:8080/report/updateReceived/${report.reportId}`, { received: currentDate })
+            axios.put(`https://spring-csdrms.onrender.com/report/updateReceived/${report.reportId}`, { received: currentDate })
           );
   
         await Promise.all(updates);
-        const updatedResponse = await axios.get('http://localhost:8080/report/getAllReports');
+        const updatedResponse = await axios.get('https://spring-csdrms.onrender.com/report/getAllReports');
         fetchedReports = updatedResponse.data;
       }
   
@@ -126,7 +126,7 @@ const Reports = () => {
 
   const handleComplete = async (reportId) => {
     try {
-      await axios.put(`http://localhost:8080/report/complete/${reportId}`);
+      await axios.put(`https://spring-csdrms.onrender.com/report/complete/${reportId}`);
       fetchReports(); 
     } catch (error) {
       console.error('Error completing the report:', error);

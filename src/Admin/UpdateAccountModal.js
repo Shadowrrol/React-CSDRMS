@@ -75,7 +75,7 @@ const UpdateAccountModal = ({ isOpen, onClose, user }) => {
                          updatedUser.userType === 6 ? 'updateGuidance' : '';
     
         if (endpoint) {
-            axios.put(`http://localhost:8080/user/${endpoint}`, updatedData)
+            axios.put(`https://spring-csdrms.onrender.com/user/${endpoint}`, updatedData)
                 .then(response => {
                     console.log(response.data);
                     alert('Account Successfully Updated');

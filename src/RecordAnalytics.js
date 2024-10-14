@@ -43,7 +43,7 @@ const RecordAnalytics = () => {
 
   const fetchSchoolYears = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/schoolYear/getAllSchoolYears');
+      const response = await axios.get('https://spring-csdrms.onrender.com/schoolYear/getAllSchoolYears');
       setSchoolYears(response.data);
     } catch (error) {
       console.error('Error fetching school years:', error);
@@ -52,7 +52,7 @@ const RecordAnalytics = () => {
 
   const fetchClasses = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/class/getAllClasses');
+      const response = await axios.get('https://spring-csdrms.onrender.com/class/getAllClasses');
       setClasses(response.data);
     } catch (error) {
       console.error('Error fetching classes:', error);
@@ -63,7 +63,7 @@ const RecordAnalytics = () => {
     try {
       let response;
       if (isAdviser) {
-        response = await axios.get('http://localhost:8080/student-record/getStudentRecordsByAdviser', {
+        response = await axios.get('https://spring-csdrms.onrender.com/student-record/getStudentRecordsByAdviser', {
           params: {
             grade: loggedInUser.grade,
             section: loggedInUser.section,
@@ -72,7 +72,7 @@ const RecordAnalytics = () => {
         });
         setSelectedClass(classes.find(cls => cls.grade === loggedInUser.grade && cls.section === loggedInUser.section));
       } else {
-        response = await axios.get('http://localhost:8080/student-record/getAllStudentRecords');
+        response = await axios.get('https://spring-csdrms.onrender.com/student-record/getAllStudentRecords');
       }
 
       setRecords(response.data);

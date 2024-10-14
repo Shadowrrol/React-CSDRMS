@@ -33,7 +33,7 @@ const AddRecordModal = ({ student, onClose, refreshRecords }) => {  // Add refre
     };
 
     try {
-      await axios.post('http://localhost:8080/student-record/insertRecord', newRecord);
+      await axios.post('https://spring-csdrms.onrender.com/student-record/insertRecord', newRecord);
       alert('Record added successfully');
       refreshRecords(); // Call the refresh function to fetch updated records
       onClose(); // Close the modal after submission

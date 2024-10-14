@@ -37,7 +37,7 @@ const Class = () => {
 
     const fetchClasses = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/class/getAllClasses");
+            const response = await axios.get("https://spring-csdrms.onrender.com/class/getAllClasses");
             setClasses(response.data);
         } catch (error) {
             console.error("Error fetching classes:", error);
@@ -46,7 +46,7 @@ const Class = () => {
 
     const fetchSchoolYears = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/schoolYear/getAllSchoolYears");
+            const response = await axios.get("https://spring-csdrms.onrender.com/schoolYear/getAllSchoolYears");
             setSchoolYears(response.data);
         } catch (error) {
             console.error("Error fetching school years:", error);
@@ -70,7 +70,7 @@ const Class = () => {
     }
 
     try {
-        await axios.post("http://localhost:8080/class/addClass", {
+        await axios.post("https://spring-csdrms.onrender.com/class/addClass", {
             grade: newGrade,
             section: newSection,
         });
@@ -96,7 +96,7 @@ const Class = () => {
         }
 
         try {
-            await axios.post("http://localhost:8080/schoolYear/addSchoolYear", {
+            await axios.post("https://spring-csdrms.onrender.com/schoolYear/addSchoolYear", {
                 schoolYear: newSchoolYear,
             });
             await fetchSchoolYears();
@@ -111,7 +111,7 @@ const Class = () => {
       const confirmDelete = window.confirm("Are you sure you want to delete this class? " +grade+ "-" +section+ "?" );
       if (confirmDelete) {
           try {
-              await axios.delete(`http://localhost:8080/class/deleteClass/${classId}`);
+              await axios.delete(`https://spring-csdrms.onrender.com/class/deleteClass/${classId}`);
               await fetchClasses(); // Refresh the list after deletion
           } catch (error) {
               console.error("Error deleting class:", error);
@@ -124,7 +124,7 @@ const Class = () => {
       const confirmDelete = window.confirm("Are you sure you want to delete this school year: " +schoolYear + "?" );
       if (confirmDelete) {
           try {
-              await axios.delete(`http://localhost:8080/schoolYear/deleteSchoolYear/${schoolYearId}`);
+              await axios.delete(`https://spring-csdrms.onrender.com/schoolYear/deleteSchoolYear/${schoolYearId}`);
               await fetchSchoolYears(); // Refresh the list after deletion
           } catch (error) {
               console.error("Error deleting school year:", error);

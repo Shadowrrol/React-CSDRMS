@@ -16,12 +16,12 @@ const RecordTable = () => {
 
     useEffect(() => {
         const fetchClasses = async () => {
-            const response = await axios.get('http://localhost:8080/class/getAllClasses');
+            const response = await axios.get('https://spring-csdrms.onrender.com/class/getAllClasses');
             setClasses(response.data);
         };
 
         const fetchSchoolYears = async () => {
-            const response = await axios.get('http://localhost:8080/schoolYear/getAllSchoolYears');
+            const response = await axios.get('https://spring-csdrms.onrender.com/schoolYear/getAllSchoolYears');
             setSchoolYears(response.data);
         };
 
@@ -48,11 +48,11 @@ const RecordTable = () => {
                 const schoolYear = loggedInUser.schoolYear;
 
                 response = await axios.get(
-                    `http://localhost:8080/student-record/getStudentRecordsByAdviser`,
+                    `https://spring-csdrms.onrender.com/student-record/getStudentRecordsByAdviser`,
                     { params: { grade, section, schoolYear } }
                 );
             } else {
-                response = await axios.get('http://localhost:8080/student-record/getAllStudentRecords');
+                response = await axios.get('https://spring-csdrms.onrender.com/student-record/getAllStudentRecords');
             }
             setRecords(response.data);
         };

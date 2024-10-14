@@ -42,7 +42,7 @@ const RecordStudentEditModal = ({ record, onClose }) => {
     };
 
     try {
-      await axios.put(`http://localhost:8080/student-record/update/${record.recordId}`, updatedRecord);
+      await axios.put(`https://spring-csdrms.onrender.com/student-record/update/${record.recordId}`, updatedRecord);
       alert('Record updated successfully!');
       onClose(); // Close modal after submission
     } catch (error) {
