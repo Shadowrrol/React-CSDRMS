@@ -111,8 +111,21 @@ const EditReportModal = ({ reportId, onClose, refreshReports }) => {
       return;
     }
 
+    const viewedByAdviser = loggedInUser.userType === 3 &&
+    loggedInUser.grade === reportData.grade && // Adjust this to match the structure of your reportData
+    loggedInUser.section === reportData.section && // Adjust accordingly
+    loggedInUser.schoolYear === reportData.schoolYear; // Adjust accordingly
+
+    const viewedBySso = loggedInUser.userType === 1;
+
+    const updatedReportData = {
+      ...reportData,
+      viewedByAdviser,
+      viewedBySso,
+    };
+
     try {
-      await axios.put(`http://localhost:8080/report/updateReport/${reportId}/${reportData.record.id}/${reportData.record.monitored_record}`, reportData);
+      await axios.put(`http://localhost:8080/report/updateReport/${reportId}/${reportData.record.id}/${reportData.record.monitored_record}`, updatedReportData);
       refreshReports(); // Refresh the report list after submission
       onClose(); // Close the modal after submission
     } catch (error) {

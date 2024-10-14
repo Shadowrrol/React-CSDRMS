@@ -78,11 +78,14 @@ const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refres
         </button>
         <h2 className={styles['notification-modal-title']}>Your Notifications</h2>
 
+        {(loggedInUser?.userType === 1 || loggedInUser?.userType === 3) && (
+        <>
         <h3 className={styles['notification-modal-section-title']}>New Reports</h3>
         {reports.length > 0 ? (
           <ul className={styles['notification-modal-list']}>
             {reports
               .filter(report => report.complainant !== loggedInUser?.username)
+              .sort((a, b) => b.reportId - a.reportId) // Sort reports in descending order by reportId
               .map((report) => (
                 <li
                   key={report.reportId}
@@ -97,23 +100,27 @@ const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refres
         ) : (
           <p className={styles['notification-modal-empty-message']}>You have no new reports at the moment.</p>
         )}
+         </>
+         )}
 
         {loggedInUser?.userType !== 1 && (
           <>
             <h3 className={styles['notification-modal-section-title']}>Recent Suspensions</h3>
             {suspensions.length > 0 ? (
               <ul className={styles['notification-modal-list']}>
-                {suspensions.map((suspension) => (
-                  <li
-                    key={suspension.suspensionId}
-                    className={`${styles['notification-modal-list-item']} ${styles['clickable']}`}
-                    onClick={() => handleViewReport(suspension.reportEntity.reportId)}
-                  >
-                    <strong>{suspension.reportEntity.record.student.name}</strong> has been suspended. 
-                    <br />
-                    <small>Click to view details.</small>
-                  </li>
-                ))}
+                {suspensions
+                  .sort((a, b) => b.suspensionId - a.suspensionId) // Sort suspensions in descending order by suspensionId
+                  .map((suspension) => (
+                    <li
+                      key={suspension.suspensionId}
+                      className={`${styles['notification-modal-list-item']} ${styles['clickable']}`}
+                      onClick={() => handleViewReport(suspension.reportEntity.reportId)}
+                    >
+                      <strong>{suspension.reportEntity.record.student.name}</strong> has been suspended. 
+                      <br />
+                      <small>Click to view details.</small>
+                    </li>
+                  ))}
               </ul>
             ) : (
               <p className={styles['notification-modal-empty-message']}>No suspensions recorded at this time.</p>

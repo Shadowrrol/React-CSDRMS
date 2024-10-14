@@ -72,7 +72,7 @@ const Reports = () => {
     setLoading(true);
     try {
       let response;
-
+  
       if (loggedInUser?.userType === 3) {
         response = await axios.get('http://localhost:8080/report/getAllReportsForAdviser', {
           params: {
@@ -91,9 +91,9 @@ const Reports = () => {
       } else {
         response = await axios.get('http://localhost:8080/report/getAllReports');
       }
-
-      const fetchedReports = response.data;
-
+  
+      let fetchedReports = response.data;
+  
       if (loggedInUser?.userType === 1) {
         const currentDate = new Date().toISOString().split('T')[0];
         const updates = fetchedReports
@@ -101,13 +101,16 @@ const Reports = () => {
           .map((report) =>
             axios.put(`http://localhost:8080/report/updateReceived/${report.reportId}`, { received: currentDate })
           );
-
+  
         await Promise.all(updates);
         const updatedResponse = await axios.get('http://localhost:8080/report/getAllReports');
-        setReports(updatedResponse.data);
-      } else {
-        setReports(fetchedReports);
+        fetchedReports = updatedResponse.data;
       }
+  
+      // Sort reports by reportId in descending order
+      fetchedReports.sort((a, b) => b.reportId - a.reportId);
+  
+      setReports(fetchedReports);
     } catch (error) {
       console.error('Error fetching reports:', error);
       alert('Failed to fetch reports. Please try again later.');
@@ -115,6 +118,7 @@ const Reports = () => {
       setLoading(false);
     }
   };
+  
 
   const isReportSuspended = (reportId) => {
     return suspensions.some((suspension) => suspension.reportId === reportId);

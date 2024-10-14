@@ -13,15 +13,27 @@ const AddSuspensionModal = ({ onClose, reportId, refreshReports, refreshSuspensi
   });
 
   // Handle input changes for the form
-  const handleInputChange = (e) => {
-    const inputValue = e.target.value;  
+  // Handle input changes for the form
+const handleInputChange = (e) => {
+  const { name, value } = e.target;
 
-    // Ensure the value is not negative
-    if (inputValue === "" || parseInt(inputValue) >= 1 && e.target.name === "days") {
-      setSuspensionData({ ...suspensionData, [e.target.name]: e.target.value });
-    }
+  // Ensure that 'days' is a positive integer
+  if (name === "days" && (value === "" || parseInt(value) >= 1)) {
+    setSuspensionData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  }
 
-  };
+  // For other fields like date, just update the state
+  if (name !== "days") {
+    setSuspensionData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  }
+};
+
 
   // Handle adding suspension
   const handleCreateSuspension = async () => {

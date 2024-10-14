@@ -73,6 +73,7 @@ const handleCreateReport = async () => {
     onClose(); // Close the modal after submission
   } catch (error) { 
     console.error('Error creating report:', error);
+    alert('The account for the adviser for this student is not existing')
   }
 };
 

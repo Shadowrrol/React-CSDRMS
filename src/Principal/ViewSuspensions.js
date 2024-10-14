@@ -23,7 +23,9 @@ const ViewSuspensions = () => {
       try {
         await axios.post('http://localhost:8080/suspension/markAsViewedForPrincipal'); // Mark as viewed
         const response = await axios.get('http://localhost:8080/suspension/getAllSuspensions');
-        setSuspensions(response.data);
+
+        const sortedSuspensions = response.data.sort((a, b) => b.suspensionId - a.suspensionId);
+        setSuspensions(sortedSuspensions);
       } catch (error) {
         console.error('Error fetching suspensions:', error);
         setError('Failed to fetch suspensions. Please try again later.');
