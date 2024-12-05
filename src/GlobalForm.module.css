@@ -32,7 +32,7 @@
     color: #8A252C;
 }
 
-.form-group-details {
+.form-group-remarks {
     display: flex;
     flex: 1; /* Allow label to take up space */
     align-items: normal;
@@ -97,7 +97,7 @@
     margin: 5px 0 0 0;
     border: 1px solid #ccc;
     border-radius: 5px;
-    max-height: 110px;
+    max-height: 150px;
     max-width: 250px;
     overflow-y: auto;
     cursor: pointer;
@@ -118,7 +118,26 @@
     gap: 25px;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 5px;
+}
+
+.global-button {
+    background-color: #861b1c; /* Button color */
+    font-weight: bold;
+    color: #fff; /* White text color */
+    border: none; /* Remove button border */
+    border-radius: 20px; /* Add border radius to button */
+    padding: 12px 20px; /* Increase padding for better touch targets */
+    font-size: 16px; /* Increase font size for better readability */
+    cursor: pointer; /* Show pointer cursor on hover */
+    transition: transform 0.3s ease, background-color 0.3s ease-in-out;
+    animation: fadeInLeft 0.8s ease-in-out;
+    text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
+}
+
+.global-button:hover {
+    background-color: #6d3f3e; 
+    transform: scale(1.05); /* Slightly enlarge on hover */ 
 }
 
 .green-button {
@@ -133,8 +152,6 @@
     font-size: 14px;
     transition: background-color 0.3s, transform 0.3s;
     text-shadow: 1px 1px 3px #000;  /* Slight shadow for all text */
-    display: flex;
-    align-items: center;
 }
 
 .green-button:hover {
@@ -179,15 +196,4 @@
 .yellow-button:hover {
     background-color: #C69A1E;
     transform: scale(1.05);
-}
-
-.action-icon{
-        color: #8A252C;
-        transition: background-color 0.3s, transform 0.3s;
-        font-size: 2.0rem;
-}
-
-.action-icon:hover {
-    transform: scale(1.25);
-    cursor: pointer;
 }

@@ -56,8 +56,7 @@
 
 .notification-modal-empty-message {
   color: #777;
-  text-align: left; /* Center the empty message */
-  font-size: 16px;
+  text-align: center; /* Center the empty message */
 }
 
 .notification-modal-content::-webkit-scrollbar {

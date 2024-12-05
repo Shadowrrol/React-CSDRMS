@@ -2,38 +2,72 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './NotificationModal.module.css';
-import ViewRecord from './Record/ViewRecordModal'; // Import ViewRecord component
+import ViewReport from './ViewReport'; // Import ViewReport component
 
-const NotificationModal = ({ onClose, loggedInUser, notifications, refreshNotifications }) => {
+const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refreshNotifications }) => {
   const navigate = useNavigate();
-  const [showViewRecordModal, setShowViewRecordModal] = useState(false); // State to control the ViewRecord modal
-  const [selectedNotificationId, setSelectedNotificationId] = useState(null); // Selected notification ID
-  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [showViewReportModal, setShowViewReportModal] = useState(false); // State to control the ViewReport modal
+  const [selectedReportId, setSelectedReportId] = useState(null); // State to store the selected report ID
 
   // Automatically mark notifications as viewed when modal opens
   useEffect(() => {
     const markNotificationsAsViewed = async () => {
       try {
-        await axios.post(`http://localhost:8080/notifications/user/${loggedInUser.userId}/mark-all-as-viewed`);
-        refreshNotifications(); // Refresh notification count
+        // Logic to update "received" status for userType === 1
+        if (loggedInUser?.userType === 1) {
+          await axios.post('https://spring-csdrms.onrender.com/report/markAsViewedForSso');
+          await axios.post('https://spring-csdrms.onrender.com/suspension/markAsViewedForSso');
+          
+          const response = await axios.get('https://spring-csdrms.onrender.com/report/getAllReports'); // Fetch all reports
+          const currentDate = new Date().toISOString().split('T')[0];
+
+          const updates = response.data
+            .filter(report => !report.received) // Filter unreceived reports
+            .map(report => axios.put(`https://spring-csdrms.onrender.com/report/updateReceived/${report.reportId}`, { received: currentDate }));
+
+          await Promise.all(updates); // Update all unreceived reports
+        } else if (loggedInUser?.userType === 2) {
+          await axios.post('https://spring-csdrms.onrender.com/suspension/markAsViewedForPrincipal');
+        } else if (loggedInUser?.userType === 3) {
+          await axios.post('https://spring-csdrms.onrender.com/report/markAsViewedForAdviser', null, {
+            params: {
+              grade: loggedInUser.grade,
+              section: loggedInUser.section,
+              schoolYear: loggedInUser.schoolYear,
+            },
+          });
+          await axios.post('https://spring-csdrms.onrender.com/suspension/markAsViewedForAdviser', null, {
+            params: {
+              grade: loggedInUser.grade,
+              section: loggedInUser.section,
+              schoolYear: loggedInUser.schoolYear,
+            },
+          });
+        } else if (loggedInUser?.userType === 5 || loggedInUser?.userType === 6) {
+          await axios.post('https://spring-csdrms.onrender.com/suspension/markAsViewedForComplainant', null, {
+            params: {
+              username: loggedInUser.username,
+            },
+          });
+        }
+        refreshNotifications();
       } catch (error) {
         console.error('Error marking notifications as viewed:', error);
       }
     };
-  
+
     markNotificationsAsViewed();
   }, [loggedInUser, refreshNotifications]);
-  
 
-  // Handle viewing a record in modal
-  const handleViewRecord = (record) => {
-      setSelectedRecord(record);
-      setShowViewRecordModal(true);
+  // Handle viewing a report in modal
+  const handleViewReport = (reportId) => {
+    setSelectedReportId(reportId);
+    setShowViewReportModal(true); // Show the ViewReport modal
   };
 
-  const closeViewRecordModal = () => {
-    setShowViewRecordModal(false);
-    setSelectedRecord(null); // Clear the selected record ID
+  const closeViewReportModal = () => {
+    setShowViewReportModal(false);
+    setSelectedReportId(null); // Clear the selected report ID
   };
 
   return (
@@ -44,33 +78,62 @@ const NotificationModal = ({ onClose, loggedInUser, notifications, refreshNotifi
         </button>
         <h2 className={styles['notification-modal-title']}>Your Notifications</h2>
 
-        {notifications.length > 0 ? (
+        {(loggedInUser?.userType === 1 || loggedInUser?.userType === 3) && (
+        <>
+        <h3 className={styles['notification-modal-section-title']}>New Reports</h3>
+        {reports.length > 0 ? (
           <ul className={styles['notification-modal-list']}>
-            {notifications
-              .sort((a, b) => b.notificationId - a.notificationId) // Sort by newest first
-              .map(notification => (
+            {reports
+              .filter(report => report.complainant !== loggedInUser?.username)
+              .sort((a, b) => b.reportId - a.reportId) // Sort reports in descending order by reportId
+              .map((report) => (
                 <li
-                  key={notification.notificationId}
+                  key={report.reportId}
                   className={`${styles['notification-modal-list-item']} ${styles['clickable']}`}
-                  onClick={() => handleViewRecord(notification.notification.record)}
+                  onClick={() => handleViewReport(report.reportId)}
                 >
-                  <strong>{notification.notification.message}</strong>
-                  <br />
+                  <strong>{report.record.student.name}</strong> from <strong>{report.record.student.grade} - {report.record.student.section}</strong> has a report concerning a recent incident. <br />
                   <small>Click to view details.</small>
                 </li>
               ))}
           </ul>
         ) : (
-          <p className={styles['notification-modal-empty-message']}>You have no new notifications.</p>
+          <p className={styles['notification-modal-empty-message']}>You have no new reports at the moment.</p>
         )}
-                
+         </>
+         )}
+
+        {loggedInUser?.userType !== 1 && (
+          <>
+            <h3 className={styles['notification-modal-section-title']}>Recent Suspensions</h3>
+            {suspensions.length > 0 ? (
+              <ul className={styles['notification-modal-list']}>
+                {suspensions
+                  .sort((a, b) => b.suspensionId - a.suspensionId) // Sort suspensions in descending order by suspensionId
+                  .map((suspension) => (
+                    <li
+                      key={suspension.suspensionId}
+                      className={`${styles['notification-modal-list-item']} ${styles['clickable']}`}
+                      onClick={() => handleViewReport(suspension.reportEntity.reportId)}
+                    >
+                      <strong>{suspension.reportEntity.record.student.name}</strong> has been suspended. 
+                      <br />
+                      <small>Click to view details.</small>
+                    </li>
+                  ))}
+              </ul>
+            ) : (
+              <p className={styles['notification-modal-empty-message']}>No suspensions recorded at this time.</p>
+            )}
+          </>
+        )}
       </div>
 
-      {/* View Record Modal */}
-      {showViewRecordModal && selectedRecord && (
-        <ViewRecord
-          record={selectedRecord}
-          onClose={closeViewRecordModal}
+      {/* ViewReport Modal */}
+      {showViewReportModal && selectedReportId && (
+        <ViewReport
+          reportId={selectedReportId}
+          onClose={closeViewReportModal}
         />
       )}
     </div>

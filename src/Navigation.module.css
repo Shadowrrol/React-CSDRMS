@@ -126,6 +126,7 @@ body{
 /* Content title */
 .h1-title {
     text-align: center;
+    margin-bottom: 20px;
     font-size: 28px;
     color: #8A252C;
     font-weight: bold;
@@ -133,32 +134,19 @@ body{
 
 .TitleContainer {
     display: flex; /* Use flexbox */
-    text-align: center;
-    justify-content: space-between;
+    align-items: center; /* Align titles vertically */
 }
 
 /* Content Area */
 .content {
     flex-grow: 1;
-    padding: 70px 50px;
+    padding: 80px 50px;
     background-color: #fff;
-    margin-top: 25px;
+    margin-top: 30px;
     margin-left: 175px;
     box-sizing: border-box;
     transition: margin-left 0.3s ease; /* Smooth transition for margin-left change */
     overflow-y: auto;
-}
-
-.content-teacher{
-    margin-left: 0px;
-}
-
-.margin-zero {
-    margin-left: 0; /* For userType 5 */
-}
-
-.margin-default {
-    margin-left: 175px; /* Default margin for other user types */
 }
 
 .header-wrapper {

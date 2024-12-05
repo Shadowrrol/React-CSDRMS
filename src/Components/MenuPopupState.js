@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Profile icon
 import IconButton from '@mui/material/IconButton'; // Profile icon
-
-import UpdateAccountModal from '../UserManagement/UpdateAccountModal'; // Import the UpdateAccountModal
+import UpdateAccountModal from '../Admin/UpdateAccountModal'; // Import the UpdateAccountModal
 import navStyles from '../Navigation.module.css'; // Import the CSS module
 
 const MenuPopupState = () => {
@@ -25,7 +23,7 @@ const MenuPopupState = () => {
     }
 
     const user = loggedInUser;
-    const { userId } = user;
+    const { uid } = user;
 
     // User type label for display purposes
     const userTypeLabel = `${user.lastname || 'User'} ${user.userType === 1 ? " | SSO Officer" : 
@@ -37,21 +35,27 @@ const MenuPopupState = () => {
     const handleLogout = async () => {
         const userType = user.userType;
 
-        // try {
-        //     const logoutTime = new Date().toISOString();
-        //     const response = await axios.get(`http://localhost:8080/time-log/getLatestLog/${userId}`);
-        //     const { timelog_id: timelogId } = response.data;
+        if (userType !== 3) {
+            localStorage.removeItem('authToken');
+            navigate('/');
+            return;
+        }
 
-        //     await axios.post('http://localhost:8080/time-log/logout', {
-        //         timelogId,
-        //         logoutTime,
-        //     });
+        try {
+            const logoutTime = new Date().toISOString();
+            const response = await axios.get(`https://spring-csdrms.onrender.com/time-log/getLatestLog/${uid}`);
+            const { timelog_id: timelogId } = response.data;
+
+            await axios.post('https://spring-csdrms.onrender.com/time-log/logout', {
+                timelogId,
+                logoutTime,
+            });
 
             localStorage.removeItem('authToken');
             navigate('/');
-        // } catch (error) {
-        //     console.error('Error logging out', error);
-        // }
+        } catch (error) {
+            console.error('Error logging out', error);
+        }
     };
 
     // Open profile update modal
@@ -79,7 +83,7 @@ const MenuPopupState = () => {
                         <MenuItem onClick={handleProfileClick}>Update Account</MenuItem>
                         <MenuItem onClick={handleLogout}>Logout</MenuItem>
                     </Menu>
-                    <UpdateAccountModal isOpen={isModalOpen} onClose={handleModalClose} userId={user.userId} user={user}  /> {/* Include the modal */}
+                    <UpdateAccountModal isOpen={isModalOpen} onClose={handleModalClose} user={user}  /> {/* Include the modal */}
                 </React.Fragment>
             )}
         </PopupState>
