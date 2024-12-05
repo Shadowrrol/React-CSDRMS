@@ -42,7 +42,7 @@ const AddRecordModal = ({ student, onClose, refreshRecords }) => {
     }
     const fetchStudents = async () => {
       try {
-        const response = await axios.get('https://spring-csdrms.onrender.com/student/getAllCurrentStudents');
+        const response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
         setStudents(response.data);
       } catch (error) {
         console.error('Error fetching students:', error);
@@ -81,7 +81,7 @@ const AddRecordModal = ({ student, onClose, refreshRecords }) => {
     };
 
     try {
-      await axios.post(`https://spring-csdrms.onrender.com/record/insert/${loggedInUser.userId}`, newRecord);
+      await axios.post(`http://localhost:8080/record/insert/${loggedInUser.userId}`, newRecord);
       alert('Record added successfully');
       refreshRecords();
       onClose();

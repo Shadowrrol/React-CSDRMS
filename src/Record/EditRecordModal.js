@@ -35,7 +35,7 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
     const fetchSuspensionData = async () => {
       if (record?.recordId) {
         try {
-          const response = await axios.get(`https://spring-csdrms.onrender.com/suspension/getSuspensionByRecord/${record.recordId}`);
+          const response = await axios.get(`http://localhost:8080/suspension/getSuspensionByRecord/${record.recordId}`);
           if (response.data) {
             setExistingSuspension(response.data);
             setSuspensionDetails({
@@ -58,6 +58,21 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
 
   const handleSuspensionChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "days") {
+      const numericValue = parseInt(value, 10);
+      
+      // Check if the input is a valid positive integer
+      if (numericValue <= 0 || isNaN(numericValue)) {
+        // If invalid, clear the value
+        setSuspensionDetails((prev) => ({
+          ...prev,
+          [name]: '', // Clear the value if it's invalid (negative or zero)
+        }));
+        return; // Prevent setting invalid values
+      }
+    }
+    
     setSuspensionDetails((prev) => ({
       ...prev,
       [name]: value,
@@ -65,14 +80,31 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
     
   };
 
+  const handleKeyDown = (e) => {
+    const invalidKeys = ['-', '+'];
+    if (invalidKeys.includes(e.key)) {
+      e.preventDefault();  // Prevent typing the negative or positive symbols
+    }
+  };
+
   const isSpecialRecord = ['Lost/Found Items', 'Request ID', 'Request Permit'].includes(selectedRecord);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!selectedRecord) {
       alert('Please select a monitored record.');
       return;
+    }
+  
+  
+  
+    if (isSuspension) {
+      // Validate suspension details
+      if (!suspensionDetails.days || !suspensionDetails.startDate || !suspensionDetails.endDate || !suspensionDetails.returnDate) {
+        alert('All suspension details (Days, Start Date, End Date, Return Date) are required.');
+        return;
+      }
     }
   
     const dateSubmitted = new Date().toISOString().slice(0, 10);
@@ -97,7 +129,7 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
   
       try {
         await axios.put(
-          `https://spring-csdrms.onrender.com/suspension/update/${existingSuspension.suspensionId}/${loggedInUser.userId}`,
+          `http://localhost:8080/suspension/update/${existingSuspension.suspensionId}/${loggedInUser.userId}`,
           updatedSuspension
         );
         successMessage = 'Record updated successfully with its suspension!';
@@ -115,7 +147,7 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
   
       try {
         await axios.post(
-          `https://spring-csdrms.onrender.com/suspension/insertSuspension/${loggedInUser.userId}`,
+          `http://localhost:8080/suspension/insertSuspension/${loggedInUser.userId}`,
           newSuspension
         );
         successMessage = 'Record added successfully with its suspension!';
@@ -129,7 +161,7 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
     if (!isSuspension && existingSuspension) {
       try {
         await axios.delete(
-          `https://spring-csdrms.onrender.com/suspension/delete/${existingSuspension.suspensionId}/${loggedInUser.userId}`
+          `http://localhost:8080/suspension/delete/${existingSuspension.suspensionId}/${loggedInUser.userId}`
         );
         successMessage = 'Record updated successfully, suspension deleted!';
       } catch (error) {
@@ -153,7 +185,7 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
     // Update the record
     try {
       await axios.put(
-        `https://spring-csdrms.onrender.com/record/update/${record.recordId}/${loggedInUser.userId}`,
+        `http://localhost:8080/record/update/${record.recordId}/${loggedInUser.userId}`,
         updatedRecord
       );
       alert(successMessage);
@@ -178,6 +210,7 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
               value={selectedRecord} 
               onChange={(e) => setSelectedRecord(e.target.value)}
               className={styles.select}
+              required
             >
               <option value="">Select a monitored record</option>
               {monitoredRecords.map((record, index) => (
@@ -208,7 +241,7 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
                 />
               </div>
               
-              {loggedInUser.userType == 3 && (
+              {loggedInUser.userType == 1 && (
               <div className={styles.inputGroup}>
                 <label>Investigation Details:</label>
                   <textarea
@@ -241,6 +274,7 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
                   type="text"
                   value={sanction}
                   onChange={(e) => setSanction(e.target.value)}
+                  
                 />
               </div>
             </>
@@ -290,6 +324,8 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
                   name="days"
                   value={suspensionDetails.days}
                   onChange={handleSuspensionChange}
+                  onKeyDown={handleKeyDown}
+                  required
                 />
               </div>
 
@@ -300,6 +336,7 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
                   name="startDate"
                   value={suspensionDetails.startDate}
                   onChange={handleSuspensionChange}
+                  required
                 />
               </div>
 
@@ -310,6 +347,7 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
                   name="endDate"
                   value={suspensionDetails.endDate}
                   onChange={handleSuspensionChange}
+                  required
                 />
               </div>
 
@@ -320,6 +358,7 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
                   name="returnDate"
                   value={suspensionDetails.returnDate}
                   onChange={handleSuspensionChange}
+                  required
                 />
               </div>
             </div>
