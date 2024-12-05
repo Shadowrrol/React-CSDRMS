@@ -37,21 +37,21 @@ const MenuPopupState = () => {
     const handleLogout = async () => {
         const userType = user.userType;
 
-        try {
-            const logoutTime = new Date().toISOString();
-            const response = await axios.get(`https://spring-csdrms.onrender.com/time-log/getLatestLog/${userId}`);
-            const { timelog_id: timelogId } = response.data;
+        // try {
+        //     const logoutTime = new Date().toISOString();
+        //     const response = await axios.get(`http://localhost:8080/time-log/getLatestLog/${userId}`);
+        //     const { timelog_id: timelogId } = response.data;
 
-            await axios.post('https://spring-csdrms.onrender.com/time-log/logout', {
-                timelogId,
-                logoutTime,
-            });
+        //     await axios.post('http://localhost:8080/time-log/logout', {
+        //         timelogId,
+        //         logoutTime,
+        //     });
 
             localStorage.removeItem('authToken');
             navigate('/');
-        } catch (error) {
-            console.error('Error logging out', error);
-        }
+        // } catch (error) {
+        //     console.error('Error logging out', error);
+        // }
     };
 
     // Open profile update modal

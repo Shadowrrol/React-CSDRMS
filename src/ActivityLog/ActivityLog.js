@@ -37,7 +37,7 @@ const ActivityLog = () => {
     useEffect(() => {
         const fetchActivityLogs = async () => {
             try {
-                const response = await axios.get('https://spring-csdrms.onrender.com/activity-log/getAllActivityLogs');
+                const response = await axios.get('http://localhost:8080/activity-log/getAllActivityLogs');
                 const sortedLogs = response.data.sort((a, b) => b.activitylog_id - a.activitylog_id); // Sort by ID in descending order
                 setActivityLogs(sortedLogs);
             } catch (err) {
@@ -49,7 +49,7 @@ const ActivityLog = () => {
 
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('https://spring-csdrms.onrender.com/user/getAllUsers');
+                const response = await axios.get('http://localhost:8080/user/getAllUsers');
                 setUsers(response.data);
             } catch (err) {
                 console.error('Error fetching users:', err);

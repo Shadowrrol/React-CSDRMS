@@ -89,7 +89,7 @@ const Record = () => {
                 // Check if the logged-in user is an adviser
                 if (loggedInUser.userType === 3) {
                     // Fetch records based on adviser parameters
-                    recordRes = await axios.get('https://spring-csdrms.onrender.com/record/getStudentRecordsByAdviser', {
+                    recordRes = await axios.get('http://localhost:8080/record/getStudentRecordsByAdviser', {
                         params: {
                             grade: loggedInUser.grade,
                             section: loggedInUser.section,
@@ -98,13 +98,13 @@ const Record = () => {
                     });
                 } else {
                     // Fetch all records for other user types
-                    recordRes = await axios.get('https://spring-csdrms.onrender.com/record/getAllRecords');
+                    recordRes = await axios.get('http://localhost:8080/record/getAllRecords');
                 }
 
                 const [classRes, yearRes, gradeRes] = await Promise.all([
-                    axios.get('https://spring-csdrms.onrender.com/class/getAllClasses'),
-                    axios.get('https://spring-csdrms.onrender.com/schoolYear/getAllSchoolYears'),
-                    axios.get('https://spring-csdrms.onrender.com/class/allUniqueGrades'),
+                    axios.get('http://localhost:8080/class/getAllClasses'),
+                    axios.get('http://localhost:8080/schoolYear/getAllSchoolYears'),
+                    axios.get('http://localhost:8080/class/allUniqueGrades'),
                 ]);
 
                 setRecords(recordRes.data);
@@ -129,7 +129,7 @@ const Record = () => {
         const fetchSections = async () => {
             if (selectedGrade) {
                 try {
-                    const response = await axios.get(`https://spring-csdrms.onrender.com/class/sections/${selectedGrade}`);
+                    const response = await axios.get(`http://localhost:8080/class/sections/${selectedGrade}`);
                     setSectionsForGrade(response.data); // Set sections for selected grade
                 } catch (err) {
                     setError(err.message || 'Error fetching sections.');

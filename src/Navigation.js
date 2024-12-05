@@ -36,7 +36,7 @@ const Navigation = ({ loggedInUser }) => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get(`https://spring-csdrms.onrender.com/notifications/user/${userId}`);
+        const response = await axios.get(`http://localhost:8080/notifications/user/${userId}`);
         const notificationsData = response.data;
 
         notificationsData.sort((a, b) => b.userNotificationId - a.userNotificationId);

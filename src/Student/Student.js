@@ -66,7 +66,7 @@ const Student = () => {
       let response;
       const userType = loggedInUser.userType;
       if (userType === 3) {
-        response = await axios.get('https://spring-csdrms.onrender.com/student/getAllStudentsByAdviser', {
+        response = await axios.get('http://localhost:8080/student/getAllStudentsByAdviser', {
           params: {
             grade: loggedInUser.grade,
             section: loggedInUser.section,
@@ -74,7 +74,7 @@ const Student = () => {
           }
         });
       } else {
-        response = await axios.get('https://spring-csdrms.onrender.com/student/getAllCurrentStudents');
+        response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
       }
       setStudents(response.data);
     } catch (error) {
@@ -99,7 +99,7 @@ const Student = () => {
   useEffect(() => {
     const fetchSchoolYears = async () => {
       try {
-        const response = await axios.get('https://spring-csdrms.onrender.com/schoolYear/getAllSchoolYears');
+        const response = await axios.get('http://localhost:8080/schoolYear/getAllSchoolYears');
         setSchoolYears(response.data);
       } catch (error) {
         console.error('Error fetching school years:', error);
@@ -153,7 +153,7 @@ const Student = () => {
   const fetchStudentRecords = async (sid) => {
     setLoading(true);
     try {
-      const response = await axios.get(`https://spring-csdrms.onrender.com/record/getStudentRecords/${sid}`);
+      const response = await axios.get(`http://localhost:8080/record/getStudentRecords/${sid}`);
       setRecords(response.data);
     } catch (error) {
       console.error('Error fetching student records:', error);
@@ -164,7 +164,7 @@ const Student = () => {
 
   const fetchAdviser = async (grade, section, schoolYear) => {
     try {
-      const response = await axios.get(`https://spring-csdrms.onrender.com/user/adviser`, {
+      const response = await axios.get(`http://localhost:8080/user/adviser`, {
         params: { grade, section, schoolYear }
       });
       setAdviser(response.data);
@@ -227,7 +227,7 @@ const Student = () => {
     const confirmed = window.confirm('Are you sure you want to delete this record?'); // Confirmation alert
     if (confirmed) {
       try {
-        await axios.delete(`https://spring-csdrms.onrender.com/record/delete/${recordId}/${loggedInUser.userId}`); // Call your delete API
+        await axios.delete(`http://localhost:8080/record/delete/${recordId}/${loggedInUser.userId}`); // Call your delete API
         setRecords(records.filter((record) => record.recordId !== recordId)); // Remove the deleted record from state
         alert('Record deleted successfully!'); // Optionally, show a success message
       } catch (error) {
@@ -250,7 +250,7 @@ const Student = () => {
     if (confirmed) {
       try {
         // Perform DELETE request to the backend API
-        await axios.delete(`https://spring-csdrms.onrender.com/student/delete/${studentId}/${loggedInUser.userId}`);
+        await axios.delete(`http://localhost:8080/student/delete/${studentId}/${loggedInUser.userId}`);
         
         // Update state: Remove the deleted student from the list and clear the selected student
         setStudents(students.filter((student) => student.id !== studentId));
