@@ -31,7 +31,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
 
             // Fetch grade, section, and school year for Adviser role only
             if (role === 'Adviser') {
-                axios.get('http://localhost:8080/class/allUniqueGrades')
+                axios.get('https://spring-csdrms.onrender.com/class/allUniqueGrades')
                     .then(response => {
                         setGrades(response.data);
                     })
@@ -39,7 +39,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
                         console.error('Error fetching grades:', error);
                     });
 
-                axios.get('http://localhost:8080/schoolYear/getAllSchoolYears')
+                axios.get('https://spring-csdrms.onrender.com/schoolYear/getAllSchoolYears')
                     .then(response => {
                         setSchoolYears(response.data.map(year => year.schoolYear));
                     })
@@ -63,7 +63,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
     const handleGradeChange = (e) => {
         const grade = e.target.value;
         setUserData(prevUserData => ({ ...prevUserData, grade, section: '', schoolYear: '' }));
-        axios.get(`http://localhost:8080/class/sections/${grade}`)
+        axios.get(`https://spring-csdrms.onrender.com/class/sections/${grade}`)
             .then(response => {
                 setSections(response.data);
             })
@@ -104,7 +104,7 @@ const RegisterUserModal = ({ isOpen, onClose, role }) => {
         
         try {
             // Directly register using the endpoint provided
-            const response = await axios.post(`http://localhost:8080/user/registerUser`, userData);
+            const response = await axios.post(`https://spring-csdrms.onrender.com/user/registerUser`, userData);
             console.log(response.data);
             alert(`${role} is successfully registered.`);
             setError('');
