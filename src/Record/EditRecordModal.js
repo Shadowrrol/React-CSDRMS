@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from './RecordStudentEditModal.module.css'; 
-import formStyles from './GlobalForm.module.css';
+import styles from './EditRecordModal.module.css'; 
+import formStyles from '../GlobalForm.module.css';
 
 const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
   const authToken = localStorage.getItem('authToken');
@@ -208,7 +208,7 @@ const RecordStudentEditModal = ({ record, onClose, refreshRecords }) => {
                 />
               </div>
               
-              {loggedInUser.userType == 1 && (
+              {loggedInUser.userType == 3 && (
               <div className={styles.inputGroup}>
                 <label>Investigation Details:</label>
                   <textarea
