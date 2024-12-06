@@ -58,7 +58,7 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
   const fetchStudentRecords = async (sid) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8080/student-record/getStudentRecords/${sid}`);
+      const response = await axios.get(`https://spring-csdrms.onrender.com/student-record/getStudentRecords/${sid}`);
       setRecords(response.data);
     } catch (error) {
       console.error('Error fetching student records:', error);
@@ -69,7 +69,7 @@ const RecordStudent = ({ loggedInUser, schoolYears, grades, students, setStudent
 
   const fetchAdviser = async (grade, section, schoolYear) => {
     try {
-      const response = await axios.get(`http://localhost:8080/user/adviser`, {
+      const response = await axios.get(`https://spring-csdrms.onrender.com/user/adviser`, {
         params: { grade, section, schoolYear }
       });
       setAdviser(response.data);

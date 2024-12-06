@@ -70,7 +70,7 @@ const UpdateAccount = () => {
   const handleUpdate = () => {
     switch (UserType) {
       case 1:
-        axios.put('http://localhost:8080/user/updateSSO', updatedUser)
+        axios.put('https://spring-csdrms.onrender.com/user/updateSSO', updatedUser)
           .then(response => {
             console.log(response.data);
             // Handle success, e.g., show success message
@@ -85,7 +85,7 @@ const UpdateAccount = () => {
           }, 200);
         break;
       case 2:
-        axios.put('http://localhost:8080/user/updatePrincipal', updatedUser)
+        axios.put('https://spring-csdrms.onrender.com/user/updatePrincipal', updatedUser)
           .then(response => {
             console.log(response.data);
             // Handle success, e.g., show success message
@@ -100,7 +100,7 @@ const UpdateAccount = () => {
           }, 200);
         break;
       case 3:
-        axios.put('http://localhost:8080/user/updateAdviser', updatedUser)
+        axios.put('https://spring-csdrms.onrender.com/user/updateAdviser', updatedUser)
           .then(response => {
             console.log(response.data);
             // Handle success, e.g., show success message
@@ -115,7 +115,7 @@ const UpdateAccount = () => {
           }, 200);
         break;
       case 4:
-          axios.put('http://localhost:8080/user/updateAdmin', updatedUser)
+          axios.put('https://spring-csdrms.onrender.com/user/updateAdmin', updatedUser)
             .then(response => {
               console.log(response.data);
               // Handle success, e.g., show success message
