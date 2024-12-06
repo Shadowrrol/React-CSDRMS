@@ -38,8 +38,8 @@ const Navigation = ({ loggedInUser }) => {
         // Fetch based on userType
         if (loggedInUser?.userType === 1) {
           // SSO: Fetch all reports and suspensions
-          const reportsResponse = await axios.get('https://spring-csdrms.onrender.com/report/getAllReports');
-          const suspensionsResponse = await axios.get('https://spring-csdrms.onrender.com/suspension/getAllSuspensions');
+          const reportsResponse = await axios.get('http://localhost:8080/report/getAllReports');
+          const suspensionsResponse = await axios.get('http://localhost:8080/suspension/getAllSuspensions');
 
           setAllReports(reportsResponse.data);
           setAllSuspensions(suspensionsResponse.data);
@@ -54,7 +54,7 @@ const Navigation = ({ loggedInUser }) => {
 
         } else if (loggedInUser?.userType === 2) {
           // Principal: Fetch all suspensions
-          const suspensionsResponse = await axios.get('https://spring-csdrms.onrender.com/suspension/getAllSuspensions');
+          const suspensionsResponse = await axios.get('http://localhost:8080/suspension/getAllSuspensions');
           
           setAllSuspensions(suspensionsResponse.data);
           
@@ -64,7 +64,7 @@ const Navigation = ({ loggedInUser }) => {
 
         } else if (loggedInUser?.userType === 3) {
           // Adviser: Fetch reports and suspensions by section and school year
-          const reportsResponse = await axios.get('https://spring-csdrms.onrender.com/report/getAllReportsForAdviser', {
+          const reportsResponse = await axios.get('http://localhost:8080/report/getAllReportsForAdviser', {
             params: {
               grade: loggedInUser.grade,
               section: loggedInUser.section,
@@ -73,7 +73,7 @@ const Navigation = ({ loggedInUser }) => {
             }
           });
 
-          const suspensionsResponse = await axios.get('https://spring-csdrms.onrender.com/suspension/getAllSuspensionsByGradeSectionAndSchoolYear', {
+          const suspensionsResponse = await axios.get('http://localhost:8080/suspension/getAllSuspensionsByGradeSectionAndSchoolYear', {
             params: {
               grade: loggedInUser.grade,
               section: loggedInUser.section,
@@ -99,7 +99,7 @@ const Navigation = ({ loggedInUser }) => {
 
         } else if (loggedInUser?.userType === 5 || loggedInUser?.userType === 6) {
           // Complainant (User type 5 or 6): Fetch suspensions by complainant
-          const suspensionsResponse = await axios.get('https://spring-csdrms.onrender.com/suspension/getAllSuspensionsByComplainant', {
+          const suspensionsResponse = await axios.get('http://localhost:8080/suspension/getAllSuspensionsByComplainant', {
             params: {
               username: loggedInUser.username
             }

@@ -23,7 +23,7 @@ const Followup = () => {
     const fetchFollowups = async () => {
       try {
         const response = await fetch(
-          `https://spring-csdrms.onrender.com/followup/getAllFollowUpsByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`
+          `http://localhost:8080/followup/getAllFollowUpsByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");

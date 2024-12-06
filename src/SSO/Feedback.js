@@ -33,10 +33,10 @@ const Feedback = () => {
     
     const fetchFeedback = async () => {
       try {
-        let feedbackEndpoint = "https://spring-csdrms.onrender.com/feedback/getFeedbacks";
+        let feedbackEndpoint = "http://localhost:8080/feedback/getFeedbacks";
         
         if (loggedInUser.userType === 3) {
-          feedbackEndpoint = `https://spring-csdrms.onrender.com/feedback/getFeedbacksForAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`;
+          feedbackEndpoint = `http://localhost:8080/feedback/getFeedbacksForAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`;
         }
         
         const response = await fetch(feedbackEndpoint);
@@ -65,7 +65,7 @@ const Feedback = () => {
 
   const handleAcknowledge = async (feedbackId) => {
     try {
-      const response = await fetch(`https://spring-csdrms.onrender.com/feedback/acknowledge/${feedbackId}`, {
+      const response = await fetch(`http://localhost:8080/feedback/acknowledge/${feedbackId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

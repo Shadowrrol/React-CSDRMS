@@ -20,7 +20,7 @@ const ReportModal = ({ onClose, refreshReports }) => {
     const fetchStudents = async () => {
       try {
         // Always fetch the default API for current students
-        const response = await axios.get('https://spring-csdrms.onrender.com/student/getAllCurrentStudents');
+        const response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
         setStudents(response.data); // Set fetched students
       } catch (error) {
         console.error('Error fetching students:', error);
@@ -68,7 +68,7 @@ const handleCreateReport = async () => {
     };
 
 
-    await axios.post(`https://spring-csdrms.onrender.com/report/insertReport/${newReport.studentId}`, reportData);
+    await axios.post(`http://localhost:8080/report/insertReport/${newReport.studentId}`, reportData);
     refreshReports(); // Refresh the reports list after submission
     onClose(); // Close the modal after submission
   } catch (error) { 

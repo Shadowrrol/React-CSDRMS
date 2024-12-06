@@ -46,7 +46,7 @@ const handleInputChange = (e) => {
 
       };
 
-      await axios.post('https://spring-csdrms.onrender.com/suspension/insertSuspension', suspensionPayload);
+      await axios.post('http://localhost:8080/suspension/insertSuspension', suspensionPayload);
       
       refreshSuspensions(); // Call the suspension refresh function passed from parent
       refreshReports(); // Optionally refresh reports to reflect any report changes

@@ -49,7 +49,7 @@ const AdviserCase = () => {
         const fetchCases = async () => {
             try {
                 // Fetch cases handled by the logged-in adviser
-                const response = await fetch(`https://spring-csdrms.onrender.com/api/cases/handledByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`);
+                const response = await fetch(`http://localhost:8080/api/cases/handledByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -66,7 +66,7 @@ const AdviserCase = () => {
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const response = await axios.get(`https://spring-csdrms.onrender.com/student/getAllStudentsByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`);
+                const response = await axios.get(`http://localhost:8080/student/getAllStudentsByAdviser/${loggedInUser.section}/${loggedInUser.schoolYear}`);
                 setStudents(response.data);
             } catch (error) {
                 console.error('Error fetching students:', error);
@@ -95,7 +95,7 @@ const AdviserCase = () => {
                 id: selectedStudent ? selectedStudent.id : '' // Include selected student ID in form data
             };
     
-            const response = await fetch('https://spring-csdrms.onrender.com/api/cases', {
+            const response = await fetch('http://localhost:8080/api/cases', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -131,7 +131,7 @@ const AdviserCase = () => {
         }
 
         try {
-            const response = await fetch(`https://spring-csdrms.onrender.com/api/cases/${selectedCaseId}`, {
+            const response = await fetch(`http://localhost:8080/api/cases/${selectedCaseId}`, {
                 method: 'DELETE'
             });
 
@@ -155,7 +155,7 @@ const AdviserCase = () => {
 
     const sendToSSO = async (id) => {
         try {
-            const response = await fetch(`https://spring-csdrms.onrender.com/api/cases/${id}/sso`, {
+            const response = await fetch(`http://localhost:8080/api/cases/${id}/sso`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -185,7 +185,7 @@ const AdviserCase = () => {
         }
 
         try {
-            const response = await fetch(`https://spring-csdrms.onrender.com/api/cases/complete/${selectedCaseId}`, {
+            const response = await fetch(`http://localhost:8080/api/cases/complete/${selectedCaseId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

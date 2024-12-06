@@ -42,7 +42,7 @@ const UpdateStudent = () => {
 
     useEffect(() => {
         document.title = "Adviser | Update Student";
-        fetch(`https://spring-csdrms.onrender.com/student/getStudent/${sid}`)
+        fetch(`http://localhost:8080/student/getStudent/${sid}`)
             .then(response => response.json())
             .then(data => setStudentData(data))
             .catch(error => console.error('Error fetching student:', error));
@@ -55,7 +55,7 @@ const UpdateStudent = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch(`https://spring-csdrms.onrender.com/student/updateStudent?sid=${sid}`, {
+        fetch(`http://localhost:8080/student/updateStudent?sid=${sid}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

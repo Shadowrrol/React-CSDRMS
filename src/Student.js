@@ -32,7 +32,7 @@ const Student = () => {
 
                     // Adviser-specific API call with section and school year
                     if (loggedInUser.userType === 3) {
-                        url = 'https://spring-csdrms.onrender.com/student/getAllStudentsByAdviser';
+                        url = 'http://localhost:8080/student/getAllStudentsByAdviser';
                         params = {
                             grade: loggedInUser.grade,
                             section: loggedInUser.section,
@@ -40,7 +40,7 @@ const Student = () => {
                         };
                     } else {
                         // For other user types
-                        url = 'https://spring-csdrms.onrender.com/student/getAllCurrentStudents';
+                        url = 'http://localhost:8080/student/getAllCurrentStudents';
                     }
 
                     const response = await axios.get(url, {
@@ -59,7 +59,7 @@ const Student = () => {
             fetchStudents();
 
             // Fetch school years for the dropdown
-            fetch('https://spring-csdrms.onrender.com/schoolYear/getAllSchoolYears')
+            fetch('http://localhost:8080/schoolYear/getAllSchoolYears')
                 .then(response => response.json())
                 .then(data => setSchoolYears(data))
                 .catch(error => console.error('Error fetching school years:', error));
@@ -78,7 +78,7 @@ const Student = () => {
 
     const handleDelete = (sid) => {
         if (window.confirm(`Type 'delete' to confirm deletion of student SID ${sid}`)) {
-            fetch(`https://spring-csdrms.onrender.com/student/deleteStudent/${sid}`, {
+            fetch(`http://localhost:8080/student/deleteStudent/${sid}`, {
                 method: 'DELETE'
             })
                 .then(response => {
@@ -129,7 +129,7 @@ const Student = () => {
         formData.append('schoolYear', selectedSchoolYear); // Add school year to the request
 
         try {
-            const response = await axios.post('https://spring-csdrms.onrender.com/student/import', formData, {
+            const response = await axios.post('http://localhost:8080/student/import', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

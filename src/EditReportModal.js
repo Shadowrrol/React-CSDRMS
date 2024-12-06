@@ -41,7 +41,7 @@ const EditReportModal = ({ reportId, onClose, refreshReports }) => {
   // Fetch the report data and set it in the form
   useEffect(() => {
     if (reportId) {
-      axios.get(`https://spring-csdrms.onrender.com/report/getReport/${reportId}`)
+      axios.get(`http://localhost:8080/report/getReport/${reportId}`)
         .then(response => {
           setReportData(response.data);
           setSearchQuery(response.data.record?.id ? `${response.data.record.id} - ${response.data.record.student?.name}` : ''); // Set the current student name in the search field
@@ -56,7 +56,7 @@ const EditReportModal = ({ reportId, onClose, refreshReports }) => {
       try {
         let response;
         if (loggedInUser?.userType === 3) {
-          response = await axios.get('https://spring-csdrms.onrender.com/student/getAllStudentsByAdviser', {
+          response = await axios.get('http://localhost:8080/student/getAllStudentsByAdviser', {
             params: {
               grade: loggedInUser.grade,
               section: loggedInUser.section,
@@ -64,7 +64,7 @@ const EditReportModal = ({ reportId, onClose, refreshReports }) => {
             },
           });
         } else {
-          response = await axios.get('https://spring-csdrms.onrender.com/student/getAllCurrentStudents');
+          response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
         }
         setStudents(response.data);
       } catch (error) {
@@ -125,7 +125,7 @@ const EditReportModal = ({ reportId, onClose, refreshReports }) => {
     };
 
     try {
-      await axios.put(`https://spring-csdrms.onrender.com/report/updateReport/${reportId}/${reportData.record.id}/${reportData.record.monitored_record}`, updatedReportData);
+      await axios.put(`http://localhost:8080/report/updateReport/${reportId}/${reportData.record.id}/${reportData.record.monitored_record}`, updatedReportData);
       refreshReports(); // Refresh the report list after submission
       onClose(); // Close the modal after submission
     } catch (error) {

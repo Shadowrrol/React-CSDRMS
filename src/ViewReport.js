@@ -13,7 +13,7 @@ const ViewReportModal = ({ reportId, onClose }) => {
   useEffect(() => {
     const fetchReport = async () => {
       try {
-        const response = await axios.get(`https://spring-csdrms.onrender.com/report/getReport/${reportId}`);
+        const response = await axios.get(`http://localhost:8080/report/getReport/${reportId}`);
         setReport(response.data);
         setLoading(false);
       } catch (error) {
@@ -24,7 +24,7 @@ const ViewReportModal = ({ reportId, onClose }) => {
 
     const fetchSuspension = async () => {
       try {
-        const response = await axios.get(`https://spring-csdrms.onrender.com/suspension/getSuspensionByReport/${reportId}`);
+        const response = await axios.get(`http://localhost:8080/suspension/getSuspensionByReport/${reportId}`);
         setSuspension(response.data);
         setSuspensionLoading(false);
       } catch (error) {

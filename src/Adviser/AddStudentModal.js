@@ -30,12 +30,12 @@ const AddStudentModal = ({ open, onClose }) => {
 
     // Fetch grades and school years on component mount
     useEffect(() => {
-        fetch('https://spring-csdrms.onrender.com/class/allUniqueGrades')
+        fetch('http://localhost:8080/class/allUniqueGrades')
             .then((response) => response.json())
             .then((data) => setGrades(data))
             .catch((error) => console.error('Error fetching grades:', error));
 
-        fetch('https://spring-csdrms.onrender.com/schoolYear/getAllSchoolYears')
+        fetch('http://localhost:8080/schoolYear/getAllSchoolYears')
             .then((response) => response.json())
             .then((data) => setSchoolYears(data))
             .catch((error) => console.error('Error fetching school years:', error));
@@ -44,7 +44,7 @@ const AddStudentModal = ({ open, onClose }) => {
     // Fetch sections when grade is selected
     useEffect(() => {
         if (studentData.grade) {
-            fetch(`https://spring-csdrms.onrender.com/class/sections/${studentData.grade}`)
+            fetch(`http://localhost:8080/class/sections/${studentData.grade}`)
                 .then((response) => response.json())
                 .then((data) => setSections(data))
                 .catch((error) => console.error('Error fetching sections:', error));
@@ -58,7 +58,7 @@ const AddStudentModal = ({ open, onClose }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch('https://spring-csdrms.onrender.com/student/insertStudent', {
+        fetch('http://localhost:8080/student/insertStudent', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -15,28 +15,28 @@ const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refres
       try {
         // Logic to update "received" status for userType === 1
         if (loggedInUser?.userType === 1) {
-          await axios.post('https://spring-csdrms.onrender.com/report/markAsViewedForSso');
-          await axios.post('https://spring-csdrms.onrender.com/suspension/markAsViewedForSso');
+          await axios.post('http://localhost:8080/report/markAsViewedForSso');
+          await axios.post('http://localhost:8080/suspension/markAsViewedForSso');
           
-          const response = await axios.get('https://spring-csdrms.onrender.com/report/getAllReports'); // Fetch all reports
+          const response = await axios.get('http://localhost:8080/report/getAllReports'); // Fetch all reports
           const currentDate = new Date().toISOString().split('T')[0];
 
           const updates = response.data
             .filter(report => !report.received) // Filter unreceived reports
-            .map(report => axios.put(`https://spring-csdrms.onrender.com/report/updateReceived/${report.reportId}`, { received: currentDate }));
+            .map(report => axios.put(`http://localhost:8080/report/updateReceived/${report.reportId}`, { received: currentDate }));
 
           await Promise.all(updates); // Update all unreceived reports
         } else if (loggedInUser?.userType === 2) {
-          await axios.post('https://spring-csdrms.onrender.com/suspension/markAsViewedForPrincipal');
+          await axios.post('http://localhost:8080/suspension/markAsViewedForPrincipal');
         } else if (loggedInUser?.userType === 3) {
-          await axios.post('https://spring-csdrms.onrender.com/report/markAsViewedForAdviser', null, {
+          await axios.post('http://localhost:8080/report/markAsViewedForAdviser', null, {
             params: {
               grade: loggedInUser.grade,
               section: loggedInUser.section,
               schoolYear: loggedInUser.schoolYear,
             },
           });
-          await axios.post('https://spring-csdrms.onrender.com/suspension/markAsViewedForAdviser', null, {
+          await axios.post('http://localhost:8080/suspension/markAsViewedForAdviser', null, {
             params: {
               grade: loggedInUser.grade,
               section: loggedInUser.section,
@@ -44,7 +44,7 @@ const NotificationModal = ({ onClose, loggedInUser, reports, suspensions, refres
             },
           });
         } else if (loggedInUser?.userType === 5 || loggedInUser?.userType === 6) {
-          await axios.post('https://spring-csdrms.onrender.com/suspension/markAsViewedForComplainant', null, {
+          await axios.post('http://localhost:8080/suspension/markAsViewedForComplainant', null, {
             params: {
               username: loggedInUser.username,
             },
