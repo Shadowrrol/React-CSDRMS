@@ -27,7 +27,7 @@ const TimeLog = () => {
     useEffect(() => {
         const fetchAdvisers = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/user/getAllAdvisers');
+                const response = await axios.get('https://spring-csdrms.onrender.com/user/getAllAdvisers');
                 setAdvisers(response.data);
             } catch (err) {
                 setError('Failed to fetch advisers');

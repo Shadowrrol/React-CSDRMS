@@ -70,7 +70,7 @@ const Case = () => {
         document.title = "SSO | Cases";
         const fetchFeedbackedCases = async () => {
             try {
-                const response = await fetch('http://localhost:8080/feedback/getFeedbacks');
+                const response = await fetch('https://spring-csdrms.onrender.com/feedback/getFeedbacks');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -83,7 +83,7 @@ const Case = () => {
 
         const fetchFollowedUpCases = async () => {
             try {
-                const response = await fetch('http://localhost:8080/followup/getAllFollowUps');
+                const response = await fetch('https://spring-csdrms.onrender.com/followup/getAllFollowUps');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -96,7 +96,7 @@ const Case = () => {
 
         const fetchStudents = async () => {
             try {
-                const response = await fetch('http://localhost:8080/student/getAllCurrentStudents');
+                const response = await fetch('https://spring-csdrms.onrender.com/student/getAllCurrentStudents');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -115,7 +115,7 @@ const Case = () => {
     useEffect(() => {
         const fetchCases = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/cases/handledBySSO');
+                const response = await fetch('https://spring-csdrms.onrender.com/api/cases/handledBySSO');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -148,7 +148,7 @@ const Case = () => {
                 handledBySSO: 1
             };
     
-            const response = await fetch('http://localhost:8080/api/cases', {
+            const response = await fetch('https://spring-csdrms.onrender.com/api/cases', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -184,7 +184,7 @@ const Case = () => {
         }
     
         try {
-            const response = await fetch(`http://localhost:8080/api/cases/${selectedCaseId}`, {
+            const response = await fetch(`https://spring-csdrms.onrender.com/api/cases/${selectedCaseId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
@@ -209,7 +209,7 @@ const Case = () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/cases/complete/${selectedCaseId}`, {
+            const response = await fetch(`https://spring-csdrms.onrender.com/api/cases/complete/${selectedCaseId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -232,7 +232,7 @@ const Case = () => {
     const handleSanctionSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8080/sanction/insertSanction', {
+            const response = await fetch('https://spring-csdrms.onrender.com/sanction/insertSanction', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -273,7 +273,7 @@ const Case = () => {
 
     const handleFeedbackSubmit = async () => {
         try {
-            const response = await fetch('http://localhost:8080/feedback/insertFeedback', {
+            const response = await fetch('https://spring-csdrms.onrender.com/feedback/insertFeedback', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -323,7 +323,7 @@ const Case = () => {
     const handleSubmitFollowUp = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8080/followup/insertFollowUp', {
+            const response = await fetch('https://spring-csdrms.onrender.com/followup/insertFollowUp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

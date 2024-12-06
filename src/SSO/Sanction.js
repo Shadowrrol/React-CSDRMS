@@ -42,7 +42,7 @@ const Sanction = () => {
         document.title = "SSO | Sanction";
         const fetchStudents = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/student/getAllCurrentStudents');
+                const response = await axios.get('https://spring-csdrms.onrender.com/student/getAllCurrentStudents');
                 setStudents(response.data);
             } catch (error) {
                 console.error('Error fetching students:', error);
@@ -55,7 +55,7 @@ const Sanction = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/sanction/insertSanction', {
+            const response = await axios.post('https://spring-csdrms.onrender.com/sanction/insertSanction', {
                 sid: selectedStudent?.sid, // Use selected student's sid
                 behaviorDetails,
                 sanctionRecommendation

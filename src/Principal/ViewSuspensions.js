@@ -21,8 +21,8 @@ const ViewSuspensions = () => {
       setLoading(true);
       setError(null);
       try {
-        await axios.post('http://localhost:8080/suspension/markAsViewedForPrincipal'); // Mark as viewed
-        const response = await axios.get('http://localhost:8080/suspension/getAllSuspensions');
+        await axios.post('https://spring-csdrms.onrender.com/suspension/markAsViewedForPrincipal'); // Mark as viewed
+        const response = await axios.get('https://spring-csdrms.onrender.com/suspension/getAllSuspensions');
 
         const sortedSuspensions = response.data.sort((a, b) => b.suspensionId - a.suspensionId);
         setSuspensions(sortedSuspensions);
