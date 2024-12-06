@@ -1,0 +1,87 @@
+/* Action Buttons */
+.suspension-action-buttons {
+    margin-top: 10px;
+}
+
+.suspension-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    background-color: #4caf50;
+    color: white;
+    font-size: 14px;
+    transition: background-color 0.3s, transform 0.3s;
+    text-shadow: 1px 1px 3px #000; /* Slight shadow for all text */
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.suspension-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+.suspension-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    text-shadow: 1px 1px 3px #ccc;  /* Slight shadow for disabled text */
+}
+
+.suspension-filter {
+    margin-top: 20px;
+    max-width: 100%; /* Ensures it doesn't exceed the parent container's width */
+    display: flex; /* Added flexbox to control layout */
+    justify-content: flex-start; /* Align filters to the left */
+    gap: 10px; /* Space between individual filters */
+    flex-wrap: wrap; /* Allows filters to wrap to the next line if necessary */
+    justify-content: space-between;
+}
+
+.suspension-filter select{
+    padding: 10px; /* Reduced padding for a tighter look */
+    font-size: 14px; /* Adjust font size */
+    border: 1px solid #ccc; /* Consistent border */
+    border-radius: 4px; /* Smooth edges */
+    background-color: #fff; /* White background */
+    color: #414141; /* Darker text color for contrast */
+    width: auto; /* Adjusts width based on content */
+    text-align: center; /* Center the text inside the select */
+    margin-left: 10px; /* Removed unnecessary left margin */
+    position: relative;
+}
+
+/* Search Bar */
+.separator {
+    display: flex; /* Ensure children are aligned correctly */
+    align-items: center; /* Center the icon and input vertically */
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.search-container {
+    position: relative;
+    width: 100%; /* Adjust width as necessary */
+    max-width: 300px; /* Set a maximum width for the input */
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px; /* Adjust padding for input text */
+    padding-left: 40px; /* Add left padding for the icon */
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%; /* Center icon vertically */
+    left: 10px; /* Position icon horizontally */
+    transform: translateY(-50%);
+    font-size: 20px; /* Adjust icon size */
+    color: #888; /* Icon color */
+    pointer-events: none; /* Make icon non-clickable */
+}
